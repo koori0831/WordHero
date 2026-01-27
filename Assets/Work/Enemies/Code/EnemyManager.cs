@@ -45,7 +45,6 @@ namespace Work.Enemies.Code
                 if (item.Transform.TryGetComponent<Enemy>(out Enemy enemy))
                 {
                     enemy.Init(this);
-                    enemy.GetModule<EnemyMovementModule>().SetTarget(target);
                 }
             }
         }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Unity.AppUI.UI;
 using UnityEngine;
 
 namespace Work.Enemies.Code
@@ -11,6 +10,11 @@ namespace Work.Enemies.Code
         private List<ICrowd> nearNeighbors = new List<ICrowd>();
         private Vector3 velocity;
 
+        public bool IsCanMove { get; private set; } = true;
+
+        public bool IsMoving => velocity.magnitude > 0.1f;
+
+        [SerializeField] private float stopDistance = 0.5f;
         [SerializeField] private float speed = 3.0f;
 
         public void Initialize(Enemy enemy)
@@ -25,14 +29,18 @@ namespace Work.Enemies.Code
 
         public void Update()
         {
-            UpdateMovement();
+            if (!IsCanMove && _target != null)
+                UpdateMovement();
         }
 
         public void UpdateMovement()
         {
+            if (stopDistance > Vector2.Distance(_owner.transform.position, _target.position))
+                return;
+
             FindNeighbors();
 
-            //velocity += CalculateSeparation() * _owner.Spawner.separationWeight;
+            velocity += CalculateSeparation() * _owner.Spawner.separationWeight;
             Vector3 next = _owner.Spawner.GetNextMove(_owner.transform.position, _target.position, _owner.Guid) - _owner.transform.position;
             Debug.Log($"{gameObject.name} / 방향 : {next}");
             velocity += next;
@@ -42,12 +50,12 @@ namespace Work.Enemies.Code
 
 
             _owner.transform.position += velocity * Time.deltaTime; // 가속도
-            _owner.transform.rotation = Quaternion.Slerp(_owner.transform.rotation, Quaternion.LookRotation(velocity),Time.deltaTime * 10);
+            _owner.transform.rotation = Quaternion.Slerp(_owner.transform.rotation, Quaternion.LookRotation(velocity), Time.deltaTime * 10);
         }
 
-        public void StopMovement()
+        public void SetMovement(bool isValue)
         {
-            // Implementation for stopping movement if needed
+            IsCanMove = isValue;
         }
 
         private void FindNeighbors()
