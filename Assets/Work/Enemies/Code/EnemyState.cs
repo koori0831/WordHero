@@ -17,5 +17,6 @@ namespace Work.Enemies.Code
         Chase,
         Hit,
         Death,
+        Wait,
     }
 }

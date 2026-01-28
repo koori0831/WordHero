@@ -29,7 +29,7 @@ namespace Work.Enemies.Code
 
         public void Update()
         {
-            if (!IsCanMove && _target != null)
+            if (IsCanMove && _target != null)
                 UpdateMovement();
         }
 
@@ -42,7 +42,6 @@ namespace Work.Enemies.Code
 
             velocity += CalculateSeparation() * _owner.Spawner.separationWeight;
             Vector3 next = _owner.Spawner.GetNextMove(_owner.transform.position, _target.position, _owner.Guid) - _owner.transform.position;
-            Debug.Log($"{gameObject.name} / 방향 : {next}");
             velocity += next;
 
             if (velocity.magnitude > speed) // prevent infinite accelation
@@ -69,7 +68,6 @@ namespace Work.Enemies.Code
 
                 if (neighbor.Transform.gameObject == this.gameObject)
                 {
-                    Debug.Log("Pass, because neighbor is me");
                     continue;
                 }
 

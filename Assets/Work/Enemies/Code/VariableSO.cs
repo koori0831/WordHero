@@ -10,8 +10,13 @@ namespace Work.Enemies.Code
     public enum BTVariables
     {
         Target,
-        MoveDirection,
         CurrentState,
+        CurrentAnimation,
+        NextAnimation,
+        ChangeAnimationEvent,
+        ChangeStateEvent,
+        DetectRange,
+        TargetLayerNumber
     }
 
     [CreateAssetMenu(fileName = "VariableSO" , menuName = "SO/Behavior/VariableData")]

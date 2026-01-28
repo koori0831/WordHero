@@ -17,7 +17,9 @@ namespace Work.Enemies.Code
         public Transform Transform => gameObject != null ? transform : null;
 
         [SerializeField] private List<VariableSO> variableSOs = new List<VariableSO>();
-        
+        [SerializeField] private LayerMask targetLayerMask;
+        [SerializeField] private float detectRange = 10.0f;
+
         private Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
         private Dictionary<Type,IEnemyModule> _modules = new Dictionary<Type, IEnemyModule>();
         public Guid Guid { get; } = Guid.NewGuid();
@@ -67,6 +69,9 @@ namespace Work.Enemies.Code
                 else 
                     Debug.LogError($"Variable {item.VariableName} not found in BehaviorAgent.");
             }
+
+            SetBlackboardVariable<int>(BTVariables.TargetLayerNumber, targetLayerMask);
+            SetBlackboardVariable<float>(BTVariables.DetectRange, detectRange);
         }
 
         public BlackboardVariable<T> GetBlackboardVariable<T>(BTVariables variableName)
@@ -100,6 +105,12 @@ namespace Work.Enemies.Code
             }
             Debug.LogError($"Module of type {typeof(T)} not found.");
             return default;
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, detectRange);
         }
     }
 }
