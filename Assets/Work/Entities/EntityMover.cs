@@ -6,7 +6,7 @@ namespace Code.Entities
     [RequireComponent(typeof(CharacterController))]
     public class EntityMover : MonoBehaviour, IEntityComponent
     {
-        [SerializeField] private float speed = 5f;
+        [field:SerializeField] public float Speed { get; private set; } = 5f;
         private Entity _owner;
         private CharacterController _controller;
 
@@ -26,7 +26,7 @@ namespace Code.Entities
         {
             Vector3 camForward = Vector3.Scale(_camTransform.forward, new Vector3(1, 0, 1)).normalized;
             Vector3 camRight = _camTransform.right;
-            Vector3 move = (camForward * direction.y + camRight * direction.x) * speed * Time.deltaTime;
+            Vector3 move = (camForward * direction.y + camRight * direction.x) * Speed * Time.deltaTime;
             _controller.Move(move);
 
             if (direction.sqrMagnitude > 0.01f)

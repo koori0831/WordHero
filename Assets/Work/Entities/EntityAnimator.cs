@@ -3,6 +3,12 @@ using UnityEngine;
 
 namespace Code.Entities
 {
+    public enum AnimationEventType
+    {
+        End,
+        Attack,
+    }
+
     [RequireComponent (typeof(Animator))]
     public class EntityAnimator : MonoBehaviour, IEntityComponent
     {
@@ -36,9 +42,9 @@ namespace Code.Entities
             _animator.SetTrigger(animHash);
         }
 
-        public void AnimationEnd()
+        public void AnimationEvent(AnimationEventType eventType)
         {
-            _stateCompo.TriggerEnd();
+            _stateCompo.TriggerEvent(eventType);
         }
     }
 }
