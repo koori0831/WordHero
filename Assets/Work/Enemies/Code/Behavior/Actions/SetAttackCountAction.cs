@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Unity.Behavior;
 using UnityEngine;
 using Work.Enemies.Code;
@@ -14,16 +14,12 @@ public partial class SetAttackCountAction : Action
 
     protected override Status OnStart()
     {
+        EnemyAnimatorModule animator = Self.Value.GetModule<EnemyAnimatorModule>();
+        Debug.Assert(animator != null, "Animator module not found in enemy.");
+
+        int attackCount = UnityEngine.Random.Range(0, Range.Value);
+        animator.SetParam(Animator.StringToHash("ATTACK_COUNT"),(float)attackCount);
         return Status.Running;
-    }
-
-    protected override Status OnUpdate()
-    {
-        return Status.Success;
-    }
-
-    protected override void OnEnd()
-    {
     }
 }
 

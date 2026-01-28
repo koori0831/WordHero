@@ -5,17 +5,21 @@ using Unity.AppUI.UI;
 using Unity.Behavior;
 using Unity.Behavior.GraphFramework;
 using UnityEngine;
+using UnityEngine.Events;
 using Work.Entities;
 
 namespace Work.Enemies.Code
 {
     public abstract class Enemy : MonoBehaviour, ICrowd, IDamageable
     {
+        public UnityEvent<int> OnHitEvent;
+
         public EnemyManager Spawner { get; private set; }
         public BehaviorGraphAgent BehaviorAgent { get; private set; }
         public float NeighborRadius { get; set; } = 5.0f;
-
+        public Guid Guid { get; } = Guid.NewGuid();
         public Transform Transform => gameObject != null ? transform : null;
+
 
         [SerializeField] private List<VariableSO> variableSOs = new List<VariableSO>();
         [SerializeField] private LayerMask targetLayerMask;
@@ -25,7 +29,6 @@ namespace Work.Enemies.Code
 
         private Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
         private Dictionary<Type,IEnemyModule> _modules = new Dictionary<Type, IEnemyModule>();
-        public Guid Guid { get; } = Guid.NewGuid();
 
         public void Init(EnemyManager spawner)
         {
@@ -124,7 +127,13 @@ namespace Work.Enemies.Code
 
         public void TakeDamage(int damageAmount)
         {
+            OnHitEvent?.Invoke(damageAmount);
+            SetBlackboardVariable<EnemyState>(BTVariables.CurrentState,EnemyState.Hit);
+        }
 
+        public void Die()
+        {
+            SetBlackboardVariable<EnemyState>(BTVariables.CurrentState,EnemyState.Death);
         }
     }
 }
