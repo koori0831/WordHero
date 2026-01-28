@@ -16,7 +16,9 @@ namespace Work.Enemies.Code
         ChangeAnimationEvent,
         ChangeStateEvent,
         DetectRange,
-        TargetLayerNumber
+        TargetLayerNumber,
+        AttackRange,
+        ChaseRange
     }
 
     [CreateAssetMenu(fileName = "VariableSO" , menuName = "SO/Behavior/VariableData")]

@@ -5,10 +5,11 @@ using Unity.AppUI.UI;
 using Unity.Behavior;
 using Unity.Behavior.GraphFramework;
 using UnityEngine;
+using Work.Entities;
 
 namespace Work.Enemies.Code
 {
-    public abstract class Enemy : MonoBehaviour, ICrowd
+    public abstract class Enemy : MonoBehaviour, ICrowd, IDamageable
     {
         public EnemyManager Spawner { get; private set; }
         public BehaviorGraphAgent BehaviorAgent { get; private set; }
@@ -19,6 +20,8 @@ namespace Work.Enemies.Code
         [SerializeField] private List<VariableSO> variableSOs = new List<VariableSO>();
         [SerializeField] private LayerMask targetLayerMask;
         [SerializeField] private float detectRange = 10.0f;
+        [SerializeField] private float chaseRange = 25.0f;
+        [SerializeField] private float attackRange = 4.0f;
 
         private Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
         private Dictionary<Type,IEnemyModule> _modules = new Dictionary<Type, IEnemyModule>();
@@ -72,6 +75,8 @@ namespace Work.Enemies.Code
 
             SetBlackboardVariable<int>(BTVariables.TargetLayerNumber, targetLayerMask);
             SetBlackboardVariable<float>(BTVariables.DetectRange, detectRange);
+            SetBlackboardVariable<float>(BTVariables.AttackRange, attackRange);
+            SetBlackboardVariable<float>(BTVariables.ChaseRange, chaseRange);
         }
 
         public BlackboardVariable<T> GetBlackboardVariable<T>(BTVariables variableName)
@@ -111,6 +116,15 @@ namespace Work.Enemies.Code
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, detectRange);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, chaseRange);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(transform.position, attackRange);
+        }
+
+        public void TakeDamage(int damageAmount)
+        {
+
         }
     }
 }
