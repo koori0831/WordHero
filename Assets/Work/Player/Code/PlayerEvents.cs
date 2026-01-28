@@ -4,10 +4,6 @@ using Work.Core.Utils.EventBus;
 
 namespace Work.Player.Code
 {
-    public struct PlayerRequestAttackEvent : IEvent
-    {
-    }
-    public struct PlayerRequestDodgeEvent : IEvent
-    {
-    }
+    public readonly record struct PlayerRequestAttackEvent : IEvent;
+    public readonly record struct PlayerRequestDodgeEvent : IEvent;
 }
