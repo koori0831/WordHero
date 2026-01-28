@@ -90,9 +90,9 @@ namespace Work.Input.Code
         public void OnWordLeft(InputAction.CallbackContext context)
         {
             if (context.started || context.performed)
-                Bus<InputWordSellectLeftEvent>.Raise(new InputWordSellectLeftEvent(isRelease: false));
+                Bus<InputWordSellectLeftEvent>.Raise(new InputWordSellectLeftEvent(false));
             else if (context.canceled)
-                Bus<InputWordSellectLeftEvent>.Raise(new InputWordSellectLeftEvent(isRelease: true));
+                Bus<InputWordSellectLeftEvent>.Raise(new InputWordSellectLeftEvent(true));
         }
 
         public void OnWordUp(InputAction.CallbackContext context)

@@ -22,12 +22,12 @@ namespace Work.Player.Code
             {
                 case DirectActionType.BasicAttack:
                     Debug.Log("PLAYER: Basic Attack executed.");
-                    //Bus<PlayerRequestAttackEvent>.Raise(new PlayerRequestAttackEvent());
+                    Bus<PlayerRequestAttackEvent>.Raise(new PlayerRequestAttackEvent());
                     break;
 
                 case DirectActionType.Dodge:
                     Debug.Log("PLAYER: Dodge executed.");
-                    //Bus<PlayerRequestDodgeEvent>.Raise(new PlayerRequestDodgeEvent());
+                    Bus<PlayerRequestDodgeEvent>.Raise(new PlayerRequestDodgeEvent());
                     break;
             }
         }

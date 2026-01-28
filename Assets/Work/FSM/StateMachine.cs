@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Code.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Code.FSM
@@ -39,9 +40,9 @@ namespace Code.FSM
             CurrentState?.Update();
         }
 
-        public void TriggerEnd()
+        internal void TriggerEvent(AnimationEventType eventType)
         {
-            CurrentState?.EndTriggerCallback();
+            CurrentState?.OnTriggerEnter(eventType);
         }
     }
 }
