@@ -55,8 +55,8 @@ namespace Work.Sentence.Code
                 _builder.OnWordSlotPressed(slotIndex, word);
         }
         public void Input_WordReleased(int slotIndex) => _builder.OnWordSlotReleased(slotIndex);
-        public void Input_Cancel() => _builder.Cancel();
-        public void Input_SwitchWordPalette() => _wordPaletteIndex = (_wordPaletteIndex + 1) % 2;
+        public void Input_Cancel(InputWordCancleEvent evt) => _builder.Cancel();
+        public void Input_SwitchWordPalette(InputPaletteSwapEvent evt) => _wordPaletteIndex = (_wordPaletteIndex + 1) % 2;
 
         private void HandleSentenceCompleted(SentenceDraft draft)
         {
@@ -73,24 +73,29 @@ namespace Work.Sentence.Code
             _executor?.ExecuteSkill(skill);
         }
 
+        private void Input_SelectLeft(InputWordSellectLeftEvent evt) => Input_WordPressed(0, evt.IsRelease);
+        private void Input_SelectUp(InputWordSellectUpEvent evt) => Input_WordPressed(1, evt.IsRelease);
+        private void Input_SelectRight(InputWordSellectRightEvent evt) => Input_WordPressed(2, evt.IsRelease);
+        private void Input_SelectDown(InputWordSellectDownEvent evt) => Input_WordPressed(3, evt.IsRelease);
+
         private void InputEventSubscribe()
         {
-            Bus<InputWordCancleEvent>.Events += evt => Input_Cancel();
-            Bus<InputPaletteSwapEvent>.Events += evt => Input_SwitchWordPalette();
-            Bus<InputWordSellectLeftEvent>.Events += evt => Input_WordPressed(0, evt.IsRelease);
-            Bus<InputWordSellectUpEvent>.Events += evt => Input_WordPressed(1, evt.IsRelease);
-            Bus<InputWordSellectRightEvent>.Events += evt => Input_WordPressed(2, evt.IsRelease);
-            Bus<InputWordSellectDownEvent>.Events += evt => Input_WordPressed(3, evt.IsRelease);
+            Bus<InputWordCancleEvent>.Events += Input_Cancel;
+            Bus<InputPaletteSwapEvent>.Events += Input_SwitchWordPalette;
+            Bus<InputWordSellectLeftEvent>.Events += Input_SelectLeft;
+            Bus<InputWordSellectUpEvent>.Events += Input_SelectUp;
+            Bus<InputWordSellectRightEvent>.Events += Input_SelectRight;
+            Bus<InputWordSellectDownEvent>.Events += Input_SelectDown;
         }
 
         private void OnDestroy()
         {
-            Bus<InputWordCancleEvent>.Events -= evt => Input_Cancel();
-            Bus<InputPaletteSwapEvent>.Events -= evt => Input_SwitchWordPalette();
-            Bus<InputWordSellectLeftEvent>.Events -= evt => Input_WordPressed(0, evt.IsRelease);
-            Bus<InputWordSellectUpEvent>.Events -= evt => Input_WordPressed(1, evt.IsRelease);
-            Bus<InputWordSellectRightEvent>.Events -= evt => Input_WordPressed(2, evt.IsRelease);
-            Bus<InputWordSellectDownEvent>.Events -= evt => Input_WordPressed(3, evt.IsRelease);
+            Bus<InputWordCancleEvent>.Events -= Input_Cancel;
+            Bus<InputPaletteSwapEvent>.Events -= Input_SwitchWordPalette;
+            Bus<InputWordSellectLeftEvent>.Events -= Input_SelectLeft;
+            Bus<InputWordSellectUpEvent>.Events -= Input_SelectUp;
+            Bus<InputWordSellectRightEvent>.Events -= Input_SelectRight;
+            Bus<InputWordSellectDownEvent>.Events -= Input_SelectDown;
         }
     }
 }

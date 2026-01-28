@@ -35,8 +35,6 @@ namespace Work.Core.Utils.EventBus
                     onLogField.SetValue(null, Delegate.Combine(currentValue, logDelegate));
                 }
             }
-
-            Debug.Log($"<color=green><b>[EventBus]</b></color> {eventTypes.Count()}개의 이벤트를 자동으로 추적 중입니다.");
         }
     }
 }
