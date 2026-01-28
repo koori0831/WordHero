@@ -8,6 +8,7 @@ namespace Work.Player.Code.States
     {
         private PlayerInputRoot _input;
         private EntityMover _mover;
+        private static int _moveSpeedHash = Animator.StringToHash("MoveSpeed");
         public PlayerMove(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
         {
             if (_player == null) return;
@@ -27,6 +28,7 @@ namespace Work.Player.Code.States
             else
             {
                 _mover.Move(moveVector);
+                _animator.SetParam(_moveSpeedHash, _mover.Speed / 5);
             }
         }
     }

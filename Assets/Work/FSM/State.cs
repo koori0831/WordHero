@@ -38,7 +38,7 @@ namespace Code.FSM
         {
         }
 
-        public virtual void EndTriggerCallback()
+        public virtual void OnTriggerEnter(AnimationEventType eventType)
         {
         }
     }

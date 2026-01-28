@@ -53,9 +53,9 @@ namespace Code.FSM
             StateMachine.Update();
         }
 
-        public void TriggerEnd()
+        public void TriggerEvent(AnimationEventType eventType)
         {
-            StateMachine.TriggerEnd();
+            StateMachine.TriggerEvent(eventType);
         }
     }
 }
