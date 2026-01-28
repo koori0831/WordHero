@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Work.Sentence.Code
 {
-    [CreateAssetMenu(menuName = "Game/Effects/Effect Graph (MVP)")]
+    [CreateAssetMenu(menuName = "SO/Effects/Effect Graph (MVP)")]
     public class EffectGraphSO : ScriptableObject
     {
         public SkillKind Kind = SkillKind.Attack;

@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
-using Code.FSM;
+﻿using Code.FSM;
 using Code.Entities;
+using Work.Core.Utils.EventBus;
 using System;
 
 namespace Work.Player.Code.States
@@ -10,6 +9,12 @@ namespace Work.Player.Code.States
     {
         public PlayerAttack(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
         {
+            Bus<PlayerRequestDodgeEvent>.Events += OnRequestDodge;
+        }
+
+        private void OnRequestDodge(PlayerRequestDodgeEvent @event)
+        {
+            _stateMachine.ChangeState("Dodge");
         }
 
         public override void OnTriggerEnter(AnimationEventType eventType)

@@ -9,6 +9,7 @@ namespace Code.FSM
         private Dictionary<string, State> states = new Dictionary<string, State>();
 
         public State CurrentState { get; private set; }
+        public State PreviousState { get; private set; }
 
         public void AddState(string stateName, State state)
         {
@@ -26,6 +27,7 @@ namespace Code.FSM
             if (states.ContainsKey(stateName))
             {
                 CurrentState?.Exit();
+                PreviousState = CurrentState;
                 CurrentState = states[stateName];
                 CurrentState?.Enter();
             }
