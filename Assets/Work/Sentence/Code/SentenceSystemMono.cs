@@ -5,6 +5,8 @@ using Work.Input.Code;
 
 namespace Work.Sentence.Code
 {
+    public readonly record struct ChangeWordPaletteEvent(int index, WordPaletteSO wordPalette) : IEvent;
+
     public sealed class SentenceSystemMono : MonoBehaviour
     {
         [Header("Databases")]
@@ -36,6 +38,12 @@ namespace Work.Sentence.Code
             InputEventSubscribe();
         }
 
+        private void Start()
+        {
+            Bus<ChangeWordPaletteEvent>.Raise(new ChangeWordPaletteEvent(_wordPaletteIndex,
+                _wordPaletteIndex == 0 ? wordPaletteA : wordPaletteB));
+        }
+
         private void Update()
         {
             Builder.Tick(Time.deltaTime);
@@ -56,7 +64,12 @@ namespace Work.Sentence.Code
         }
         public void Input_WordReleased(int slotIndex) => Builder.OnWordSlotReleased(slotIndex);
         public void Input_Cancel(InputWordCancleEvent evt) => Builder.Cancel();
-        public void Input_SwitchWordPalette(InputPaletteSwapEvent evt) => _wordPaletteIndex = (_wordPaletteIndex + 1) % 2;
+        public void Input_SwitchWordPalette(InputPaletteSwapEvent evt)
+        {
+            _wordPaletteIndex = (_wordPaletteIndex + 1) % 2;
+            Bus<ChangeWordPaletteEvent>.Raise(new ChangeWordPaletteEvent(_wordPaletteIndex,
+                _wordPaletteIndex == 0 ? wordPaletteA : wordPaletteB));
+        }
 
         private void HandleSentenceCompleted(SentenceDraft draft)
         {

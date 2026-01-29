@@ -372,6 +372,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6115f778d5eb45149b921c8eba7e708e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Player.Code.PlayerInputRoot
+--- !u!1 &168377651
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 168377652}
+  - component: {fileID: 168377653}
+  m_Layer: 0
+  m_Name: AttackCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &168377652
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168377651}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.546, z: 0.567}
+  m_LocalScale: {x: 1.8208, y: 3.4007, z: 1.6455948}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1548946372}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &168377653
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168377651}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &180866884
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,7 +476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fe6eead328f5f94ebd0f51be9914f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Sentence.UI.Code.SentenceUIInstaller
-  _view: {fileID: 1062493508}
+  _currentSentenceView: {fileID: 1062493508}
+  _wordPaletteView: {fileID: 1738608193}
   _sentenceSystem: {fileID: 1393309169}
 --- !u!114 &180866887
 MonoBehaviour:
@@ -2245,6 +2299,7 @@ Transform:
   - {fileID: 1378207421125662074}
   - {fileID: 77654332}
   - {fileID: 1524888924}
+  - {fileID: 168377652}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &1548946373
@@ -2318,6 +2373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a34c8caf3d616f47a6e900fb4e5ca08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Player.Code.Player
+  _attackCollider: {fileID: 168377653}
 --- !u!114 &1548946377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2793,6 +2849,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1738608192}
+  - component: {fileID: 1738608193}
   m_Layer: 5
   m_Name: WordPanel
   m_TagString: Untagged
@@ -2821,6 +2878,23 @@ RectTransform:
   m_AnchoredPosition: {x: -10, y: 10}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 1, y: 0}
+--- !u!114 &1738608193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738608191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6076943657e437a4fbf45eb1296eb455, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Sentence.UI.Code.WordPaletteView
+  _paletteID: {fileID: 310186786}
+  _wordUP: {fileID: 680984348}
+  _wordDown: {fileID: 709260662}
+  _wordLeft: {fileID: 497331359}
+  _wordRight: {fileID: 1594034412}
 --- !u!1 &1787529147
 GameObject:
   m_ObjectHideFlags: 0
