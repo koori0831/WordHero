@@ -138,10 +138,11 @@ namespace Work.StatSystem.Code
             // key 컬렉션을 직접 수정 못 하니, 제거 대상만 모았다가 제거
             List<object> toRemove = null;
 
-            foreach (var kv in _mods)
+            var keys = new List<object>(_mods.Keys);
+            for (int i = 0; i < keys.Count; i++)
             {
-                var key = kv.Key;
-                var entry = kv.Value;
+                var key = keys[i];
+                if (!_mods.TryGetValue(key, out var entry)) continue;
 
                 if (!entry.Spec.IsTimed) continue;
 
