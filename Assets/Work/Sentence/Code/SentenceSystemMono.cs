@@ -16,7 +16,7 @@ namespace Work.Sentence.Code
         [SerializeField] private WordPaletteSO wordPaletteA, wordPaletteB;
         private int _wordPaletteIndex = 0;
 
-        private SentenceBuilder _builder;
+        public SentenceBuilder Builder { get; private set; }
         private SentenceResolver _resolver;
         private SkillFactory _factory;
 
@@ -26,19 +26,19 @@ namespace Work.Sentence.Code
             if (_executor == null)
                 Debug.LogError("combatExecutorBehaviour must implement ICombatExecutor");
 
-            _builder = new SentenceBuilder(idleCancelSeconds: 10f, requireSubject: false, requireObject: true);
+            Builder = new SentenceBuilder(idleCancelSeconds: 10f, requireSubject: false, requireObject: true);
             _resolver = new SentenceResolver(templates, properBonusScore: 50);
             _factory = new SkillFactory();
 
-            _builder.OnDirectAction += a => _executor?.ExecuteDirectAction(a);
-            _builder.OnSentenceCompleted += HandleSentenceCompleted;
+            Builder.OnDirectAction += a => _executor?.ExecuteDirectAction(a);
+            Builder.OnSentenceCompleted += HandleSentenceCompleted;
 
             InputEventSubscribe();
         }
 
         private void Update()
         {
-            _builder.Tick(Time.deltaTime);
+            Builder.Tick(Time.deltaTime);
         }
 
         public void Input_WordPressed(int slotIndex, bool isReleased)
@@ -52,10 +52,10 @@ namespace Work.Sentence.Code
             var word = palette.Words.Count > slotIndex ? palette.Words[slotIndex] : null;
 
             if (word != null)
-                _builder.OnWordSlotPressed(slotIndex, word);
+                Builder.OnWordSlotPressed(slotIndex, word);
         }
-        public void Input_WordReleased(int slotIndex) => _builder.OnWordSlotReleased(slotIndex);
-        public void Input_Cancel(InputWordCancleEvent evt) => _builder.Cancel();
+        public void Input_WordReleased(int slotIndex) => Builder.OnWordSlotReleased(slotIndex);
+        public void Input_Cancel(InputWordCancleEvent evt) => Builder.Cancel();
         public void Input_SwitchWordPalette(InputPaletteSwapEvent evt) => _wordPaletteIndex = (_wordPaletteIndex + 1) % 2;
 
         private void HandleSentenceCompleted(SentenceDraft draft)
