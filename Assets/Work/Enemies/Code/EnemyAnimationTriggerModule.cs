@@ -9,6 +9,7 @@ namespace Work.Enemies.Code
         private Enemy _owner;
 
         public Action OnAnimationEnd;
+        public Action OnAttackEvent;
 
         public void Initialize(Enemy enemy)
         {
@@ -18,6 +19,11 @@ namespace Work.Enemies.Code
         public void AnimationEndTrigger()
         {
             OnAnimationEnd?.Invoke();
+        }
+
+        public void HandleAttackTrigger()
+        {
+            OnAttackEvent?.Invoke();
         }
     }
 }
