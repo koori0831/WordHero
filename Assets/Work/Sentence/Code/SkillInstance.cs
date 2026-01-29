@@ -12,5 +12,8 @@
         public float Magnitude; // buff/cc 강도
 
         public TagSet Tags;
+
+        public bool HasStatEffect;
+        public StatEffectSpec StatEffect;
     }
 }
