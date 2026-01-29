@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using Work.StatSystem.Code;
 
 namespace Code.Entities
 {
@@ -15,13 +16,17 @@ namespace Code.Entities
     }
 
     [RequireComponent(typeof(Collider))]
-    public class EntityHealth : MonoBehaviour, IEntityComponent
+    public class EntityHealth : MonoBehaviour, IEntityComponent, IAfterInitCompo
     {
+        [SerializeField] private StatSO statSO;
+
         private Entity _entity;
+        private EntityStatCompo _stat;
+        private StatSO _healthStat;
 
         public Entity Owner => _entity;
 
-        [SerializeField] private int maxHP = 100;
+        public int MaxHP => (int)_healthStat.Value;
 
         [field: SerializeField] public int Health { get; private set; }
 
@@ -34,20 +39,20 @@ namespace Code.Entities
         public void InitCompo(Entity entity)
         {
             _entity = entity;
-            Health = maxHP;
+            _stat = entity.GetCompo<EntityStatCompo>();
+        }
+
+        public void AfterInit()
+        {
+            _healthStat = _stat.GetStat(statSO);
+            Health = MaxHP;
         }
 
         public void IncreaseHP(int value)
         {
-            Health = Math.Min(Health + value, maxHP);
-            HealthData healthData = new HealthData(Health, maxHP);
+            Health = Math.Min(Health + value, MaxHP);
+            HealthData healthData = new HealthData(Health, MaxHP);
             HealthChangedTrigger?.Invoke(healthData);
-        }
-
-        public void IncreaseMaxHP(int value)
-        {
-            maxHP += value;
-            HealthData healthData = new HealthData(Health, maxHP);
         }
 
         public void DecreaseHP(int value)
@@ -55,25 +60,13 @@ namespace Code.Entities
             if (IsDamageImmune) return;
 
             Health = Math.Max(0, Health - value);
-            HealthData healthData = new HealthData(Health, maxHP);
+            HealthData healthData = new HealthData(Health, MaxHP);
             HealthChangedTrigger?.Invoke(healthData);
             if (Health == 0)
             {
                 DeadTrigger?.Invoke();
                 return;
             }
-            DamagedTrigger?.Invoke();
-        }
-
-        public void DecreaseMaxHP(int value)
-        {
-            maxHP = Math.Max(1, maxHP - value);
-            if (Health > maxHP)
-            {
-                Health = maxHP;
-            }
-            HealthData healthData = new HealthData(Health, maxHP);
-            HealthChangedTrigger?.Invoke(healthData);
             DamagedTrigger?.Invoke();
         }
     }

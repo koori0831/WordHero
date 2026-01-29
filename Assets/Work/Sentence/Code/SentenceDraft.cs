@@ -70,6 +70,26 @@ namespace Work.Sentence.Code
             if (tok.Kind != NumericKind.DurationSeconds) return NumericToken.None;
             return tok;
         }
+
+        public NumericToken GetChangeTokenOrNone()
+        {
+            var token = GetNumericTokenIfMatch(Verb, NumericKind.Percent, NumericKind.Flat);
+            if (token.HasValue) return token;
+            token = GetNumericTokenIfMatch(Option, NumericKind.Percent, NumericKind.Flat);
+            return token;
+        }
+
+        private static NumericToken GetNumericTokenIfMatch(WordDefinitionSO word, params NumericKind[] kinds)
+        {
+            if (word == null) return NumericToken.None;
+            var tok = word.GetNumericToken();
+            if (!tok.HasValue) return NumericToken.None;
+            for (int i = 0; i < kinds.Length; i++)
+            {
+                if (tok.Kind == kinds[i]) return tok;
+            }
+            return NumericToken.None;
+        }
     }
 
     public sealed class ResolvedSentence

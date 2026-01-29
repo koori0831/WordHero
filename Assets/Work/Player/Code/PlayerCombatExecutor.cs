@@ -2,6 +2,7 @@
 using UnityEngine;
 using Work.Core.Utils.EventBus;
 using Work.Sentence.Code;
+using Work.StatSystem.Code;
 
 namespace Work.Player.Code
 {
@@ -21,12 +22,10 @@ namespace Work.Player.Code
             switch (action)
             {
                 case DirectActionType.BasicAttack:
-                    Debug.Log("PLAYER: Basic Attack executed.");
                     Bus<PlayerRequestAttackEvent>.Raise(new PlayerRequestAttackEvent());
                     break;
 
                 case DirectActionType.Dodge:
-                    Debug.Log("PLAYER: Dodge executed.");
                     Bus<PlayerRequestDodgeEvent>.Raise(new PlayerRequestDodgeEvent());
                     break;
             }
@@ -35,6 +34,12 @@ namespace Work.Player.Code
         public void ExecuteSkill(SkillInstance skill)
         {
             Debug.Log($"PLAYER: Skill={skill.DebugName} kind={skill.Kind} dmg={skill.Damage} dur={skill.Duration}");
+
+            if (skill.HasStatEffect && skill.StatEffect.IsValid)
+            {
+                Bus<StatApplyModifierEvent>.Raise(
+                    new StatApplyModifierEvent(_player, skill.StatEffect.Stat, skill.StatEffect.Key, skill.StatEffect.Modifier));
+            }
 
             switch (skill.Kind)
             {

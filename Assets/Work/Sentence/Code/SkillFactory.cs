@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Work.StatSystem.Code;
 
 namespace Work.Sentence.Code
 {
@@ -41,7 +42,53 @@ namespace Work.Sentence.Code
                 // 혹은 Cooldown 감소 등으로 바꿔도 됨
             }
 
+            if (e.ApplyStatModifier)
+            {
+                var stat = ResolveStatTarget(draft, e);
+                if (stat != null)
+                {
+                    var (op, amount) = ResolveStatChange(draft, e);
+                    float? durationSeconds = inst.Duration > 0f ? inst.Duration : null;
+                    var spec = op == StatModOp.Add
+                        ? StatModifierSpec.Add(amount, e.StatMaxStacks, durationSeconds, e.StatRefreshDurationOnStack)
+                        : StatModifierSpec.Mul(amount, e.StatMaxStacks, durationSeconds, e.StatRefreshDurationOnStack);
+
+                    inst.HasStatEffect = true;
+                    inst.StatEffect = new StatEffectSpec
+                    {
+                        Stat = stat,
+                        Modifier = spec,
+                        Key = $"{inst.DebugName}:{stat.statName}"
+                    };
+                }
+            }
+
             return inst;
+        }
+
+        private static StatSO ResolveStatTarget(SentenceDraft draft, EffectGraphSO effect)
+        {
+            if (draft.Object != null && draft.Object.LinkedStat != null)
+                return draft.Object.LinkedStat;
+
+            if (draft.Subject != null && draft.Subject.LinkedStat != null)
+                return draft.Subject.LinkedStat;
+
+            return effect.TargetStat;
+        }
+
+        private static (StatModOp op, float amount) ResolveStatChange(SentenceDraft draft, EffectGraphSO effect)
+        {
+            var token = draft.GetChangeTokenOrNone();
+            if (token.HasValue)
+            {
+                if (token.Kind == NumericKind.Percent)
+                    return (StatModOp.Mul, token.Value / 100f);
+                if (token.Kind == NumericKind.Flat)
+                    return (StatModOp.Add, token.Value);
+            }
+
+            return (effect.StatOp, effect.StatAmount);
         }
     }
 }
