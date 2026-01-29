@@ -1,6 +1,7 @@
 ﻿using Alchemy.Inspector;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Work.StatSystem.Code;
 
 namespace Work.Sentence.Code
 {
@@ -28,8 +29,8 @@ namespace Work.Sentence.Code
         [Header("Direct Action (for '완성 문장 단어' like BasicAttack/Dodge)")]
         public DirectActionType DirectAction = DirectActionType.None;
 
-        [Header("Numeric Token (optional, e.g. n초간)")]
-        [ShowIf(nameof(showNumericTokenSettings))] // Option일 때만 노출
+        [Header("Numeric Token (optional, e.g. n초간, +20%)")]
+        [ShowIf(nameof(showNumericTokenSettings))] // Option/Verb일 때 노출
         public bool HasNumericValue;
 
         [ShowIf(nameof(showNumericTokenSettings))]
@@ -38,7 +39,11 @@ namespace Work.Sentence.Code
         [ShowIf(nameof(showNumericTokenSettings))]
         public float NumericValue;
 
-        private bool showNumericTokenSettings => PartOfSpeech == PartOfSpeech.Option;
+        [Header("Linked Stat (optional, e.g. AttackPower)")]
+        public StatSO LinkedStat;
+
+        private bool showNumericTokenSettings => PartOfSpeech == PartOfSpeech.Option
+                                                 || PartOfSpeech == PartOfSpeech.Verb;
 
         // --- 유효성 검사 메서드 ---
         // true를 반환하면 정상(에러 없음), false를 반환하면 에러 메시지 출력
