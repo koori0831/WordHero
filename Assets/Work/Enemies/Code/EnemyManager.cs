@@ -55,7 +55,7 @@ namespace Work.Enemies.Code
 
             if (pathNodes.TryGetValue(guid, out PathNode pathNode))
             {
-                if (Vector3.Distance(pathNode.targetPos, targetPos) > 1f)
+                if (Vector3.Distance(pathNode.targetPos, targetPos) > 0.25f)
                 {
                     pathNode = new PathNode
                     {

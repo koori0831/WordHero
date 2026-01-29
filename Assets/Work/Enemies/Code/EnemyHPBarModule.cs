@@ -37,7 +37,9 @@ namespace Work.Enemies.Code
 
             _hpBarPercent = (float)currentHealth / maxHealth;
             _hpBarPercent = Mathf.Clamp01(_hpBarPercent);
-            text.SetText($"{currentHealth}/{maxHealth}");
+
+            int cur = currentHealth < 0 ? 0 : currentHealth;
+            text.SetText($"{cur}/{maxHealth}");
         }
 
         public void SetActiveBar(bool isTrue = true)
