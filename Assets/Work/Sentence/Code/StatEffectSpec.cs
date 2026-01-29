@@ -1,4 +1,4 @@
-using Work.StatSystem.Code;
+﻿using Work.StatSystem.Code;
 
 namespace Work.Sentence.Code
 {
