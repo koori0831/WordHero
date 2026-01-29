@@ -1,7 +1,6 @@
 ﻿using Code.FSM;
 using Code.Entities;
 using Work.Core.Utils.EventBus;
-using System;
 
 namespace Work.Player.Code.States
 {
@@ -32,6 +31,7 @@ namespace Work.Player.Code.States
 
         private void AttackProcess()
         {
+            _player.Attack();
         }
     }
 }
