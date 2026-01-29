@@ -10,21 +10,23 @@ namespace Work.Enemies.Code
         private int currentHealth;
         public int CurrentHealth => currentHealth;
 
-        public UnityEvent<int> OnHealthChanged;
+        public UnityEvent<int,int> OnHealthChanged;
         public UnityEvent OnDeath;
 
-        [SerializeField] private int maxHealth = 100;
+        [field:SerializeField] public int MaxHealth { get; private set; } = 100;
+
         public void Initialize(Enemy enemy)
         {
             _owner = enemy;
-            currentHealth = maxHealth;
+            currentHealth = MaxHealth;
         }
 
 
         public void TakeDamage(int damageAmount)
         {
+            int previousHealth = currentHealth;
             currentHealth -= damageAmount;
-            OnHealthChanged?.Invoke(currentHealth);
+            OnHealthChanged?.Invoke(previousHealth, currentHealth);
             if (currentHealth <= 0)
             {
                 Die();
