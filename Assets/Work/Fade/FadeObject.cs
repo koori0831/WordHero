@@ -1,7 +1,6 @@
 ﻿using LitMotion;
 using UnityEngine;
 using UnityEngine.UI;
-using VHierarchy.Libs;
 using Work.Core.Utils.EventBus;
 
 namespace Work.Fade
@@ -17,8 +16,14 @@ namespace Work.Fade
         {
             Bus<OnFadeEvent>.Events += HandleFadeEvent;
 
+
+
             _handle = LMotion.Create(1f, 0f, fadeDuration)
-                    .Bind(a => fadeObject.color = fadeObject.color.SetAlpha(a))
+                    .Bind(a =>
+                    {
+                        Color co = new Color(fadeObject.color.r, fadeObject.color.b, fadeObject.color.g, a);
+                        fadeObject.color = co;
+                    })
                     .AddTo(gameObject);
         }
 
@@ -31,15 +36,23 @@ namespace Work.Fade
             {
                 _handle = LMotion.Create(0f, 1f, fadeDuration)
                     .WithOnComplete(() => Bus<OnFadeCompletedEvent>.Raise(new OnFadeCompletedEvent(evt.isFadeIn)))
-                    .Bind(a => fadeObject.color = fadeObject.color.SetAlpha(a))
+                    .Bind(a =>
+                    {
+                        Color co = new Color(fadeObject.color.r, fadeObject.color.b, fadeObject.color.g, a);
+                        fadeObject.color = co;
+                    })
                     .AddTo(gameObject);
             }
             else
             {
                 _handle = LMotion.Create(1f, 0f, fadeDuration)
                     .WithOnComplete(() => Bus<OnFadeCompletedEvent>.Raise(new OnFadeCompletedEvent(evt.isFadeIn)))
-                    .Bind(a => fadeObject.color = fadeObject.color.SetAlpha(a)).
-                    AddTo(gameObject);
+                    .Bind(a =>
+                    {
+                        Color co = new Color(fadeObject.color.r, fadeObject.color.b, fadeObject.color.g, a);
+                        fadeObject.color = co;
+                    })
+                    .AddTo(gameObject);
             }
         }
 

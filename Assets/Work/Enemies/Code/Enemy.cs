@@ -29,6 +29,7 @@ namespace Work.Enemies.Code
 
         private Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
         private Dictionary<Type,IEnemyModule> _modules = new Dictionary<Type, IEnemyModule>();
+        private ChangeStateEvent _stateChangeChannel;
 
         public void Init(EnemyManager spawner)
         {
@@ -76,6 +77,7 @@ namespace Work.Enemies.Code
                     Debug.LogError($"Variable {item.VariableName} not found in BehaviorAgent.");
             }
 
+            _stateChangeChannel = GetBlackboardVariable<ChangeStateEvent>(BTVariables.ChangeStateEvent).Value;
             SetBlackboardVariable<int>(BTVariables.TargetLayerNumber, targetLayerMask);
             SetBlackboardVariable<float>(BTVariables.DetectRange, detectRange);
             SetBlackboardVariable<float>(BTVariables.AttackRange, attackRange);
@@ -127,13 +129,13 @@ namespace Work.Enemies.Code
 
         public void TakeDamage(int damageAmount)
         {
+            _stateChangeChannel.SendEventMessage(EnemyState.Hit);
             OnHitEvent?.Invoke(damageAmount);
-            SetBlackboardVariable<EnemyState>(BTVariables.CurrentState,EnemyState.Hit);
         }
 
         public void Die()
         {
-            SetBlackboardVariable<EnemyState>(BTVariables.CurrentState,EnemyState.Death);
+            _stateChangeChannel.SendEventMessage(EnemyState.Death);
         }
     }
 }
