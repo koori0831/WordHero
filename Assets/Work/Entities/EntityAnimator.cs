@@ -36,6 +36,7 @@ namespace Code.Entities
         public void SetParam(int animHash, bool value)
         {
             _animator.SetBool(animHash, value);
+            Debug.Log($"Set Bool Param: {animHash} to {value}");
         }
         public void SetTrigger(int animHash)
         {
