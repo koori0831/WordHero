@@ -26,7 +26,7 @@ public partial class WaitForAttackTriggerAction : Action
 
     private void HandleAttackTrigger()
     {
-        throw new NotImplementedException();
+        _attackTriggered = true;
     }
 
     protected override Status OnUpdate()
