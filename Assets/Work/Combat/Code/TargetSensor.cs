@@ -64,5 +64,19 @@ namespace Work.Combat.Code
             return damageables;
         }
 
+        public void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            switch (targetingShape)
+            {
+                case TargetingShape.Box:
+                    Gizmos.DrawWireCube(transform.position, boxSize * 2);
+                    break;
+                case TargetingShape.Circle:
+                    Gizmos.DrawWireSphere(transform.position, circleRadius);
+                    break;
+            }
+        }
+
     }
 }

@@ -25,7 +25,6 @@ namespace Work.Enemies.Code
         [SerializeField] private LayerMask targetLayerMask;
         [SerializeField] private float detectRange = 10.0f;
         [SerializeField] private float chaseRange = 25.0f;
-        [SerializeField] private float attackRange = 4.0f;
 
         private Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
         private Dictionary<Type,IEnemyModule> _modules = new Dictionary<Type, IEnemyModule>();
@@ -80,7 +79,7 @@ namespace Work.Enemies.Code
             _stateChangeChannel = GetBlackboardVariable<ChangeStateEvent>(BTVariables.ChangeStateEvent).Value;
             SetBlackboardVariable<int>(BTVariables.TargetLayerNumber, targetLayerMask);
             SetBlackboardVariable<float>(BTVariables.DetectRange, detectRange);
-            SetBlackboardVariable<float>(BTVariables.AttackRange, attackRange);
+            SetBlackboardVariable<float>(BTVariables.AttackRange, GetModule<EnemyAttackModule>().AttackRange);
             SetBlackboardVariable<float>(BTVariables.ChaseRange, chaseRange);
         }
 
@@ -123,8 +122,6 @@ namespace Work.Enemies.Code
             Gizmos.DrawWireSphere(transform.position, detectRange);
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, chaseRange);
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, attackRange);
         }
 
         public void TakeDamage(int damageAmount)
