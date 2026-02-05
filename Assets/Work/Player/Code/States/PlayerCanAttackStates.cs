@@ -1,6 +1,7 @@
 ﻿using Code.FSM;
 using Code.Entities;
 using Work.Core.Utils.EventBus;
+using Work.Input.Code;
 
 namespace Work.Player.Code.States
 {
@@ -8,22 +9,22 @@ namespace Work.Player.Code.States
 	{
 		public PlayerCanAttackStates(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
 		{
-			Bus<PlayerRequestAttackEvent>.Events += OnRequestAttack;
-			Bus<PlayerRequestDodgeEvent>.Events += OnRequestDodge;
+			Bus<InputAttackEvent>.Events += OnRequestAttack;
+			Bus<InputDodgeEvent>.Events += OnRequestDodge;
         }
 
-        ~PlayerCanAttackStates()
+        public override void Dispose()
 		{
-			Bus<PlayerRequestAttackEvent>.Events -= OnRequestAttack;
-            Bus<PlayerRequestDodgeEvent>.Events -= OnRequestDodge;
+            Bus<InputAttackEvent>.Events -= OnRequestAttack;
+            Bus<InputDodgeEvent>.Events -= OnRequestDodge;
         }
 
-        private void OnRequestAttack(PlayerRequestAttackEvent @event)
+        protected virtual void OnRequestAttack(InputAttackEvent @event)
         {
             _stateMachine.ChangeState("Attack");
         }
 
-        private void OnRequestDodge(PlayerRequestDodgeEvent @event)
+        private void OnRequestDodge(InputDodgeEvent @event)
         {
             _stateMachine.ChangeState("Dodge");
         }

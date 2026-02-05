@@ -57,5 +57,10 @@ namespace Code.FSM
         {
             StateMachine.TriggerEvent(eventType);
         }
+
+        private void OnDestroy()
+        {
+            StateMachine?.DisposeAll();
+        }
     }
 }

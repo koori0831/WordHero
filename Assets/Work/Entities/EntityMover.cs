@@ -6,17 +6,11 @@ namespace Code.Entities
     [RequireComponent(typeof(CharacterController))]
     public class EntityMover : MonoBehaviour, IEntityComponent, IAfterInitCompo
     {
-        [SerializeField] private StatSO statSO;
-        [SerializeField] private float mass = 3.0f;
-        [SerializeField] private float drag = 5.0f;
-
         private Entity _owner;
         private EntityStatCompo _stat;
         private StatSO _speedStat;
         private CharacterController _controller;
         private Transform _camTransform;
-
-        private Vector3 _impactVelocity = Vector3.zero;
 
         public float Speed => _speedStat.Value;
         public Entity Owner => _owner;
@@ -31,12 +25,7 @@ namespace Code.Entities
 
         public void AfterInit()
         {
-            _speedStat = _stat.GetStat(statSO);
-        }
-
-        private void Update()
-        {
-            ApplyImpact();
+            _stat.TryGetStat("MoveSpeed", out _speedStat);
         }
 
         public void Move(Vector2 direction)
@@ -44,9 +33,7 @@ namespace Code.Entities
             Vector3 camForward = Vector3.Scale(_camTransform.forward, new Vector3(1, 0, 1)).normalized;
             Vector3 camRight = _camTransform.right;
 
-            Vector3 move = (camForward * direction.y + camRight * direction.x) * Speed * Time.deltaTime;
-
-            _controller.Move(move);
+            Vector3 move = (camForward * direction.y + camRight * direction.x) * Time.deltaTime;
 
             if (direction.sqrMagnitude > 0.01f)
             {
@@ -59,26 +46,13 @@ namespace Code.Entities
             }
         }
 
-        private void ApplyImpact()
+        public void ApplyRootMotion(Vector3 deltaPosition)
         {
-            if (_impactVelocity.magnitude > 0.1f)
+            Vector3 motion = new Vector3(deltaPosition.x, 0f, deltaPosition.z);
+            if (motion.sqrMagnitude > 0f)
             {
-                _controller.Move(_impactVelocity * Time.deltaTime);
+                _controller.Move(motion);
             }
-
-            _impactVelocity = Vector3.Lerp(_impactVelocity, Vector3.zero, drag * Time.deltaTime);
-        }
-
-        public void AddImpulse(Vector2 force)
-        {
-            Vector3 impulse = new Vector3(force.x, 0, force.y);
-
-            _impactVelocity += impulse / mass;
-        }
-
-        public Vector2 GetVelocity()
-        {
-            return new Vector2(_controller.velocity.x, _controller.velocity.z);
         }
     }
 }

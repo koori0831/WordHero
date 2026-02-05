@@ -46,5 +46,13 @@ namespace Code.FSM
         {
             CurrentState?.OnTriggerEnter(eventType);
         }
+
+        public void DisposeAll()
+        {
+            foreach (var kvp in states)
+            {
+                kvp.Value?.Dispose();
+            }
+        }
     }
 }

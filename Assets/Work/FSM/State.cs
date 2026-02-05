@@ -42,5 +42,9 @@ namespace Code.FSM
         public virtual void OnTriggerEnter(AnimationEventType eventType)
         {
         }
+
+        public virtual void Dispose()
+        {
+        }
     }
 }

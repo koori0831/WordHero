@@ -18,8 +18,6 @@ namespace Code.Entities
     [RequireComponent(typeof(Collider))]
     public class EntityHealth : MonoBehaviour, IEntityComponent, IAfterInitCompo
     {
-        [SerializeField] private StatSO statSO;
-
         private Entity _entity;
         private EntityStatCompo _stat;
         private StatSO _healthStat;
@@ -44,7 +42,7 @@ namespace Code.Entities
 
         public void AfterInit()
         {
-            _healthStat = _stat.GetStat(statSO);
+            _stat.TryGetStat("MaxHP", out _healthStat);
             Health = MaxHP;
         }
 

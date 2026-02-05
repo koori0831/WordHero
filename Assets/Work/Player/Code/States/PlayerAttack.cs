@@ -1,19 +1,29 @@
-﻿using Code.FSM;
+using Code.FSM;
 using Code.Entities;
-using Work.Core.Utils.EventBus;
+using UnityEngine;
+using Work.Input.Code;
 
 namespace Work.Player.Code.States
 {
-    public class PlayerAttack : PlayerStates
+    public class PlayerAttack : PlayerCanAttackStates
     {
+        private const int MaxCombo = 3;
+        private const float ComboResetGrace = 0.15f;
+        private static readonly int _attackIndexHash = Animator.StringToHash("AttackIndex");
+
+        private int _comboIndex;
+        private bool _queueNext;
+        private bool _comboWindowOpen;
+        private float _comboExpireTime;
+
         public PlayerAttack(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
         {
-            Bus<PlayerRequestDodgeEvent>.Events += OnRequestDodge;
         }
 
-        private void OnRequestDodge(PlayerRequestDodgeEvent @event)
+        protected override void OnRequestAttack(InputAttackEvent @event)
         {
-            _stateMachine.ChangeState("Dodge");
+            if (_comboWindowOpen)
+                _queueNext = true;
         }
 
         public override void OnTriggerEnter(AnimationEventType eventType)
@@ -23,15 +33,58 @@ namespace Work.Player.Code.States
             {
                 AttackProcess();
             }
+            if (eventType == AnimationEventType.ComboWindowOpen)
+            {
+                _comboWindowOpen = true;
+            }
+            if (eventType == AnimationEventType.ComboWindowClose)
+            {
+                _comboWindowOpen = false;
+            }
             if (eventType == AnimationEventType.End)
             {
-                _stateMachine.ChangeState("Idle");
+                if (_queueNext && _comboIndex < MaxCombo - 1)
+                {
+                    _comboIndex++;
+                    _stateMachine.ChangeState("Attack", true);
+                }
+                else
+                {
+                    _comboIndex = 0;
+                    _stateMachine.ChangeState("Idle");
+                }
             }
         }
 
         private void AttackProcess()
         {
             _player.Attack();
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            if (!(_stateMachine.PreviousState is PlayerAttack))
+            {
+                if (Time.time > _comboExpireTime)
+                    _comboIndex = 0;
+            }
+
+            _queueNext = false;
+            _comboWindowOpen = false;
+
+            _animator.SetParam(_attackIndexHash, _comboIndex);
+            float clipLength = _animator.GetStateLength(0);
+            if (clipLength <= 0f)
+                clipLength = 0.7f;
+            _comboExpireTime = Time.time + clipLength + ComboResetGrace;
+            _animator.SetApplyRootMotion(true);
+        }
+
+        public override void Exit()
+        {
+            _animator.SetApplyRootMotion(false);
+            base.Exit();
         }
     }
 }

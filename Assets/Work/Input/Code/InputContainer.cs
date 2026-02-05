@@ -69,60 +69,16 @@ namespace Work.Input.Code
                 Bus<InputMenuEvent>.Raise(new InputMenuEvent());
         }
 
-        public void OnPaletteSwap(InputAction.CallbackContext context)
+        public void OnAttack(InputAction.CallbackContext context)
         {
             if (context.performed)
-                Bus<InputPaletteSwapEvent>.Raise(new InputPaletteSwapEvent());
+                Bus<InputAttackEvent>.Raise(new InputAttackEvent());
         }
 
-        public void OnSpellA(InputAction.CallbackContext context)
+        public void OnDodge(InputAction.CallbackContext context)
         {
             if (context.performed)
-                Bus<InputSpellAEvent>.Raise(new InputSpellAEvent());
-        }
-
-        public void OnSpellB(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                Bus<InputSpellBEvent>.Raise(new InputSpellBEvent());
-        }
-
-        public void OnWordLeft(InputAction.CallbackContext context)
-        {
-            if (context.started || context.performed)
-                Bus<InputWordSellectLeftEvent>.Raise(new InputWordSellectLeftEvent(false));
-            else if (context.canceled)
-                Bus<InputWordSellectLeftEvent>.Raise(new InputWordSellectLeftEvent(true));
-        }
-
-        public void OnWordUp(InputAction.CallbackContext context)
-        {
-            if (context.started || context.performed)
-                Bus<InputWordSellectUpEvent>.Raise(new InputWordSellectUpEvent(false));
-            else if (context.canceled)
-                Bus<InputWordSellectUpEvent>.Raise(new InputWordSellectUpEvent(true));
-        }
-
-        public void OnWordRight(InputAction.CallbackContext context)
-        {
-            if (context.started || context.performed)
-                Bus<InputWordSellectRightEvent>.Raise(new InputWordSellectRightEvent(false));
-            else if (context.canceled)
-                Bus<InputWordSellectRightEvent>.Raise(new InputWordSellectRightEvent(true));
-        }
-
-        public void OnWordDown(InputAction.CallbackContext context)
-        {
-            if (context.started || context.performed)
-                Bus<InputWordSellectDownEvent>.Raise(new InputWordSellectDownEvent(false));
-            else if (context.canceled)
-                Bus<InputWordSellectDownEvent>.Raise(new InputWordSellectDownEvent(true));
-        }
-
-        public void OnWordCancle(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                Bus<InputWordCancleEvent>.Raise(new InputWordCancleEvent());
+                Bus<InputDodgeEvent>.Raise(new InputDodgeEvent());
         }
     }
 }

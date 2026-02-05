@@ -111,51 +111,6 @@ public partial class @Console: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""PaletteSwap"",
-                    ""type"": ""Button"",
-                    ""id"": ""9aa4ff77-b491-49ba-837d-85a77eec7caa"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""WordLeft"",
-                    ""type"": ""Button"",
-                    ""id"": ""2bffe1ce-3e95-43b5-8ed2-cebbcd767e47"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""WordUp"",
-                    ""type"": ""Button"",
-                    ""id"": ""98491378-c625-45c5-a04c-38d64af568d3"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""WordRight"",
-                    ""type"": ""Button"",
-                    ""id"": ""3deba9e4-4a01-45ba-a35f-cef1428e8711"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""WordDown"",
-                    ""type"": ""Button"",
-                    ""id"": ""2a23dda1-627a-4d41-a177-b3b07208aa17"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Menu"",
                     ""type"": ""Button"",
                     ""id"": ""2f796840-00af-443f-b2a1-391d0a170b2e"",
@@ -165,27 +120,18 @@ public partial class @Console: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SpellA"",
+                    ""name"": ""Attack"",
                     ""type"": ""Button"",
-                    ""id"": ""2d243e01-7c45-4dd9-ae73-f1fce5f4a6dd"",
+                    ""id"": ""a52fa067-7237-45e5-933f-c8016629bc28"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SpellB"",
+                    ""name"": ""Dodge"",
                     ""type"": ""Button"",
-                    ""id"": ""85f7c73e-d8bc-4864-9ced-5ae58e2a9676"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""WordCancle"",
-                    ""type"": ""Button"",
-                    ""id"": ""a8cdaa0c-6cdf-4f8b-8d05-01cf208ac8e3"",
+                    ""id"": ""146e1554-99f0-46ed-8459-9531c894260f"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -218,7 +164,7 @@ public partial class @Console: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""up"",
                     ""id"": ""749a454b-f80a-4e52-b1b2-fa4985104b81"",
-                    ""path"": ""<Keyboard>/upArrow"",
+                    ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -229,7 +175,7 @@ public partial class @Console: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""14e6f1bc-6286-4745-ac6c-940af37d03f9"",
-                    ""path"": ""<Keyboard>/downArrow"",
+                    ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -240,7 +186,7 @@ public partial class @Console: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""left"",
                     ""id"": ""328bc1f4-d698-4c88-8eb9-dc82786b4456"",
-                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -251,7 +197,7 @@ public partial class @Console: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""right"",
                     ""id"": ""64bf4a1f-5d8c-41c1-8f59-aa5715f599b4"",
-                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -262,7 +208,7 @@ public partial class @Console: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1c04ea5f-b012-41d1-a6f7-02e963b52893"",
-                    ""path"": ""<Keyboard>/g"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -278,116 +224,6 @@ public partial class @Console: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7b767cd9-e1b1-450f-9e6f-30f0aa41639a"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""PaletteSwap"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""db496871-33bd-426c-afff-bc84c0aa40cc"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""PaletteSwap"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""028a2031-0c17-4940-b226-561810080f15"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""WordUp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""79acbbcb-e1bd-48e4-be72-829846e4c1e6"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""WordUp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6a94c389-eed0-46f6-86ec-864b135c2a93"",
-                    ""path"": ""<Keyboard>/r"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""WordDown"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7290b352-ff16-47e8-b958-6dca2bbd71ca"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""WordDown"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c211e1be-2e98-4f7e-a3ff-9173417f2281"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""WordLeft"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""66c5b864-5159-4932-9fbc-02b0103c29d7"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""WordLeft"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""75af64ff-4a86-4560-a95e-4e5c254c5dd9"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""WordRight"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2349d154-0537-40c2-b885-2a2e57cf9c41"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""WordRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -415,67 +251,23 @@ public partial class @Console: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""46f4ef98-abbf-4175-9e43-dcf484235c57"",
-                    ""path"": ""<Keyboard>/d"",
+                    ""id"": ""d8e5c31e-66a3-4b95-92f0-4508b5282da0"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""SpellA"",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""df7997e1-04b1-4290-b8fd-2b091a652217"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""SpellA"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d8f75bce-284d-444c-82b8-b95b80e5614e"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""id"": ""9401eecd-b502-45c8-b506-25dc5a8f0a2b"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""SpellB"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""62b6abd2-803c-4b4e-86fc-f5fa9c8b7dcc"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""SpellB"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""fb7e01f3-7c68-4bc7-8699-feda16ac7bad"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""WordCancle"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7106d27e-f448-47a9-a2af-af8723bbf590"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""WordCancle"",
+                    ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1065,15 +857,9 @@ public partial class @Console: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
-        m_Player_PaletteSwap = m_Player.FindAction("PaletteSwap", throwIfNotFound: true);
-        m_Player_WordLeft = m_Player.FindAction("WordLeft", throwIfNotFound: true);
-        m_Player_WordUp = m_Player.FindAction("WordUp", throwIfNotFound: true);
-        m_Player_WordRight = m_Player.FindAction("WordRight", throwIfNotFound: true);
-        m_Player_WordDown = m_Player.FindAction("WordDown", throwIfNotFound: true);
         m_Player_Menu = m_Player.FindAction("Menu", throwIfNotFound: true);
-        m_Player_SpellA = m_Player.FindAction("SpellA", throwIfNotFound: true);
-        m_Player_SpellB = m_Player.FindAction("SpellB", throwIfNotFound: true);
-        m_Player_WordCancle = m_Player.FindAction("WordCancle", throwIfNotFound: true);
+        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1169,15 +955,9 @@ public partial class @Console: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Interact;
-    private readonly InputAction m_Player_PaletteSwap;
-    private readonly InputAction m_Player_WordLeft;
-    private readonly InputAction m_Player_WordUp;
-    private readonly InputAction m_Player_WordRight;
-    private readonly InputAction m_Player_WordDown;
     private readonly InputAction m_Player_Menu;
-    private readonly InputAction m_Player_SpellA;
-    private readonly InputAction m_Player_SpellB;
-    private readonly InputAction m_Player_WordCancle;
+    private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_Dodge;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1198,41 +978,17 @@ public partial class @Console: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         /// <summary>
-        /// Provides access to the underlying input action "Player/PaletteSwap".
-        /// </summary>
-        public InputAction @PaletteSwap => m_Wrapper.m_Player_PaletteSwap;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/WordLeft".
-        /// </summary>
-        public InputAction @WordLeft => m_Wrapper.m_Player_WordLeft;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/WordUp".
-        /// </summary>
-        public InputAction @WordUp => m_Wrapper.m_Player_WordUp;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/WordRight".
-        /// </summary>
-        public InputAction @WordRight => m_Wrapper.m_Player_WordRight;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/WordDown".
-        /// </summary>
-        public InputAction @WordDown => m_Wrapper.m_Player_WordDown;
-        /// <summary>
         /// Provides access to the underlying input action "Player/Menu".
         /// </summary>
         public InputAction @Menu => m_Wrapper.m_Player_Menu;
         /// <summary>
-        /// Provides access to the underlying input action "Player/SpellA".
+        /// Provides access to the underlying input action "Player/Attack".
         /// </summary>
-        public InputAction @SpellA => m_Wrapper.m_Player_SpellA;
+        public InputAction @Attack => m_Wrapper.m_Player_Attack;
         /// <summary>
-        /// Provides access to the underlying input action "Player/SpellB".
+        /// Provides access to the underlying input action "Player/Dodge".
         /// </summary>
-        public InputAction @SpellB => m_Wrapper.m_Player_SpellB;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/WordCancle".
-        /// </summary>
-        public InputAction @WordCancle => m_Wrapper.m_Player_WordCancle;
+        public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1265,33 +1021,15 @@ public partial class @Console: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
-            @PaletteSwap.started += instance.OnPaletteSwap;
-            @PaletteSwap.performed += instance.OnPaletteSwap;
-            @PaletteSwap.canceled += instance.OnPaletteSwap;
-            @WordLeft.started += instance.OnWordLeft;
-            @WordLeft.performed += instance.OnWordLeft;
-            @WordLeft.canceled += instance.OnWordLeft;
-            @WordUp.started += instance.OnWordUp;
-            @WordUp.performed += instance.OnWordUp;
-            @WordUp.canceled += instance.OnWordUp;
-            @WordRight.started += instance.OnWordRight;
-            @WordRight.performed += instance.OnWordRight;
-            @WordRight.canceled += instance.OnWordRight;
-            @WordDown.started += instance.OnWordDown;
-            @WordDown.performed += instance.OnWordDown;
-            @WordDown.canceled += instance.OnWordDown;
             @Menu.started += instance.OnMenu;
             @Menu.performed += instance.OnMenu;
             @Menu.canceled += instance.OnMenu;
-            @SpellA.started += instance.OnSpellA;
-            @SpellA.performed += instance.OnSpellA;
-            @SpellA.canceled += instance.OnSpellA;
-            @SpellB.started += instance.OnSpellB;
-            @SpellB.performed += instance.OnSpellB;
-            @SpellB.canceled += instance.OnSpellB;
-            @WordCancle.started += instance.OnWordCancle;
-            @WordCancle.performed += instance.OnWordCancle;
-            @WordCancle.canceled += instance.OnWordCancle;
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
+            @Dodge.started += instance.OnDodge;
+            @Dodge.performed += instance.OnDodge;
+            @Dodge.canceled += instance.OnDodge;
         }
 
         /// <summary>
@@ -1309,33 +1047,15 @@ public partial class @Console: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
-            @PaletteSwap.started -= instance.OnPaletteSwap;
-            @PaletteSwap.performed -= instance.OnPaletteSwap;
-            @PaletteSwap.canceled -= instance.OnPaletteSwap;
-            @WordLeft.started -= instance.OnWordLeft;
-            @WordLeft.performed -= instance.OnWordLeft;
-            @WordLeft.canceled -= instance.OnWordLeft;
-            @WordUp.started -= instance.OnWordUp;
-            @WordUp.performed -= instance.OnWordUp;
-            @WordUp.canceled -= instance.OnWordUp;
-            @WordRight.started -= instance.OnWordRight;
-            @WordRight.performed -= instance.OnWordRight;
-            @WordRight.canceled -= instance.OnWordRight;
-            @WordDown.started -= instance.OnWordDown;
-            @WordDown.performed -= instance.OnWordDown;
-            @WordDown.canceled -= instance.OnWordDown;
             @Menu.started -= instance.OnMenu;
             @Menu.performed -= instance.OnMenu;
             @Menu.canceled -= instance.OnMenu;
-            @SpellA.started -= instance.OnSpellA;
-            @SpellA.performed -= instance.OnSpellA;
-            @SpellA.canceled -= instance.OnSpellA;
-            @SpellB.started -= instance.OnSpellB;
-            @SpellB.performed -= instance.OnSpellB;
-            @SpellB.canceled -= instance.OnSpellB;
-            @WordCancle.started -= instance.OnWordCancle;
-            @WordCancle.performed -= instance.OnWordCancle;
-            @WordCancle.canceled -= instance.OnWordCancle;
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
+            @Dodge.started -= instance.OnDodge;
+            @Dodge.performed -= instance.OnDodge;
+            @Dodge.canceled -= instance.OnDodge;
         }
 
         /// <summary>
@@ -1651,41 +1371,6 @@ public partial class @Console: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "PaletteSwap" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnPaletteSwap(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "WordLeft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWordLeft(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "WordUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWordUp(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "WordRight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWordRight(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "WordDown" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWordDown(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "Menu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1693,26 +1378,19 @@ public partial class @Console: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMenu(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "SpellA" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Attack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSpellA(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "SpellB" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Dodge" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSpellB(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "WordCancle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWordCancle(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
