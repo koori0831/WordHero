@@ -90,6 +90,24 @@ namespace Work.Maps.Code
             );
         }
 
+        public bool GetCanMove(Vector3 currentWorld,
+            Vector3 targetWorld)
+        {
+            if (walkable == null)
+                return false;
+
+            Vector2Int start = WorldToGrid(currentWorld);
+            Vector2Int target = WorldToGrid(targetWorld);
+
+            if (!IsInBounds(start) || !IsInBounds(target))
+                return false;
+
+            if (!walkable[target.x, target.y])
+                return false;
+
+            return true;
+        }
+
         public bool GetMovePath(
             Vector3 currentWorld,
             Vector3 targetWorld,
@@ -103,20 +121,16 @@ namespace Work.Maps.Code
             Vector2Int start = WorldToGrid(currentWorld);
             Vector2Int target = WorldToGrid(targetWorld);
 
-            Debug.Log("범위안에 없음 시발 왜 없지 ");
             if (!IsInBounds(start) || !IsInBounds(target))
                 return false;
-            Debug.Log("InBound");
 
             if (!walkable[target.x, target.y])
                 return false;
-            Debug.Log("타겟이 맵위에 없음");
 
             List<Vector2Int> path = FindPathBFS(start, target);
 
             if (path == null || path.Count < 2)
                 return false;
-            Debug.Log("패스가 안나옴");
 
             movePath = GridToWorldList(path);
             return true;

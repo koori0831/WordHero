@@ -21,15 +21,15 @@ namespace Work.Enemies.Code
         public void Initialize(Enemy enemy)
         {
             _owner = enemy;
+            targetSensor.Init(enemy);
         }
+
+
 
         public void Attack()
         {
             List<IDamageable> damageables = targetSensor.Cast();
             damageables.ForEach(d => d.TakeDamage(damage));
-
-            //공격로직 구현
-            Debug.Log($"{_owner.name} attacks with {damage} damage within {attackRange} range.");
         }
 
         private void OnDrawGizmos()

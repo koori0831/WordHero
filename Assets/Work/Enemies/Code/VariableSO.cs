@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
-
 namespace Work.Enemies.Code
 {
     public enum BTVariables
@@ -18,12 +15,32 @@ namespace Work.Enemies.Code
         DetectRange,
         TargetLayerNumber,
         AttackRange,
-        ChaseRange
+        ChaseRange,
+        PatrolRange,
+        RunSpeed,
+        WalkSpeed,
+        PatrolPointCount,
     }
 
-    [CreateAssetMenu(fileName = "VariableSO" , menuName = "SO/Behavior/VariableData")]
+    [CreateAssetMenu(fileName = "VariableSO", menuName = "SO/Behavior/VariableData")]
     public class VariableSO : ScriptableObject
     {
-        [field:SerializeField] public BTVariables VariableName { get; private set; }
+        [field: SerializeField] public BTVariables VariableName { get; private set; }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            try
+            {
+                string path = AssetDatabase.GetAssetPath(this);
+                if (string.IsNullOrEmpty(path)) return;
+
+                string newName = VariableName.ToString();
+                AssetDatabase.RenameAsset(path, newName);
+                AssetDatabase.SaveAssets();
+            }
+            catch { }
+        }
+#endif
     }
 }

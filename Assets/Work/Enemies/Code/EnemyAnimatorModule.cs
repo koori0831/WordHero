@@ -5,6 +5,7 @@ namespace Work.Enemies.Code
     public class EnemyAnimatorModule : MonoBehaviour, IEnemyModule
     {
         private Animator _animator;
+        public Animator Animator => _animator;
         private Enemy _owner;
 
         public void Initialize(Enemy enemy)
