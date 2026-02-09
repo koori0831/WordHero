@@ -14,7 +14,7 @@ public partial class SetPatrolAction : Action
 
     protected override Status OnStart()
     {
-        Self.Value.GetModule<EnemyMovementModule>().SetPatroling(Value.Value);
+        Self.Value.GetModule<EnemyMovementModule>().SetAutoMove(Value.Value);
 
         return Status.Success;
     }

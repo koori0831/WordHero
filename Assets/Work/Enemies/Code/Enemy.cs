@@ -63,6 +63,14 @@ namespace Work.Enemies.Code
         protected void AddModule()
         {
             _modules = GetComponentsInChildren<IEnemyModule>(true).ToList().ToDictionary(item => item.GetType());
+
+            string m = $"이름 : {name} \n";
+            foreach (var kvp in _modules)
+            {
+
+                m += $"{kvp.Value.GetType().ToString()} \n";
+            }
+            Debug.Log(m);
         }
 
         protected void Start()
@@ -95,7 +103,7 @@ namespace Work.Enemies.Code
             _stateChangeChannel = GetBlackboardVariable<ChangeStateEvent>(BTVariables.ChangeStateEvent).Value;
             SetBlackboardVariable<int>(BTVariables.TargetLayerNumber, targetLayerMask);
             SetBlackboardVariable<float>(BTVariables.DetectRange, detectRange);
-            SetBlackboardVariable<float>(BTVariables.AttackRange, GetModule<EnemyAttackModule>().AttackRange);
+            SetBlackboardVariable<float>(BTVariables.AttackRange, GetModule<EnemyAttackModule>(true).AttackRange);
             SetBlackboardVariable<float>(BTVariables.ChaseRange, chaseRange);
         }
 
@@ -124,14 +132,24 @@ namespace Work.Enemies.Code
             Debug.LogError($"Variable {variableName} not found in BehaviorAgent.");
         }
 
-        public T GetModule<T>()
+        public T GetModule<T>(bool isAssignable = false) where T : class, IEnemyModule
         {
-            if (_modules.TryGetValue(typeof(T), out IEnemyModule module))
+            if (_modules.TryGetValue(typeof(T), out var compo))
+                return compo as T;
+            if (isAssignable == false)
             {
-                return (T)module;
+                Debug.LogError($"Not Find {typeof(T)}");
+                return null;
             }
-            Debug.LogError($"Module of type {typeof(T)} not found.");
-            return default;
+
+            foreach (var kvp in _modules)
+            {
+                if (kvp.Value is T tComp)
+                    return tComp;
+            }
+
+            Debug.LogError($"Not Find {typeof(T)}");
+            return null;
         }
 
         protected virtual void OnDrawGizmos()

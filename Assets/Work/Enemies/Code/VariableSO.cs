@@ -20,6 +20,10 @@ namespace Work.Enemies.Code
         RunSpeed,
         WalkSpeed,
         PatrolPointCount,
+        MovePos,
+        DistanceToKeepRange,
+        MoveDistance
+
     }
 
     [CreateAssetMenu(fileName = "VariableSO", menuName = "SO/Behavior/VariableData")]
@@ -27,20 +31,20 @@ namespace Work.Enemies.Code
     {
         [field: SerializeField] public BTVariables VariableName { get; private set; }
 
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            try
-            {
-                string path = AssetDatabase.GetAssetPath(this);
-                if (string.IsNullOrEmpty(path)) return;
+//#if UNITY_EDITOR
+//        private void OnValidate()
+//        {
+//            try
+//            {
+//                string path = AssetDatabase.GetAssetPath(this);
+//                if (string.IsNullOrEmpty(path)) return;
 
-                string newName = VariableName.ToString();
-                AssetDatabase.RenameAsset(path, newName);
-                AssetDatabase.SaveAssets();
-            }
-            catch { }
-        }
-#endif
+//                string newName = VariableName.ToString();
+//                AssetDatabase.RenameAsset(path, newName);
+//                AssetDatabase.SaveAssets();
+//            }
+//            catch { }
+//        }
+//#endif
     }
 }

@@ -18,7 +18,7 @@ namespace Work.Enemies.Code
         public bool IsArrived => !_agent.pathPending && _agent.remainingDistance < _agent.stoppingDistance + stopDistance;
         //남은거리
         public float RemainDistance => _agent.pathPending ? -1 : _agent.remainingDistance;
-        public bool IsPatroling { get; private set; } = false;
+        public bool IsAutoMove { get; private set; } = false;
         public bool IsFocusingTarget { get; private set; }
         public bool IsMoving => velocity.magnitude > 0.1f;
         public bool IsCanMove { get; private set; } = true;
@@ -58,7 +58,7 @@ namespace Work.Enemies.Code
                 NavMoveUpdate(_target.position);
             }
 
-            if (IsPatroling)
+            if (IsAutoMove)
             {
                 NavMoveUpdate(_destination);
             }
@@ -123,12 +123,12 @@ namespace Work.Enemies.Code
         {
             IsCanMove = isValue;
             if (_agent.enabled == false) return;
-            _agent.isStopped = !isValue && !IsPatroling;
+            _agent.isStopped = !isValue && !IsAutoMove;
         }
 
-        public void SetPatroling(bool isValue)
+        public void SetAutoMove(bool isValue)
         {
-            IsPatroling = isValue;
+            IsAutoMove = isValue;
             if (_agent.enabled == false) return;
             _agent.isStopped = !isValue && !IsCanMove;
         }

@@ -72,7 +72,7 @@ namespace Work.Combat.Code
 
         public void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.orange;
             switch (targetingShape)
             {
                 case TargetingShape.Box:
