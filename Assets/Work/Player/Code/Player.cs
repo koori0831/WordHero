@@ -3,6 +3,8 @@ using Code.FSM;
 using Work.Entities;
 using UnityEngine;
 using Work.StatSystem.Code;
+using Work.Combat.Code;
+using Work.Core.Utils.EventBus;
 
 namespace Work.Player.Code
 {
@@ -14,6 +16,7 @@ namespace Work.Player.Code
         private StateMachine _stateMachine;
         private EntityStatCompo _stat;
         private StatSO _attackSO;
+        [SerializeField, Range(0f, 1f)] private float _criticalChance = 0f;
 
         private void OnEnable()
         {
@@ -55,7 +58,12 @@ namespace Work.Player.Code
                 if (damageable != null)
                 {
                     int damage = (int)_attackSO.Value;
+                    bool isCritical = Random.value <= _criticalChance;
                     damageable.TakeDamage(damage);
+
+                    Component targetComponent = damageable as Component;
+                    GameObject targetObject = targetComponent != null ? targetComponent.gameObject : null;
+                    Bus<CombatHitEvent>.Raise(new CombatHitEvent(gameObject, targetObject, damage, isCritical));
                 }
             }
         }

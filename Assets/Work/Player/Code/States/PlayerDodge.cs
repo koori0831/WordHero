@@ -1,8 +1,11 @@
 ﻿using Code.FSM;
 using Code.Entities;
+using Work.Core.Utils.EventBus;
 
 namespace Work.Player.Code.States
 {
+    public readonly record struct DodgeEvent : IEvent;
+
     public class PlayerDodge : PlayerStates
     {
         private EntityHealth _health;
@@ -18,6 +21,7 @@ namespace Work.Player.Code.States
 
             _health.IsDamageImmune = true;
             _animator.SetApplyRootMotion(true);
+            Bus<DodgeEvent>.Raise(new DodgeEvent());
         }
 
         public override void Exit()
