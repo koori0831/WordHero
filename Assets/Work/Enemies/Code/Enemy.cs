@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.AppUI.UI;
 using Unity.Behavior;
 using Unity.Behavior.GraphFramework;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 using Work.Entities;
 
@@ -19,81 +19,107 @@ namespace Work.Enemies.Code
         public float NeighborRadius { get; set; } = 5.0f;
         public Guid Guid { get; } = Guid.NewGuid();
         public Transform Transform => gameObject != null ? transform : null;
+        public NavMeshAgent NavAgent { get; private set; }
 
+        [SerializeField] protected List<VariableSO> variableSOs = new List<VariableSO>();
+        [SerializeField] protected LayerMask targetLayerMask;
+        [SerializeField] protected float detectRange = 10.0f;
+        [SerializeField] protected float chaseRange = 25.0f;
 
-        [SerializeField] private List<VariableSO> variableSOs = new List<VariableSO>();
-        [SerializeField] private LayerMask targetLayerMask;
-        [SerializeField] private float detectRange = 10.0f;
-        [SerializeField] private float chaseRange = 25.0f;
-
-        private Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
-        private Dictionary<Type,IEnemyModule> _modules = new Dictionary<Type, IEnemyModule>();
-        private ChangeStateEvent _stateChangeChannel;
+        protected Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
+        protected Dictionary<Type, IEnemyModule> _modules = new Dictionary<Type, IEnemyModule>();
+        protected ChangeStateEvent _stateChangeChannel;
 
         public void Init(EnemyManager spawner)
         {
             Spawner = spawner;
             BehaviorAgent = GetComponent<BehaviorGraphAgent>();
+            NavAgent = GetComponent<NavMeshAgent>();
             Debug.Assert(BehaviorAgent != null, "BehaviorAgent component is missing.");
             AddModule();
             ModuleInit();
             ModuleAfterInit();
         }
 
-        private void ModuleAfterInit()
+        protected void ModuleAfterInit()
         {
             foreach (var module in _modules.Values)
             {
-                if(module is IAfterInit afterInitModule)
+                if (module is IAfterInit afterInitModule)
                 {
                     afterInitModule.AfterInitialize();
                 }
             }
         }
 
-        private void ModuleInit()
+        protected void ModuleInit()
         {
-            foreach(var module in _modules.Values)
+            foreach (var module in _modules.Values)
             {
                 module.Initialize(this);
             }
         }
 
-        private void AddModule()
+        protected void AddModule()
         {
             _modules = GetComponentsInChildren<IEnemyModule>(true).ToList().ToDictionary(item => item.GetType());
+
+            string m = $"이름 : {name} \n";
+            foreach (var kvp in _modules)
+            {
+
+                m += $"{kvp.Value.GetType().ToString()} \n";
+            }
+            Debug.Log(m);
         }
 
-        private void Start()
+        protected void Start()
         {
-            foreach(VariableSO item in variableSOs)
+            foreach (VariableSO item in variableSOs)
             {
-                if(BehaviorAgent.GetVariableID(item.VariableName.ToString(),out SerializableGUID id))
+                if (BehaviorAgent.GetVariableID(item.VariableName.ToString(), out SerializableGUID id))
                 {
                     guids.Add(item.VariableName, id);
                 }
-                else 
+                else
                     Debug.LogError($"Variable {item.VariableName} not found in BehaviorAgent.");
             }
+
+
+
+            VariableSetting();
+        }
+
+        public virtual void VariableSetting()
+        {
+            _modules.Values.ToList().ForEach(item =>
+            {
+                if (item is IVariableModule variable)
+                {
+                    variable.BTInit();
+                }
+            });
 
             _stateChangeChannel = GetBlackboardVariable<ChangeStateEvent>(BTVariables.ChangeStateEvent).Value;
             SetBlackboardVariable<int>(BTVariables.TargetLayerNumber, targetLayerMask);
             SetBlackboardVariable<float>(BTVariables.DetectRange, detectRange);
-            SetBlackboardVariable<float>(BTVariables.AttackRange, GetModule<EnemyAttackModule>().AttackRange);
+            SetBlackboardVariable<float>(BTVariables.AttackRange, GetModule<EnemyAttackModule>(true).AttackRange);
             SetBlackboardVariable<float>(BTVariables.ChaseRange, chaseRange);
         }
 
         public BlackboardVariable<T> GetBlackboardVariable<T>(BTVariables variableName)
         {
-            if(guids.TryGetValue(variableName, out SerializableGUID id))
+            if (guids.TryGetValue(variableName, out SerializableGUID id))
             {
-                if(BehaviorAgent.GetVariable(id,out BlackboardVariable<T> variable))
+                if (BehaviorAgent.GetVariable(id, out BlackboardVariable<T> variable))
                     return variable;
             }
 
             Debug.LogError($"Variable {variableName} not found in BehaviorAgent.");
             return default;
         }
+
+        public bool ExistVarialbe(BTVariables variableName) => guids.ContainsKey(variableName);
 
         public void SetBlackboardVariable<T>(BTVariables variableName, T value)
         {
@@ -106,17 +132,27 @@ namespace Work.Enemies.Code
             Debug.LogError($"Variable {variableName} not found in BehaviorAgent.");
         }
 
-        public T GetModule<T>()
+        public T GetModule<T>(bool isAssignable = false) where T : class, IEnemyModule
         {
-            if(_modules.TryGetValue(typeof(T), out IEnemyModule module))
+            if (_modules.TryGetValue(typeof(T), out var compo))
+                return compo as T;
+            if (isAssignable == false)
             {
-                return (T)module;
+                Debug.LogError($"Not Find {typeof(T)}");
+                return null;
             }
-            Debug.LogError($"Module of type {typeof(T)} not found.");
-            return default;
+
+            foreach (var kvp in _modules)
+            {
+                if (kvp.Value is T tComp)
+                    return tComp;
+            }
+
+            Debug.LogError($"Not Find {typeof(T)}");
+            return null;
         }
 
-        private void OnDrawGizmos()
+        protected virtual void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, detectRange);
