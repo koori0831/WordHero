@@ -1,9 +1,9 @@
 ﻿using System;
 using Unity.Behavior;
+using Unity.Properties;
 using UnityEngine;
 using Work.Enemies.Code;
 using Action = Unity.Behavior.Action;
-using Unity.Properties;
 using Random = UnityEngine.Random;
 
 [Serializable, GeneratePropertyBag]
@@ -28,7 +28,7 @@ public partial class GetNextAttackPointAction : Action
     {
         Vector3 enemyPos = Self.Value.transform.position;
         Vector3 targetPos = Target.Value.position;
-        Vector3 newPos = GetSmartRandomPosition(enemyPos, targetPos, MoveDistance,AttackRange,DistanceToKeepRange,enemyPos.y);
+        Vector3 newPos = GetSmartRandomPosition(enemyPos, targetPos, MoveDistance, AttackRange, DistanceToKeepRange, enemyPos.y);
 
         Point.Value = newPos;
 
@@ -54,10 +54,19 @@ public partial class GetNextAttackPointAction : Action
         float d = Vector2.Distance(E, P);
 
         // 안전 체크 (설계상 파란 영역이 존재해야 함)
-        if (d <= 0.0001f || d > r1 + r2 || d < Mathf.Abs(r1 - r3))
+        if (d > r1 + r2) //가까워져야하는 조건이므로 냅두면 알아서 가까워짐
         {
             // 이 경우는 AI 상태 전환이 맞음 (접근 / 후퇴 등)
             return enemyPos;
+        }
+
+        if (d <= 0.0001f || d < Mathf.Abs(r1 - r3)) //멀어져야 하니까 거리 계산해서 먼곳으로 좌표찍어줘야함
+        {
+            float range = d + r3 + 1f;
+            Vector2 direction = E - P;
+            direction.Normalize();
+            direction *= range;
+            return new Vector3(E.x + direction.x, fixedY, E.y + direction.y);
         }
 
         // 적 → 플레이어 방향
