@@ -8,6 +8,7 @@ namespace Work.Sentence.Code.UI
         [SerializeField] private GameObject panelRoot;
         [SerializeField] private CanvasGroup panelCanvasGroup;
         [SerializeField] private TMP_Text partName, coreWord, wordA, wordB;
+        [SerializeField] private TMP_Text inventoryWords;
 
         public void SetPartName(string name)
         {
@@ -38,6 +39,14 @@ namespace Work.Sentence.Code.UI
             if (wordB != null)
             {
                 wordB.text = word;
+            }
+        }
+
+        public void SetInventoryWords(string words)
+        {
+            if (inventoryWords != null)
+            {
+                inventoryWords.text = words;
             }
         }
 
