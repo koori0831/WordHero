@@ -2785,6 +2785,8 @@ MonoBehaviour:
           rid: 5690896457920152036
         Self:
           rid: 5690896457920152067
+        IsRunning:
+          rid: -2
     - rid: 5690896457920152049
       type: {class: TriggerEventAction, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -3147,6 +3149,8 @@ MonoBehaviour:
           rid: 5690896457920152064
         Self:
           rid: 5690896457920152084
+        IsRunning:
+          rid: -2
     - rid: 5690896457920152076
       type: {class: TriggerEventAction, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -7010,28 +7014,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c02bb70996b49eba31d0c206e28da24, type: 3}
   m_Name: PatrolEnemy Blackboard
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.RuntimeBlackboardAsset
-  VersionTimestamp: 639061884911309505
+  VersionTimestamp: 639057595592734366
   AssetID:
-    m_Value0: 11835527114838191361
-    m_Value1: 2676665642808302521
+    m_Value0: 0
+    m_Value1: 0
   m_Blackboard:
     m_Variables:
     - rid: 5690896342567092232
-    - rid: 5690896457920151885
-    - rid: 5690896457920151886
+    - rid: 5690896342567092237
+    - rid: 5690896342567092246
     - rid: 5690896342567092257
     - rid: 5690896342567092270
     - rid: 5690896342567092285
     - rid: 5690896342567092302
     - rid: 5690896345242009611
-    - rid: 5690896366976368927
-    - rid: 5690896366976369012
-    - rid: 5690896409570312577
-    - rid: 5690896409597051338
-    - rid: 5690896409597051727
-    - rid: 5690896409592070660
     - rid: 5690896345242009710
-    - rid: 5690896366308688511
     - rid: 5690896345242010011
   m_SharedBlackboardVariableGuids: []
   references:
@@ -7044,6 +7041,22 @@ MonoBehaviour:
           m_Value0: 1
           m_Value1: 0
         Name: Self
+        m_Value: {fileID: 0}
+    - rid: 5690896342567092237
+      type: {class: 'BlackboardVariable`1[[ChangeAnimationEvent, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 10657404749788221799
+          m_Value1: 18075811805287478677
+        Name: ChangeAnimationEvent
+        m_Value: {fileID: 0}
+    - rid: 5690896342567092246
+      type: {class: 'BlackboardVariable`1[[ChangeStateEvent, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 6023264259948844015
+          m_Value1: 17177485491509679271
+        Name: ChangeStateEvent
         m_Value: {fileID: 0}
     - rid: 5690896342567092257
       type: {class: 'BlackboardVariable`1[[UnityEngine.Transform, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
@@ -7101,75 +7114,3 @@ MonoBehaviour:
           m_Value1: 12565553236352718927
         Name: PatralPoints
         m_Value: []
-    - rid: 5690896366308688511
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Vector3, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 2063889914077909670
-          m_Value1: 6848805091424066143
-        Name: NextPatrolPoint
-        m_Value: {x: 0, y: 0, z: 0}
-    - rid: 5690896366976368927
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 10113647645720245626
-          m_Value1: 7160108334565787745
-        Name: ChaseRange
-        m_Value: 0
-    - rid: 5690896366976369012
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 7389344592145146393
-          m_Value1: 4562631384036103166
-        Name: AttackRange
-        m_Value: 0
-    - rid: 5690896409570312577
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 5195389527340498101
-          m_Value1: 16506165508749780862
-        Name: PatrolRange
-        m_Value: 0
-    - rid: 5690896409592070660
-      type: {class: 'BlackboardVariable`1[[System.Int32, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 17935074432346648375
-          m_Value1: 3639260448873972830
-        Name: PatrolPointCount
-        m_Value: 0
-    - rid: 5690896409597051338
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 10031693497351758352
-          m_Value1: 8715293309704799134
-        Name: WalkSpeed
-        m_Value: 0
-    - rid: 5690896409597051727
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 315625950414862966
-          m_Value1: 4735083962271941019
-        Name: RunSpeed
-        m_Value: 0
-    - rid: 5690896457920151885
-      type: {class: 'BlackboardVariable`1[[ChangeAnimationEvent, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 10657404749788221799
-          m_Value1: 18075811805287478677
-        Name: ChangeAnimationEvent
-        m_Value: {fileID: 0}
-    - rid: 5690896457920151886
-      type: {class: 'BlackboardVariable`1[[ChangeStateEvent, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 6023264259948844015
-          m_Value1: 17177485491509679271
-        Name: ChangeStateEvent
-        m_Value: {fileID: 0}
