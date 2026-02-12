@@ -1,25 +1,46 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Work.Enemies.Code
 {
-    public class EnemyMovementModule : MonoBehaviour, IEnemyModule
+    public class EnemyMovementModule : MonoBehaviour, IEnemyModule, IVariableModule
     {
         private Enemy _owner;
         private Transform _target;
+        private NavMeshAgent _agent;
+        private EnemyAnimatorModule _animator;
         private List<ICrowd> nearNeighbors = new List<ICrowd>();
+        private Vector3 _destination;
         private Vector3 velocity;
 
+        //도착헀는가 , 현재 패스계산중이 아니고 남은 거리가 StopDistance보다 적다면 true;
+        public bool IsArrived => !_agent.pathPending && _agent.remainingDistance < _agent.stoppingDistance + stopDistance;
+        //남은거리
+        public float RemainDistance => _agent.pathPending ? -1 : _agent.remainingDistance;
+        public bool IsAutoMove { get; private set; } = false;
+        public bool IsFocusingTarget { get; private set; }
+        public bool IsMoving => velocity.magnitude > 0.1f;
         public bool IsCanMove { get; private set; } = true;
 
-        public bool IsMoving => velocity.magnitude > 0.1f;
-
-        [SerializeField] private float stopDistance = 0.5f;
-        [SerializeField] private float speed = 3.0f;
+        [SerializeField] private float stopDistance = 0.05f;
+        [SerializeField] private float rotateSpeed = 5f;
+        [field: SerializeField] public float Speed { get; private set; } = 3f;
+        [SerializeField] private float speedAnimationMultiflier = 1f;
 
         public void Initialize(Enemy enemy)
         {
             _owner = enemy;
+            _animator = enemy.GetModule<EnemyAnimatorModule>();
+            _agent = enemy.NavAgent;
+            SetSpeed(Speed);
+        }
+
+        public void BTInit()
+        {
+            _owner.SetBlackboardVariable<float>(BTVariables.RunSpeed, Speed);
+            if (_owner.ExistVarialbe(BTVariables.WalkSpeed))
+                _owner.SetBlackboardVariable<float>(BTVariables.WalkSpeed, Speed / 3);
         }
 
         public void SetTarget(Transform target)
@@ -29,32 +50,87 @@ namespace Work.Enemies.Code
 
         public void Update()
         {
+            //float speed = _animator.Animator.rootPosition.magnitude;
+            //_agent.speed = speed;
+
             if (IsCanMove && _target != null)
-                UpdateMovement();
+            {
+                NavMoveUpdate(_target.position);
+            }
+
+            if (IsAutoMove)
+            {
+                NavMoveUpdate(_destination);
+            }
+
+            RotateUpdate();
         }
 
-        public void UpdateMovement()
+        private void RotateUpdate()
         {
-            if (stopDistance > Vector2.Distance(_owner.transform.position, _target.position))
-                return;
+            if (IsCanMove)
+            {
+                if (IsFocusingTarget)
+                {
+                    if (_target != null)
+                    {
+                        LookAtTarget(_target.position);
+                    }
+                    else
+                    {
+                        LookAtTarget(_destination);
+                    }
+                }
+                else if (IsArrived)
+                {
+                    LookAtTarget(_target.position);
+                }
+                else
+                {
+                    LookAtTarget(_agent.steeringTarget);
+                }
+            }
+        }
 
-            FindNeighbors();
+        private void NavMoveUpdate(Vector3 targetPos)
+        {
+            if (Vector3.Distance(_agent.destination, targetPos) > 0.25f)
+            {
+                _agent.SetDestination(targetPos);
+            }
+        }
 
-            velocity += CalculateSeparation() * _owner.Spawner.separationWeight;
-            Vector3 next = _owner.Spawner.GetNextMove(_owner.transform.position, _target.position, _owner.Guid) - _owner.transform.position;
-            velocity += next;
+        public Quaternion LookAtTarget(Vector3 target, bool isSmooth = true)
+        {
+            Vector3 direction = target - _owner.transform.position;
+            direction.y = 0;
+            Quaternion lookRotation = Quaternion.LookRotation(direction.normalized);
 
-            if (velocity.magnitude > speed) // prevent infinite accelation
-                velocity = velocity.normalized * speed;
+            if (isSmooth)
+            {
+                _owner.transform.rotation = Quaternion.Slerp(_owner.transform.rotation,
+                                                lookRotation, Time.deltaTime * rotateSpeed);
+            }
+            else
+            {
+                _owner.transform.rotation = lookRotation;
+            }
 
-
-            _owner.transform.position += velocity * Time.deltaTime; // 가속도
-            _owner.transform.rotation = Quaternion.Slerp(_owner.transform.rotation, Quaternion.LookRotation(velocity), Time.deltaTime * 10);
+            return lookRotation;
         }
 
         public void SetMovement(bool isValue)
         {
             IsCanMove = isValue;
+            if (_agent.enabled == false) return;
+            _agent.isStopped = !isValue && !IsAutoMove;
+        }
+
+        public void SetAutoMove(bool isValue)
+        {
+            IsAutoMove = isValue;
+            if (_agent.enabled == false) return;
+            _agent.isStopped = !isValue && !IsCanMove;
         }
 
         private void FindNeighbors()
@@ -96,5 +172,45 @@ namespace Work.Enemies.Code
 
             return separationDirection;
         }
+
+        public void SetDestination(Vector3 destination)
+        {
+            _destination = destination;
+            if (_agent.enabled == false) return;
+            _agent.SetDestination(destination);
+        }
+
+        public void SetSpeed(float speed)
+        {
+            this.Speed = speed;
+            //float mul = IsPatroling ? speedAnimationMultiflier / 2 : speedAnimationMultiflier;
+            _animator.SetParam(Animator.StringToHash("MOVE_SPEED"), speed * speedAnimationMultiflier);
+            if (_agent.enabled == false) return;
+            _agent.speed = speed;
+        }
+
+        public void SetRotate(Vector3 position)
+        {
+            LookAtTarget(position, false);
+        }
+
+        public void SetForcusingTarget(bool canForcusing) => IsFocusingTarget = canForcusing;
+
+        public bool CanMovePoint(Vector3 movePoint)
+        {
+            NavMeshPath path = new NavMeshPath();
+            if (_agent.enabled == false) return false;
+            _agent.CalculatePath(movePoint, path);
+
+            return path.status == NavMeshPathStatus.PathComplete;
+        }
+
+        void EnableRootMotion(bool enable)
+        {
+            _animator.Animator.applyRootMotion = enable;
+            _agent.updatePosition = !enable;
+        }
+
+
     }
 }

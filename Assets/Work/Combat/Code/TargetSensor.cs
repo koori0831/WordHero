@@ -1,6 +1,7 @@
 ﻿using Alchemy.Inspector;
 using System.Collections.Generic;
 using UnityEngine;
+using Work.Enemies.Code;
 using Work.Entities;
 
 namespace Work.Combat.Code
@@ -19,6 +20,8 @@ namespace Work.Combat.Code
 
     public class TargetSensor : MonoBehaviour
     {
+        private Enemy _owner;
+
         [SerializeField] private TargetingType targetingType = TargetingType.AreaEnemy;
         [SerializeField] private TargetingShape targetingShape = TargetingShape.Circle;
 
@@ -38,7 +41,10 @@ namespace Work.Combat.Code
         [ShowIf(nameof(IsCircleShape))]
         [SerializeField] private float circleRadius = 0.5f;
 
-
+        public void Init(Enemy enemy)
+        {
+            _owner = enemy;
+        }
 
         public List<IDamageable> Cast()
         {
@@ -47,7 +53,7 @@ namespace Work.Combat.Code
 
             cols = targetingShape switch
             {
-                TargetingShape.Box => Physics.OverlapBox(transform.position, boxSize, transform.rotation, targetLayer),
+                TargetingShape.Box => Physics.OverlapBox(transform.position, boxSize, _owner.transform.rotation, targetLayer),
                 TargetingShape.Circle => Physics.OverlapSphere(transform.position, circleRadius, targetLayer),
                 _=> new Collider[0],
             };
@@ -66,7 +72,7 @@ namespace Work.Combat.Code
 
         public void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.orange;
             switch (targetingShape)
             {
                 case TargetingShape.Box:

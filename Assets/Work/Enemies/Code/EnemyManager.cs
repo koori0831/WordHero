@@ -14,11 +14,7 @@ namespace Work.Enemies.Code
             public List<Vector3> path;
         }
 
-        [SerializeField] private MapManager mapManager; 
         [field: SerializeField] public List<GameObject> objects;
-        [field: SerializeField] public Transform target;
-
-        private Dictionary<Guid, PathNode> pathNodes = new Dictionary<Guid, PathNode>();
 
         [Header("MoveManage")]
         public float cohesionWeight = 1.0f;     // 3규칙 가중치
@@ -47,76 +43,6 @@ namespace Work.Enemies.Code
                     enemy.Init(this);
                 }
             }
-        }
-
-        public Vector3 GetNextMove(Vector3 startPos, Vector3 targetPos, Guid guid)
-        {
-            Vector3 nextPos = startPos;
-
-            if (pathNodes.TryGetValue(guid, out PathNode pathNode))
-            {
-                if (Vector3.Distance(pathNode.targetPos, targetPos) > 0.25f)
-                {
-                    pathNode = new PathNode
-                    {
-                        targetPos = targetPos,
-                        path = mapManager.GetMovePath(startPos, targetPos)
-                    };
-                    pathNodes[guid] = pathNode;
-
-                    if (pathNode.path.Count <= 1)
-                    {
-                        return startPos;
-                    }
-                    else
-                    {
-                        nextPos = pathNode.path[1];
-                        if (Vector3.Distance(startPos, nextPos) < 0.1f)
-                        {
-                            pathNode.path.RemoveAt(0);
-                            if (pathNode.path.Count <= 1)
-                            {
-                                return startPos;
-                            }
-                            nextPos = pathNode.path[1];
-                        }
-                    }
-                }
-                else
-                {
-                    if (pathNode.path.Count <= 1)
-                    {
-                        return startPos;
-                    }
-                    else
-                    {
-                        nextPos = pathNode.path[1];
-                        if (Vector3.Distance(startPos, nextPos) < 0.1f)
-                        {
-                            pathNode.path.RemoveAt(0);
-                            if (pathNode.path.Count <= 1)
-                            {
-                                return startPos;
-                            }
-                            nextPos = pathNode.path[1];
-                        }
-                        
-                    }
-                }
-            }
-            else
-            {
-                pathNode = new PathNode
-                {
-                    targetPos = targetPos,
-                    path = mapManager.GetMovePath(startPos, targetPos)
-                };
-                pathNodes.Add(guid, pathNode);
-                nextPos = pathNode.path.Count > 1 ? pathNode.path[1] : startPos;
-                Debug.Log($"{nextPos}");
-            }
-
-            return nextPos;
         }
     }
 }

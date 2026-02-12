@@ -13,7 +13,7 @@ public partial class AttackAction : Action
 
     protected override Status OnStart()
     {
-        Self.Value.GetModule<EnemyAttackModule>().Attack();
+        Self.Value.GetModule<EnemyAttackModule>(true).Attack();
 
         return Status.Success;
     }
