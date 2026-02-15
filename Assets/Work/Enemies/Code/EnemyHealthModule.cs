@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace Work.Enemies.Code
@@ -10,10 +9,10 @@ namespace Work.Enemies.Code
         private int currentHealth;
         public int CurrentHealth => currentHealth;
 
-        public UnityEvent<int,int> OnHealthChanged;
+        public UnityEvent<int, int> OnHealthChanged;
         public UnityEvent OnDeath;
 
-        [field:SerializeField] public int MaxHealth { get; private set; } = 100;
+        [field: SerializeField] public int MaxHealth { get; private set; } = 100;
 
         public void Initialize(Enemy enemy)
         {
@@ -24,6 +23,7 @@ namespace Work.Enemies.Code
 
         public void TakeDamage(int damageAmount)
         {
+            _owner.StateChangeChannel.SendEventMessage(EnemyState.Hit);
             int previousHealth = currentHealth;
             currentHealth -= damageAmount;
             OnHealthChanged?.Invoke(previousHealth, currentHealth);

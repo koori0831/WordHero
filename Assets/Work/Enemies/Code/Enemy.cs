@@ -6,13 +6,15 @@ using Unity.Behavior.GraphFramework;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using Work.Combat.Code;
 using Work.Entities;
 
 namespace Work.Enemies.Code
 {
-    public abstract class Enemy : MonoBehaviour, ICrowd, IDamageable
+    public abstract class Enemy : MonoBehaviour, ICrowd, IDamageable, IKnockbackable
     {
         public UnityEvent<int> OnHitEvent;
+        public UnityEvent<KnockbackData> OnKnockbackEvent;
 
         public EnemyManager Spawner { get; private set; }
         public BehaviorGraphAgent BehaviorAgent { get; private set; }
@@ -29,6 +31,7 @@ namespace Work.Enemies.Code
         protected Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
         protected Dictionary<Type, IEnemyModule> _modules = new Dictionary<Type, IEnemyModule>();
         protected ChangeStateEvent _stateChangeChannel;
+        public ChangeStateEvent StateChangeChannel => _stateChangeChannel;
 
         public void Init(EnemyManager spawner)
         {
@@ -162,8 +165,12 @@ namespace Work.Enemies.Code
 
         public void TakeDamage(int damageAmount)
         {
-            _stateChangeChannel.SendEventMessage(EnemyState.Hit);
             OnHitEvent?.Invoke(damageAmount);
+        }
+
+        public void TakeKnockback(KnockbackData knockbackData)
+        {
+
         }
 
         public void Die()
