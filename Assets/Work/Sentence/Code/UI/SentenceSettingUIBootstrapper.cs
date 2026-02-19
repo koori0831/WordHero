@@ -7,6 +7,7 @@ namespace Work.Sentence.Code.UI
     {
         [SerializeField] private SentenceSettingView view;
         [SerializeField] private SentencePartDefinitionSO targetPart;
+        [SerializeField] private SentenceInventorySO inventory;
 
         private SentenceSettingPresenter _presenter;
 
@@ -19,7 +20,7 @@ namespace Work.Sentence.Code.UI
                 return;
             }
 
-            ISentenceSettingModel model = new SentenceSettingModel(targetPart);
+            ISentenceSettingModel model = new SentenceSettingModel(targetPart, inventory);
             _presenter = new SentenceSettingPresenter(model, view);
         }
 
