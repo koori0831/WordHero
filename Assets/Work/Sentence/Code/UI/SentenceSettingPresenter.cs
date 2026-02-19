@@ -38,6 +38,7 @@ namespace Work.Sentence.Code.UI
             _view.SetCoreWord(snapshot.CoreWord);
             _view.SetWordA(snapshot.WordA);
             _view.SetWordB(snapshot.WordB);
+            _view.SetInventoryWords(snapshot.InventoryWords);
             _view.SetVisible(_model.IsOpen);
         }
     }
