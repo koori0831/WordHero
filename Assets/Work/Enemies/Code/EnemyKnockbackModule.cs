@@ -7,17 +7,18 @@ namespace Work.Enemies.Code
     public class EnemyKnockbackModule : MonoBehaviour, IEnemyModule
     {
         private Enemy _owner;
+        private EnemyMovementModule _mover;
         private EnemyStatusModule _statusModule;
 
         public void Initialize(Enemy enemy)
         {
             _owner = enemy;
             _owner.OnKnockbackEvent.AddListener(ApplyKnockback);
-
+            _mover = _owner.GetModule<EnemyMovementModule>();
             _statusModule = _owner.GetModule<EnemyStatusModule>();
         }
 
-        private void ApplyKnockback(KnockbackData knockbackData)
+        public void ApplyKnockback(KnockbackData knockbackData)
         {
             if (_statusModule.HasStatusEffect(StatusType.HitImmunity))
                 return;
@@ -27,6 +28,8 @@ namespace Work.Enemies.Code
                 return;
             if (_statusModule.HasStatusEffect(StatusType.KnockbackImmune))
                 return;
+
+            _mover.KnockBack(knockbackData);
         }
     }
 }

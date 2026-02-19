@@ -170,7 +170,7 @@ namespace Work.Enemies.Code
 
         public void TakeKnockback(KnockbackData knockbackData)
         {
-
+            OnKnockbackEvent?.Invoke(knockbackData);
         }
 
         public void Die()

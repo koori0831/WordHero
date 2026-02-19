@@ -11,6 +11,7 @@ namespace Work.Player.Code
     public class Player : Entity, IDamageable
     {
         [SerializeField] private BoxCollider _attackCollider;
+        [SerializeField] private AnimationCurve _attackKnockbackCurve;
 
         private EntityHealth _health;
         private StateMachine _stateMachine;
@@ -64,6 +65,14 @@ namespace Work.Player.Code
                     Component targetComponent = damageable as Component;
                     GameObject targetObject = targetComponent != null ? targetComponent.gameObject : null;
                     Bus<CombatHitEvent>.Raise(new CombatHitEvent(gameObject, targetObject, damage, isCritical));
+                }
+
+                IKnockbackable knockbackable = hitCollider.GetComponent<IKnockbackable>();
+                if (knockbackable != null)
+                {
+                    Vector3 knockbackDirection = (hitCollider.transform.position - transform.position).normalized;
+                    KnockbackData knockbackData = new KnockbackData(3f, 0.15f, knockbackDirection, _attackKnockbackCurve);
+                    knockbackable.TakeKnockback(knockbackData);
                 }
             }
         }
