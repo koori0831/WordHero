@@ -15,6 +15,7 @@ namespace Work.Sentence.Code.UI
             _model = model;
             _view = view;
             _menuBinding = EventBinding.Bind<InputMenuEvent>(OnMenuEvent);
+            _view.BindPartSelection(OnPreviousPartClicked, OnNextPartClicked);
 
             Render();
             _view.SetVisible(_model.IsOpen);
@@ -38,8 +39,27 @@ namespace Work.Sentence.Code.UI
             _view.SetCoreWord(snapshot.CoreWord);
             _view.SetWordA(snapshot.WordA);
             _view.SetWordB(snapshot.WordB);
-            _view.SetInventoryWords(snapshot.InventoryWords);
+            _view.SetInventoryItems(snapshot.InventoryItems, OnInventoryItemButtonClicked);
+            _view.SetPartNavigationEnabled(_model.CanSelectPart);
             _view.SetVisible(_model.IsOpen);
+        }
+
+        private void OnInventoryItemButtonClicked(int index)
+        {
+            _model.ToggleInventoryItem(index);
+            Render();
+        }
+
+        private void OnPreviousPartClicked()
+        {
+            _model.SelectPreviousPart();
+            Render();
+        }
+
+        private void OnNextPartClicked()
+        {
+            _model.SelectNextPart();
+            Render();
         }
     }
 }
