@@ -6,6 +6,7 @@ namespace Work.Sentence.Code.UI
     public class SentenceSettingUIBootstrapper : MonoBehaviour
     {
         [SerializeField] private SentenceSettingView view;
+        [SerializeField] private SentenceLoadoutSO loadout;
         [SerializeField] private SentencePartDefinitionSO targetPart;
         [SerializeField] private SentenceInventorySO inventory;
 
@@ -20,7 +21,7 @@ namespace Work.Sentence.Code.UI
                 return;
             }
 
-            ISentenceSettingModel model = new SentenceSettingModel(targetPart, inventory);
+            ISentenceSettingModel model = new SentenceSettingModel(loadout, targetPart, inventory);
             _presenter = new SentenceSettingPresenter(model, view);
         }
 
