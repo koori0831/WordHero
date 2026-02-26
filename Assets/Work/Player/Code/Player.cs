@@ -76,7 +76,7 @@ namespace Work.Player.Code
                 if (knockbackable != null)
                 {
                     Vector3 knockbackDirection = (hitCollider.transform.position - transform.position).normalized;
-                    KnockbackData knockbackData = new KnockbackData(3f, 0.15f, knockbackDirection, _attackKnockbackCurve);
+                    KnockbackData knockbackData = new KnockbackData(7f, 0.15f, knockbackDirection, _attackKnockbackCurve);
                     knockbackable.TakeKnockback(knockbackData);
                 }
             }

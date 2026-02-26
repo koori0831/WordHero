@@ -1040,6 +1040,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 83adb7022ffcf5648a41315139fec043, type: 2}
   - {fileID: 11400000, guid: 139017a8967273c4d8952298601922ac, type: 2}
   - {fileID: 11400000, guid: a750a44f8af176f4ba298d0750cb92e3, type: 2}
+  enemyInfoData: {fileID: 11400000, guid: 4e2ba3e440e39a74990d8d72feaffbd6, type: 2}
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -1089,7 +1090,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -2554,7 +2555,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1736285843081252499
 Transform:
   m_ObjectHideFlags: 0
@@ -3352,7 +3353,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  <MaxHealth>k__BackingField: 746
+  <MaxHealth>k__BackingField: 75
 --- !u!1 &5620785849079639726
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,12 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 using Work.Combat.Code;
 
 namespace Work.Enemies.Code
 {
+    public class StatusValue
+    {
+        public Action<StatusType, bool> OnstateusChangeEvent;
+        public Action<StatusType> OnStatusTickEvent;
+        public bool isHitImmunity;
+        public bool isSuperArmor;
+        public bool isInvincible;
+    }
+
     public class EnemyStatusModule : MonoBehaviour, IEnemyModule
     {
         private Enemy _enemy;
@@ -17,9 +24,15 @@ namespace Work.Enemies.Code
         private List<StatusType> _tickEffects = new List<StatusType>();
         private List<StatusType> _removeEffects = new List<StatusType>();
 
+        public StatusValue StatusValue { get; private set; }
+
         public void Initialize(Enemy enemy)
         {
             _enemy = enemy;
+            StatusValue = new StatusValue();
+            StatusValue.isSuperArmor = HasStatusEffect(StatusType.SuperArmor);
+            StatusValue.isInvincible = HasStatusEffect(StatusType.Invincible);
+            StatusValue.isHitImmunity = HasStatusEffect(StatusType.HitImmunity);
         }
 
         public void AddStatus(StatusEffect statusEffect)
@@ -37,12 +50,20 @@ namespace Work.Enemies.Code
 
         private void UpdateRemoveEffects()
         {
-            for(int i = 0; i < _removeEffects.Count; i++)
+            for (int i = 0; i < _removeEffects.Count; i++)
             {
                 if (_activeEffects.ContainsKey(_removeEffects[i]))
                 {
                     // 효과 제거 로직 (예: 스턴 해제, 화상 해제 등)
                     Debug.Log($"Removed status effect: {_removeEffects[i]}");
+                    if (_removeEffects[i] == StatusType.SuperArmor)
+                        StatusValue.isSuperArmor = false;
+                    if (_removeEffects[i] == StatusType.Invincible)
+                        StatusValue.isInvincible = false;
+                    if (_removeEffects[i] == StatusType.HitImmunity)
+                        StatusValue.isHitImmunity = false;
+
+                    StatusValue.OnstateusChangeEvent?.Invoke(_removeEffects[i], false); // 효과 제거 이벤트 호출
                     _activeEffects.Remove(_removeEffects[i]);
                 }
             }
@@ -50,7 +71,7 @@ namespace Work.Enemies.Code
         }
         private void UpdateTickEffects()
         {
-            for(int i = 0; i < _tickEffects.Count; i++)
+            for (int i = 0; i < _tickEffects.Count; i++)
             {
                 ApplyTickEffect(_tickEffects[i]);
             }
@@ -98,23 +119,22 @@ namespace Work.Enemies.Code
             else
             {
                 _activeEffects.Add(effect.type, effect);
+
+                if (effect.type == StatusType.SuperArmor)
+                    StatusValue.isSuperArmor = true;
+                if (effect.type == StatusType.Invincible)
+                    StatusValue.isInvincible = true;
+                if (effect.type == StatusType.HitImmunity)
+                    StatusValue.isHitImmunity = true;
+
+                StatusValue.OnstateusChangeEvent?.Invoke(effect.type, true); // 효과 적용 이벤트 호출
                 // 효과 적용 로직 (예: 스턴, 화상 등)
                 Debug.Log($"Applied status effect: {effect.type}");
             }
         }
         public void ApplyTickEffect(StatusType type)
         {
-            switch (type)
-            {
-                case StatusType.Burn:
-                    break;
-                case StatusType.Poison:
-                    break;
-                case StatusType.Bleed:
-                    break;
-                case StatusType.Shock:
-                    break;
-            }
+            StatusValue.OnStatusTickEvent?.Invoke(type);
         }
 
         public bool HasStatusEffect(StatusType type)

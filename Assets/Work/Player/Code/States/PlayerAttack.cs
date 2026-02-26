@@ -1,4 +1,4 @@
-using Code.FSM;
+﻿using Code.FSM;
 using Code.Entities;
 using UnityEngine;
 using Work.Input.Code;
@@ -7,7 +7,7 @@ namespace Work.Player.Code.States
 {
     public class PlayerAttack : PlayerCanAttackStates
     {
-        private const int MaxCombo = 3;
+        private const int MaxCombo = 2;
         private const float ComboResetGrace = 0.15f;
         private static readonly int _attackIndexHash = Animator.StringToHash("AttackIndex");
 
@@ -46,6 +46,11 @@ namespace Work.Player.Code.States
                 if (_queueNext && _comboIndex < MaxCombo - 1)
                 {
                     _comboIndex++;
+                    _stateMachine.ChangeState("Attack", true);
+                }
+                else if(_queueNext)
+                {
+                    _comboIndex = 0;
                     _stateMachine.ChangeState("Attack", true);
                 }
                 else
