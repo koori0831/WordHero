@@ -3,6 +3,12 @@ using Work.Core.Utils.EventBus;
 
 namespace Work.Input.Code
 {
+    public enum InputDeviceType
+    {
+        KeyboardMouse,
+        Gamepad
+    }
+
     public readonly record struct InputEnableEvent(bool Enable) : IEvent;
 
     public readonly record struct InputInteractEvent : IEvent;
@@ -10,4 +16,6 @@ namespace Work.Input.Code
 
     public readonly record struct InputDodgeEvent : IEvent;
     public readonly record struct InputAttackEvent : IEvent;
+
+    public readonly record struct InputDeviceChangedEvent(InputDeviceType NewDevice) : IEvent;
 }
