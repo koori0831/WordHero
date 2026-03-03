@@ -75,6 +75,8 @@ namespace Work.Player.Code.States
                     _comboIndex = 0;
             }
 
+            _player.LockOn();
+
             _queueNext = false;
             _comboWindowOpen = false;
 

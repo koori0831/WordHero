@@ -58,11 +58,6 @@ namespace Work.Player.Code
 
         public void Attack()
         {
-            if (_inputRoot.Input.CurrentDeviceType == InputDeviceType.KeyboardMouse)
-                RotateToMousePosition();
-            else
-                RotateToNearestEnemy();
-
             // 어택 콜라이더 영역에 있는 IDamageable 오브젝트에 데미지 적용
             Collider[] hitColliders = Physics.OverlapBox(_attackCollider.bounds.center, _attackCollider.bounds.extents, _attackCollider.transform.rotation);
             foreach (var hitCollider in hitColliders)
@@ -88,6 +83,14 @@ namespace Work.Player.Code
                     knockbackable.TakeKnockback(knockbackData);
                 }
             }
+        }
+
+        public void LockOn()
+        {
+            if (_inputRoot.Input.CurrentDeviceType == InputDeviceType.KeyboardMouse)
+                RotateToMousePosition();
+            else
+                RotateToNearestEnemy();
         }
 
         private void RotateToMousePosition()
