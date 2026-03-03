@@ -6,6 +6,8 @@ using Work.StatSystem.Code;
 using Work.Combat.Code;
 using Work.Core.Utils.EventBus;
 using Work.Enemies.Code;
+using UnityEngine.InputSystem;
+using Work.Input.Code;
 
 namespace Work.Player.Code
 {
@@ -22,11 +24,14 @@ namespace Work.Player.Code
         private StatSO _attackSO;
         [SerializeField, Range(0f, 1f)] private float _criticalChance = 0f;
 
+        private PlayerInputRoot _inputRoot;
+
         private void OnEnable()
         {
             _health = GetCompo<EntityHealth>();
             _stateMachine = GetCompo<StateCompo>().StateMachine;
             _stat = GetCompo<EntityStatCompo>();
+            _inputRoot = GetCompo<PlayerInputRoot>();
 
             _health.DeadTrigger += OnDead;
             _health.DamagedTrigger += OnHit;
@@ -53,8 +58,6 @@ namespace Work.Player.Code
 
         public void Attack()
         {
-            RotateToNearestEnemy();
-
             // 어택 콜라이더 영역에 있는 IDamageable 오브젝트에 데미지 적용
             Collider[] hitColliders = Physics.OverlapBox(_attackCollider.bounds.center, _attackCollider.bounds.extents, _attackCollider.transform.rotation);
             foreach (var hitCollider in hitColliders)
@@ -78,6 +81,28 @@ namespace Work.Player.Code
                     Vector3 knockbackDirection = (hitCollider.transform.position - transform.position).normalized;
                     KnockbackData knockbackData = new KnockbackData(7f, 0.15f, knockbackDirection, _attackKnockbackCurve);
                     knockbackable.TakeKnockback(knockbackData);
+                }
+            }
+        }
+
+        public void LockOn()
+        {
+            if (_inputRoot.Input.CurrentDeviceType == InputDeviceType.KeyboardMouse)
+                RotateToMousePosition();
+            else
+                RotateToNearestEnemy();
+        }
+
+        private void RotateToMousePosition()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, _lockOnTargetLayer))
+            {
+                Vector3 lookDirection = hitInfo.point - transform.position;
+                lookDirection.y = 0f; // 수평 회전만 허용
+                if (lookDirection.sqrMagnitude > 0.0001f)
+                {
+                    transform.rotation = Quaternion.LookRotation(lookDirection.normalized);
                 }
             }
         }
