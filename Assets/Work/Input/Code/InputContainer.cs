@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using Work.Core.Utils.EventBus;
 
@@ -63,7 +63,10 @@ namespace Work.Input.Code
         {
             UpdateCurrentDevice(context);
             if (context.performed)
+            {
                 Bus<InputInteractEvent>.Raise(new InputInteractEvent());
+                Debug.Log("아니 시발 되잖아요");
+            }
         }
 
         public void OnMenu(InputAction.CallbackContext context)

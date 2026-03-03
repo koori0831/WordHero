@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using UnityEngine;
+﻿using UnityEngine;
 using Work.Entities;
 
 namespace Work.Combat.Code
@@ -24,23 +23,25 @@ namespace Work.Combat.Code
         {
             _timer += Time.deltaTime;
 
-            if ( _timer > LIFE_TIME )
+            if (_timer > LIFE_TIME)
                 Destroy(gameObject);
 
             transform.position += transform.forward * _speed * Time.deltaTime;
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider collision)
         {
-            if((1 << collision.gameObject.layer & collisionLayer) != 0)
+            if ((1 << collision.gameObject.layer & collisionLayer) != 0)
             {
-                if(collision.gameObject.TryGetComponent(out IDamageable damageable))
+                Debug.Log(collision.gameObject.name);
+
+                if (collision.gameObject.TryGetComponent(out IDamageable damageable))
                 {
                     damageable.TakeDamage(_damage);
                 }
 
-                Destroy(gameObject);
 
+                Destroy(gameObject);
             }
         }
 

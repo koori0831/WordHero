@@ -8,10 +8,13 @@ namespace Work.Enemies.Code
         public Animator Animator => _animator;
         private Enemy _owner;
 
+        public Renderer[] Renderers { get; private set; }
+
         public void Initialize(Enemy enemy)
         {
             _owner = enemy;
             _animator = GetComponent<Animator>();
+            Renderers = GetComponentsInChildren<Renderer>();
         }
 
         public void SetParam(int animHash , bool value) => _animator.SetBool(animHash, value);

@@ -28,7 +28,7 @@ namespace Code.Entities
             _stat.TryGetStat("MoveSpeed", out _speedStat);
         }
 
-        public void Move(Vector2 direction)
+        public void Move(Vector2 direction, bool isSmooth = true)
         {
             Vector3 camForward = Vector3.Scale(_camTransform.forward, new Vector3(1, 0, 1)).normalized;
             Vector3 camRight = _camTransform.right;
@@ -41,7 +41,10 @@ namespace Code.Entities
                 if (lookDirection != Vector3.zero)
                 {
                     Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.1f);
+                    if (isSmooth)
+                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.1f);
+                    else
+                        transform.rotation = targetRotation;
                 }
             }
         }

@@ -5004,6 +5004,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Work.Enemies.Code.EnemyAttackModule
   attackRange: 1.5
   damage: 5
+  _isComboAttacked: 1
+  attackCount: 2
   targetSensor: {fileID: 413741554657751285}
 --- !u!1 &6999336667676778627
 GameObject:
@@ -6461,6 +6463,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e106d0a7fd9206346943ad285ae90d22, type: 2}
   - {fileID: 11400000, guid: b2289eb957ad41e48b152d33cbf93446, type: 2}
   - {fileID: 11400000, guid: 83adb7022ffcf5648a41315139fec043, type: 2}
+  - {fileID: 11400000, guid: a750a44f8af176f4ba298d0750cb92e3, type: 2}
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 128

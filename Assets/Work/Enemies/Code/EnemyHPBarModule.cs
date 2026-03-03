@@ -44,7 +44,7 @@ namespace Work.Enemies.Code
 
         public void SetActiveBar(bool isTrue = true)
         {
-            bar.SetActive(isTrue);
+            bar.SetActive(false);
         }
     }
 }

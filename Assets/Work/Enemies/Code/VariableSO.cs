@@ -22,7 +22,8 @@ namespace Work.Enemies.Code
         PatrolPointCount,
         MovePos,
         DistanceToKeepRange,
-        MoveDistance
+        MoveDistance,
+        AttackCount
 
     }
 
