@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Alchemy.Inspector;
+using System.Collections.Generic;
 using UnityEngine;
 using Work.Combat.Code;
 using Work.Entities;
 
 namespace Work.Enemies.Code
 {
-    public class EnemyAttackModule : MonoBehaviour, IEnemyModule
+    public class EnemyAttackModule : MonoBehaviour, IEnemyModule, IVariableModule
     {
         protected Enemy _owner;
 
@@ -13,6 +14,8 @@ namespace Work.Enemies.Code
         [SerializeField] protected float attackRange;
         public float AttackRange => attackRange;
         [SerializeField] protected int damage;
+        [SerializeField] private bool _isComboAttacked;
+        [ShowIf(nameof(_isComboAttacked))][SerializeField] protected int attackCount;
 
         [SerializeField] protected TargetSensor targetSensor;
 
@@ -38,5 +41,10 @@ namespace Work.Enemies.Code
             Gizmos.DrawWireSphere(transform.position, attackRange);
         }
 
+        public void BTInit()
+        {
+            if (_isComboAttacked)
+                _owner.SetBlackboardVariable<int>(BTVariables.AttackCount, attackCount);
+        }
     }
 }

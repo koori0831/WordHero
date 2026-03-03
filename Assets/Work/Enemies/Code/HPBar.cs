@@ -13,7 +13,7 @@ namespace Work.Enemies.Code
         {
             Transform cam = Camera.main.transform;
 
-            transform.LookAt(cam);
+            transform.LookAt(-cam.forward);
             transform.Rotate(90f, 0f, 0f);
         }
     }

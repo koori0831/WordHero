@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Code.Entities;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Work.Combat.Code;
 
 namespace Work.Enemies.Code
 {
@@ -50,8 +52,6 @@ namespace Work.Enemies.Code
 
         public void Update()
         {
-            //float speed = _animator.Animator.rootPosition.magnitude;
-            //_agent.speed = speed;
 
             if (IsCanMove && _target != null)
             {
@@ -119,6 +119,33 @@ namespace Work.Enemies.Code
             return lookRotation;
         }
 
+        public async void KnockBack(KnockbackData knockbackData)
+        {
+            //넉백에 대한 면역이 있는지 체크하는건 EnemyKnockbackModule에서 하자.
+            SetStop(true); //네비게이션은 정지시켜주고
+
+            float duration = knockbackData.Duration;
+            Vector3 direction = knockbackData.Direction.normalized;
+            direction.y = 0; // 수평 방향으로만 넉백이 적용되도록 y축은 제거
+            float currentTime = 0;
+            float maxSpeed = knockbackData.Force;
+            AnimationCurve moveCurve = knockbackData.KnockbackCurve;
+
+            while (currentTime < duration)
+            {
+                float normalizeTime = currentTime / duration;
+                float currentSpeed = maxSpeed * moveCurve.Evaluate(normalizeTime);
+                Vector3 currentMovement = direction * currentSpeed;
+                _owner.transform.Translate(currentMovement * Time.fixedDeltaTime, Space.World);
+                currentTime += Time.fixedDeltaTime;
+                await Awaitable.FixedUpdateAsync();
+            }
+            //여기서 추가 작업을 안해주면 넉백이 이상해진다. 일단 이상하게 해서 봅시다.
+            WarpToPosition(_owner.transform.position);
+            SetStop(false); //넉백이 끝나면 다시 네비게이션을 시작합니다.
+
+        }
+
         public void SetMovement(bool isValue)
         {
             IsCanMove = isValue;
@@ -131,46 +158,6 @@ namespace Work.Enemies.Code
             IsAutoMove = isValue;
             if (_agent.enabled == false) return;
             _agent.isStopped = !isValue && !IsCanMove;
-        }
-
-        private void FindNeighbors()
-        {
-            nearNeighbors.Clear();
-
-            foreach (ICrowd neighbor in _owner.Spawner.Neighdors) // 전체 이웃 탐색
-            {
-                if (nearNeighbors.Count >= _owner.Spawner.maxNeighbors)
-                    return;
-
-                if (neighbor.Transform.gameObject == this.gameObject)
-                {
-                    continue;
-                }
-
-                Vector3 diff = neighbor.Transform.position - _owner.transform.position;
-
-                if (diff.sqrMagnitude < _owner.Spawner.neighborDistance * _owner.Spawner.neighborDistance) // 범위 내 이웃만 남기기
-                {
-                    nearNeighbors.Add(neighbor);
-                }
-            }
-        }
-
-        private Vector3 CalculateSeparation()
-        {
-            Vector3 separationDirection = Vector3.zero;
-
-            if (nearNeighbors.Count > 0)
-            {
-                for (int i = 0; i < nearNeighbors.Count; ++i)
-                {
-                    separationDirection += (_owner.transform.position - nearNeighbors[i].Transform.position);
-                }
-
-                separationDirection.Normalize();
-            }
-
-            return separationDirection;
         }
 
         public void SetDestination(Vector3 destination)
@@ -205,7 +192,11 @@ namespace Work.Enemies.Code
             return path.status == NavMeshPathStatus.PathComplete;
         }
 
-        void EnableRootMotion(bool enable)
+        public void SetStop(bool isStop) => _agent.isStopped = isStop;
+
+        public void WarpToPosition(Vector3 position) => _agent.Warp(position);
+
+        public void EnableRootMotion(bool enable)
         {
             _animator.Animator.applyRootMotion = enable;
             _agent.updatePosition = !enable;

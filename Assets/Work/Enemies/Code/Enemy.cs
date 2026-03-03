@@ -6,29 +6,37 @@ using Unity.Behavior.GraphFramework;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using Work.Combat.Code;
 using Work.Entities;
+using Work.Information.Code;
 
 namespace Work.Enemies.Code
 {
-    public abstract class Enemy : MonoBehaviour, ICrowd, IDamageable
+    public abstract class Enemy : MonoBehaviour, IDamageable, IKnockbackable, IInformationable
     {
+        protected ChangeStateEvent _stateChangeChannel;
+        public ChangeStateEvent StateChangeChannel => _stateChangeChannel;
         public UnityEvent<int> OnHitEvent;
+        public UnityEvent<KnockbackData> OnKnockbackEvent;
 
+        public bool IsDead { get; private set; } = false;
+        public bool IsCanShowInfo { get; protected set; }
         public EnemyManager Spawner { get; private set; }
-        public BehaviorGraphAgent BehaviorAgent { get; private set; }
-        public float NeighborRadius { get; set; } = 5.0f;
-        public Guid Guid { get; } = Guid.NewGuid();
-        public Transform Transform => gameObject != null ? transform : null;
         public NavMeshAgent NavAgent { get; private set; }
+        public EnemyInfoDataSO EnemyInfoData { get; protected set; }
+        public BehaviorGraphAgent BehaviorAgent { get; private set; }
+        public Transform Transform => gameObject != null ? transform : null;
+        public InfoDataSO InfoData => EnemyInfoData;
+
 
         [SerializeField] protected List<VariableSO> variableSOs = new List<VariableSO>();
+        [SerializeField] protected EnemyInfoDataSO enemyInfoData;
         [SerializeField] protected LayerMask targetLayerMask;
         [SerializeField] protected float detectRange = 10.0f;
         [SerializeField] protected float chaseRange = 25.0f;
 
         protected Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
         protected Dictionary<Type, IEnemyModule> _modules = new Dictionary<Type, IEnemyModule>();
-        protected ChangeStateEvent _stateChangeChannel;
 
         public void Init(EnemyManager spawner)
         {
@@ -36,6 +44,7 @@ namespace Work.Enemies.Code
             BehaviorAgent = GetComponent<BehaviorGraphAgent>();
             NavAgent = GetComponent<NavMeshAgent>();
             Debug.Assert(BehaviorAgent != null, "BehaviorAgent component is missing.");
+            IsCanShowInfo = EnemyInfoData != null;
             AddModule();
             ModuleInit();
             ModuleAfterInit();
@@ -50,6 +59,8 @@ namespace Work.Enemies.Code
                     afterInitModule.AfterInitialize();
                 }
             }
+
+            EnemyInfoData = enemyInfoData.GetInfo(this);
         }
 
         protected void ModuleInit()
@@ -162,12 +173,18 @@ namespace Work.Enemies.Code
 
         public void TakeDamage(int damageAmount)
         {
-            _stateChangeChannel.SendEventMessage(EnemyState.Hit);
             OnHitEvent?.Invoke(damageAmount);
+        }
+
+        public void TakeKnockback(KnockbackData knockbackData)
+        {
+            if (IsDead) return;
+            OnKnockbackEvent?.Invoke(knockbackData);
         }
 
         public void Die()
         {
+            IsDead = true;
             _stateChangeChannel.SendEventMessage(EnemyState.Death);
         }
     }

@@ -14,6 +14,8 @@ public partial class SetRotateFromTransformAction : Action
 
     protected override Status OnStart()
     {
+        if(Transform.Value == null)
+            return Status.Success;
         Self.Value.GetModule<EnemyMovementModule>().SetRotate(Transform.Value.position);
         return Status.Success;
     }

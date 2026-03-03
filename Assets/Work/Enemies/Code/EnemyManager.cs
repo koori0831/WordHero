@@ -8,40 +8,62 @@ namespace Work.Enemies.Code
 {
     public class EnemyManager : MonoBehaviour
     {
-        private class PathNode
+        [field: SerializeField] public List<Enemy> enemies;
+        [field: SerializeField] public List<GameObject> enemySpawnPoints;
+        [field: SerializeField] public int onePointInMaxEnemyCount = 20;
+        [field: SerializeField] public float spawnRadius = 8f;
+
+        private int _minEnemyCount => onePointInMaxEnemyCount - 5 <= 0 ? 0 : onePointInMaxEnemyCount - 5;
+        private List<Enemy> currentEnemies = new List<Enemy>();
+        
+        public bool IsCanMoveRoom => currentEnemies.Count <= 0;
+
+        public void Start()
         {
-            public Vector3 targetPos;
-            public List<Vector3> path;
+            if (enemies.Count <= 0) return;
+
+            foreach(GameObject point in enemySpawnPoints)
+            {
+                Vector3 spawnPoint = point.transform.position;
+                int enemyCount = UnityEngine.Random.Range(_minEnemyCount, onePointInMaxEnemyCount + 1);
+
+                for(int i = 0; i < enemyCount; i++)
+                {
+                    Vector3 rnad = UnityEngine.Random.onUnitSphere * (spawnRadius);
+                    Vector3 newPos = spawnPoint + new Vector3(rnad.x, 0, rnad.z);
+                    newPos.y = 0;
+                    Enemy enemy = Instantiate(enemies[UnityEngine.Random.Range(0, enemies.Count - 1)], newPos, Quaternion.identity);
+                    currentEnemies.Add(enemy);
+                    enemy.Init(this);
+                    enemy.gameObject.transform.parent = point.transform;
+                }
+            }
         }
 
-        [field: SerializeField] public List<GameObject> objects;
-
-        [Header("MoveManage")]
-        public float cohesionWeight = 1.0f;     // 3규칙 가중치
-        public float alignmentWeight = 1.0f;
-        public float separationWeight = 1.0f;
-        public float moveRadiusRange = 5.0f;    // 활동 범위 반지름
-        public float boundaryForce = 3.5f;      // 범위 내로 돌아가게 하는 힘
-        public float maxSpeed = 2.0f;
-        public float neighborDistance = 3.0f;   // 이웃 탐색 범위
-        public float maxNeighbors = 50;         // 이웃 탐색 수 제한
-
-        private List<ICrowd> neighdors = new List<ICrowd>();
-        public List<ICrowd> Neighdors => neighdors;
-
-        public void Awake()
+        private void Update()
         {
-            foreach (var item in objects)
+            for (int i = currentEnemies.Count - 1; i >= 0; i--)
             {
-                neighdors.Add(item.GetComponent<ICrowd>());
-            }
-
-            foreach (var item in Neighdors)
-            {
-                if (item.Transform.TryGetComponent<Enemy>(out Enemy enemy))
+                if (currentEnemies[i] == null)
                 {
-                    enemy.Init(this);
+                    currentEnemies.RemoveAt(i);
+                    break;
                 }
+                else if (currentEnemies[i].IsDead == true)
+                {
+                    currentEnemies.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            if (enemySpawnPoints.Count <= 0) return;
+            foreach (GameObject point in enemySpawnPoints)
+            {
+                Gizmos.DrawWireSphere(point.transform.position, spawnRadius);
             }
         }
     }

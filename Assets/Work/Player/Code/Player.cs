@@ -12,6 +12,7 @@ namespace Work.Player.Code
     public class Player : Entity, IDamageable
     {
         [SerializeField] private BoxCollider _attackCollider;
+        [SerializeField] private AnimationCurve _attackKnockbackCurve;
         [SerializeField] private float _lockOnDetectRange = 5f;
         [SerializeField] private LayerMask _lockOnTargetLayer = ~0;
 
@@ -69,6 +70,14 @@ namespace Work.Player.Code
                     Component targetComponent = damageable as Component;
                     GameObject targetObject = targetComponent != null ? targetComponent.gameObject : null;
                     Bus<CombatHitEvent>.Raise(new CombatHitEvent(gameObject, targetObject, damage, isCritical));
+                }
+
+                IKnockbackable knockbackable = hitCollider.GetComponent<IKnockbackable>();
+                if (knockbackable != null)
+                {
+                    Vector3 knockbackDirection = (hitCollider.transform.position - transform.position).normalized;
+                    KnockbackData knockbackData = new KnockbackData(7f, 0.15f, knockbackDirection, _attackKnockbackCurve);
+                    knockbackable.TakeKnockback(knockbackData);
                 }
             }
         }
