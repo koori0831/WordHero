@@ -29,6 +29,8 @@ namespace Work.Interaction.Code
 
         private void OnInteract(InputInteractEvent evt)
         {
+            Debug.Log("Interact event received");
+
             Physics.OverlapSphere(trm.position, interactRange)
                 .Select(col => col.GetComponent<IInteractable>())
                 .Where(interactable => interactable != null)

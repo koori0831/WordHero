@@ -16,9 +16,9 @@ namespace Work.Enemies.Code
         private int _minEnemyCount => onePointInMaxEnemyCount - 5 <= 0 ? 0 : onePointInMaxEnemyCount - 5;
         private List<Enemy> currentEnemies = new List<Enemy>();
         
-        public bool IsCanMoveRoom => enemies.Count <= 0;
+        public bool IsCanMoveRoom => currentEnemies.Count <= 0;
 
-        public void Awake()
+        public void Start()
         {
             if (enemies.Count <= 0) return;
 
@@ -36,6 +36,23 @@ namespace Work.Enemies.Code
                     currentEnemies.Add(enemy);
                     enemy.Init(this);
                     enemy.gameObject.transform.parent = point.transform;
+                }
+            }
+        }
+
+        private void Update()
+        {
+            for (int i = currentEnemies.Count - 1; i >= 0; i--)
+            {
+                if (currentEnemies[i] == null)
+                {
+                    currentEnemies.RemoveAt(i);
+                    break;
+                }
+                else if (currentEnemies[i].IsDead == true)
+                {
+                    currentEnemies.RemoveAt(i);
+                    break;
                 }
             }
         }

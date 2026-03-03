@@ -59,8 +59,12 @@ namespace Work.Input.Code
 
         public void OnInteract(InputAction.CallbackContext context)
         {
+            Debug.Log("mmingmingming");
             if (context.performed)
+            {
                 Bus<InputInteractEvent>.Raise(new InputInteractEvent());
+                Debug.Log("아니 시발 되잖아요");
+            }
         }
 
         public void OnMenu(InputAction.CallbackContext context)
