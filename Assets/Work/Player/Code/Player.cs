@@ -11,7 +11,7 @@ using Work.Input.Code;
 
 namespace Work.Player.Code
 {
-    public class Player : Entity, IDamageable
+    public class Player : Entity, IDamageable, IKnockbackable
     {
         [SerializeField] private BoxCollider _attackCollider;
         [SerializeField] private AnimationCurve _attackKnockbackCurve;
@@ -148,6 +148,11 @@ namespace Work.Player.Code
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, _lockOnDetectRange);
+        }
+
+        public void TakeKnockback(KnockbackData knockbackData)
+        {
+
         }
     }
 }

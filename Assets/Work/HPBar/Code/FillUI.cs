@@ -9,11 +9,14 @@ namespace Work.HPBar.Code
     {
         [SerializeField] private Image fiilImage;
 
+        private MotionHandle _currentMotion;
+
         private const float ANIMATION_DURATION = 0.25f;
 
         public void Disable()
         {
             fiilImage.fillAmount = 0;
+            _currentMotion.TryCancel();
             fiilImage.gameObject.SetActive(false);
         }
 
@@ -26,7 +29,10 @@ namespace Work.HPBar.Code
         public void SetFill(float amount, Action callback = null)
         {
             float currentFill = fiilImage.fillAmount;
-            LMotion.Create(currentFill, amount, ANIMATION_DURATION)
+
+            _currentMotion.TryCancel();
+
+            _currentMotion = LMotion.Create(currentFill, amount, ANIMATION_DURATION)
                 .WithEase(Ease.OutQuart)
                 .WithOnComplete(() => callback?.Invoke())
                 .Bind(x => fiilImage.fillAmount = x);

@@ -184,6 +184,7 @@ namespace Work.Enemies.Code
 
         public void Die()
         {
+            if (IsDead) return;
             IsDead = true;
             _stateChangeChannel.SendEventMessage(EnemyState.Death);
         }

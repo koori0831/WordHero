@@ -60,9 +60,9 @@ namespace Work.Enemies.Code
         public void TakeDamage(int damageAmount)
         {
             _owner.StateChangeChannel.SendEventMessage(EnemyState.Hit);
+            Bus<EnemyHitEvent>.Raise(new EnemyHitEvent(_owner.gameObject,_owner.InfoData));
             int previousHealth = CurrentHealth;
             CurrentHealth -= damageAmount;
-            Bus<InfoDataEvent>.Raise(new InfoDataEvent(_owner.gameObject,_owner.InfoData));
             OnHealthChanged?.Invoke(previousHealth, CurrentHealth);
             HpValue.OnHpChanged?.Invoke(CurrentHealth, MaxHealth);
             if (CurrentHealth <= 0)

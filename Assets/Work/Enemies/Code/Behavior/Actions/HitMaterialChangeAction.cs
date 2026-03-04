@@ -40,7 +40,7 @@ public partial class HitMaterialChangeAction : Action
 
         
         
-        return Status.Running;
+        return Status.Success;
     }
 
 }
