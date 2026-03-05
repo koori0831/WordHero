@@ -49,6 +49,7 @@ namespace Work.Enemies.Code
         public UnityEvent OnDeath;
 
         [field: SerializeField] public int MaxHealth { get; private set; } = 100;
+        
 
         public void Initialize(Enemy enemy)
         {

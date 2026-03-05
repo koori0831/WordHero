@@ -18,8 +18,9 @@ namespace Work.Combat.Code
         }
     }
 
-    public interface IKnockbackable
+    public interface IKnockbackable : ICastable
     {
+        Transform Transform { get; }
         void TakeKnockback(KnockbackData knockbackData);
     }
 } 

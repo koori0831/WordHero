@@ -46,9 +46,9 @@ namespace Work.Combat.Code
             _owner = enemy;
         }
 
-        public List<IDamageable> Cast()
+        public List<T> Cast<T>() where T : ICastable
         {
-            List<IDamageable> damageables = new List<IDamageable>();
+            List<T> damageables = new List<T>();
             Collider[] cols = new Collider[0];
 
             cols = targetingShape switch
@@ -60,7 +60,7 @@ namespace Work.Combat.Code
 
             foreach (Collider col in cols)
             {
-                IDamageable damageable = col.GetComponent<IDamageable>();
+                T damageable = col.GetComponent<T>();
                 if (damageable != null)
                 {
                     damageables.Add(damageable);

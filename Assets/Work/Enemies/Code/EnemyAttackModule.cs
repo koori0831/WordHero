@@ -31,7 +31,13 @@ namespace Work.Enemies.Code
 
         public virtual void Attack()
         {
-            List<IDamageable> damageables = targetSensor.Cast();
+            List<IDamageable> damageables = targetSensor.Cast<IDamageable>();
+            List<IKnockbackable> knockbackables = targetSensor.Cast<IKnockbackable>();
+
+            knockbackables.ForEach(k =>
+            {
+                k.TakeKnockback(new KnockbackData(5f, 0.5f, (k.Transform.position - _owner.Transform.position).normalized, AnimationCurve.EaseInOut(0, 1, 1, 0)));
+            });
             damageables.ForEach(d => d.TakeDamage(damage));
         }
 
