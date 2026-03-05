@@ -1,6 +1,8 @@
 using Work.Sentence.Code.Data;
 using System.Collections.Generic;
 using System;
+using Work.Core.Utils.EventBus;
+using Work.Input.Code;
 
 namespace Work.Sentence.Code.UI
 {
@@ -82,6 +84,7 @@ namespace Work.Sentence.Code.UI
         public void ToggleOpen()
         {
             IsOpen = !IsOpen;
+            Bus<PlayerInputEnableEvent>.Raise(new(!IsOpen));
         }
 
         public void SelectPreviousPart()

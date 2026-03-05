@@ -9,7 +9,7 @@ namespace Work.Input.Code
         Gamepad
     }
 
-    public readonly record struct InputEnableEvent(bool Enable) : IEvent;
+    public readonly record struct PlayerInputEnableEvent(bool Enable) : IEvent;
 
     public readonly record struct InputInteractEvent : IEvent;
     public readonly record struct InputMenuEvent : IEvent;
