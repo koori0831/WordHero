@@ -1,10 +1,11 @@
+using LitMotion;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Work.Core.Utils.EventBus;
 
 namespace Work.Input.Code
 {
-    public class InputContainer : Console.IPlayerActions
+    public class InputContainer : Console.IPlayerActions, Console.IUIActions
     {
         private Console _console;
 
@@ -15,25 +16,37 @@ namespace Work.Input.Code
         // 스틱 드리프트 방지
         private const float Deadzone = 0.2f;
 
+        private MotionHandle _motionX;
+        private MotionHandle _motionZ;
+
+        private float _currentX;
+        private float _currentZ;
+
         public void Init()
         {
             if (_console == null)
             {
                 _console = new Console();
                 _console.Player.SetCallbacks(this);
+                _console.UI.SetCallbacks(this);
             }
             _console.Player.Enable();
-            Bus<InputEnableEvent>.Events += SetEnable;
+            _console.UI.Enable();
+            Bus<PlayerInputEnableEvent>.Events += SetPlayerInputEnable;
         }
 
         public void Deinit()
         {
+            if (_motionX.IsActive()) _motionX.Cancel();
+            if (_motionZ.IsActive()) _motionZ.Cancel();
+
             _console.Player.Disable();
+            _console.UI.Disable();
             _console = null;
-            Bus<InputEnableEvent>.Events -= SetEnable;
+            Bus<PlayerInputEnableEvent>.Events -= SetPlayerInputEnable;
         }
 
-        public void SetEnable(InputEnableEvent evt)
+        public void SetPlayerInputEnable(PlayerInputEnableEvent evt)
         {
             if (evt.Enable) _console.Player.Enable();
             else _console.Player.Disable();
@@ -42,21 +55,34 @@ namespace Work.Input.Code
         public void OnMove(InputAction.CallbackContext context)
         {
             UpdateCurrentDevice(context);
-            if (context.canceled)
-            {
-                MoveVector = Vector2.zero;
-                IsMovePressed = false;
-                return;
-            }
 
-            var v = context.ReadValue<Vector2>();
+            Vector2 input = context.canceled ? Vector2.zero : context.ReadValue<Vector2>();
+            Ease ease = context.canceled ? Ease.InQuad : Ease.OutQuad;
+            if (input.sqrMagnitude < Deadzone * Deadzone) input = Vector2.zero;
+            input = Vector2.ClampMagnitude(input, 1f);
 
-            // deadzone
-            if (v.sqrMagnitude < Deadzone * Deadzone)
-                v = Vector2.zero;
+            if (_motionX.IsActive()) _motionX.Cancel();
+            _motionX = LMotion.Create(_currentX, input.x, 0.12f)
+                .WithEase(ease)
+                .Bind(x => {
+                    _currentX = x;
+                    UpdateMoveVector();
+                });
 
-            MoveVector = Vector2.ClampMagnitude(v, 1f);
-            IsMovePressed = MoveVector != Vector2.zero;
+            if (_motionZ.IsActive()) _motionZ.Cancel();
+            _motionZ = LMotion.Create(_currentZ, input.y, 0.12f)
+                .WithEase(ease)
+                .Bind(z => {
+                    _currentZ = z;
+                    UpdateMoveVector();
+                });
+        }
+
+        private void UpdateMoveVector()
+        {
+            // 계산된 X, Z 값을 합쳐서 최종 MoveVector 갱신
+            MoveVector = new Vector2(_currentX, _currentZ);
+            IsMovePressed = MoveVector.sqrMagnitude > 0.001f;
         }
 
         public void OnInteract(InputAction.CallbackContext context)
@@ -102,6 +128,46 @@ namespace Work.Input.Code
 
             CurrentDeviceType = newDevice;
             Bus<InputDeviceChangedEvent>.Raise(new InputDeviceChangedEvent(CurrentDeviceType));
+        }
+
+        public void OnNavigate(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnSubmit(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnCancel(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnPoint(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnClick(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnRightClick(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnMiddleClick(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnScrollWheel(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnTrackedDevicePosition(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnTrackedDeviceOrientation(InputAction.CallbackContext context)
+        {
         }
     }
 }

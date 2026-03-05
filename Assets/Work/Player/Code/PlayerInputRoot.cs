@@ -17,6 +17,7 @@ namespace Work.Player.Code
         public InputContainer Input { get; private set; }
 
         public Vector2 MoveVector => Input.MoveVector;
+        public bool IsMovePressed => Input.IsMovePressed;
 
         private void Awake()
         {

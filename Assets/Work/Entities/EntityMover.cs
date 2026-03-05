@@ -28,31 +28,30 @@ namespace Code.Entities
             _stat.TryGetStat("MoveSpeed", out _speedStat);
         }
 
+
         public void Move(Vector2 direction, bool isSmooth = true)
         {
             Vector3 camForward = Vector3.Scale(_camTransform.forward, new Vector3(1, 0, 1)).normalized;
             Vector3 camRight = _camTransform.right;
+            Vector3 lookDirection = (camForward * direction.y + camRight * direction.x);
 
-            Vector3 move = (camForward * direction.y + camRight * direction.x) * Time.deltaTime;
-
-            if (direction.sqrMagnitude > 0.01f)
-            {
-                Vector3 lookDirection = new Vector3(move.x, 0, move.z);
-                if (lookDirection != Vector3.zero)
-                {
-                    Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-                    if (isSmooth)
-                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.1f);
-                    else
-                        transform.rotation = targetRotation;
-                }
-            }
+            if (direction.sqrMagnitude > 0.01f && lookDirection != Vector3.zero)
+                transform.rotation = Quaternion.LookRotation(lookDirection);
         }
 
-        public void ApplyRootMotion(Vector3 deltaPosition)
+        public void ApplyRootMotion(Vector3 deltaPosition, bool useXPos = false)
         {
             Vector3 motion = new Vector3(deltaPosition.x, 0f, deltaPosition.z);
-            if (motion.sqrMagnitude > 0f)
+
+            if (!useXPos)
+            {
+                Vector3 forward = transform.forward;
+
+                // 투영으로 빗겨 나가는 움직임을 제외한 직진 벡터만 남긴다.
+                motion = Vector3.Project(motion, forward);
+            }
+
+            if (motion.sqrMagnitude > 0.0001f) // 부동 소수점 오차를 고려해 약간의 여유를 둠
             {
                 _controller.Move(motion);
             }
