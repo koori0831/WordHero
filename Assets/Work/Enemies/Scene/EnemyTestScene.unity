@@ -2616,6 +2616,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 4482ceb80c1e29c479a0d394bfdc8252, type: 2}
+  - {fileID: 2100000, guid: 2c236d78f2072bf4e92ea841836cabef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2951,7 +2952,7 @@ Transform:
   m_GameObject: {fileID: 786360878}
   serializedVersion: 2
   m_LocalRotation: {x: 0.45383492, y: 0, z: 0, w: 0.8910858}
-  m_LocalPosition: {x: 9.117998e-11, y: 19.632093, z: -52.089874}
+  m_LocalPosition: {x: 0, y: 19.632095, z: -52.089878}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4026,6 +4027,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a8c0cff7906583449b8e48931489885d, type: 2}
+  - {fileID: 2100000, guid: 2c236d78f2072bf4e92ea841836cabef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4170,6 +4172,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 39165591524cae145b060f60a8207572, type: 2}
+  - {fileID: 2100000, guid: 2c236d78f2072bf4e92ea841836cabef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6125,6 +6128,7 @@ GameObject:
   - component: {fileID: 1540623735}
   - component: {fileID: 1540623734}
   - component: {fileID: 1540623733}
+  - component: {fileID: 1540623736}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -6215,12 +6219,36 @@ Transform:
   m_GameObject: {fileID: 1540623732}
   serializedVersion: 2
   m_LocalRotation: {x: 0.45383492, y: 0, z: 0, w: 0.8910858}
-  m_LocalPosition: {x: 9.117998e-11, y: 19.632093, z: -52.089874}
+  m_LocalPosition: {x: 0, y: 19.632095, z: -52.089878}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 53.98, y: 0, z: 0}
+--- !u!114 &1540623736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540623732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineImpulseListener
+  ApplyAfter: 2
+  ChannelMask: 1
+  Gain: 1
+  Use2DDistance: 0
+  UseCameraSpace: 1
+  SignalCombinationMode: 0
+  ReactionSettings:
+    m_SecondaryNoise: {fileID: 0}
+    AmplitudeGain: 1
+    FrequencyGain: 1
+    Duration: 1
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &1590647173
 GameObject:
   m_ObjectHideFlags: 0
@@ -7610,6 +7638,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 39165591524cae145b060f60a8207572, type: 2}
+  - {fileID: 2100000, guid: 2c236d78f2072bf4e92ea841836cabef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

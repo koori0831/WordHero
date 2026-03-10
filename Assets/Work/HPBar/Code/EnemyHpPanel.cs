@@ -34,11 +34,9 @@ namespace Work.HPBar.Code
 
         private void OnHideInfoDataEvent(HideInfoDataEvent evt)
         {
-            if (_currentTargetEnemy != null)
-                if (!_currentTargetEnemy.IsDead)
-                    return;
-            if (_currentEnemyInfoData != null)
-                _currentEnemyInfoData.EnemyHpValue.OnHpChanged -= HandleHPChangeEvent;
+            if (_currentEnemyInfoData != null && !_currentEnemyInfoData.Owner.IsDead)
+                return;
+            ResetEvents();
             AllDisable();
             _currentEnemyInfoData = null;
             _currentTargetEnemy = null;
@@ -46,25 +44,38 @@ namespace Work.HPBar.Code
 
         private void OnInfoDataEvent(InfoDataEvent evt)
         {
-            if (_currentEnemyInfoData != null) return;
+            if (_currentEnemyInfoData != null)
+                return;
+            //if (_currentTargetEnemy != null) return;
             if (!(evt.Info is EnemyInfoDataSO data)) return;
-            if (_currentTargetEnemy != null) return;
+            EnableFromInfo(data);
+        }
+
+        private void EnableFromInfo(EnemyInfoDataSO data)
+        {
+            ResetEvents();
             _currentEnemyInfoData = data;
-            AllEnable();
             _currentEnemyInfoData.EnemyHpValue.OnHpChanged += HandleHPChangeEvent;
             _currentEnemyInfoData.StatusValue.OnstateusChangeEvent += HandleStatusChangeEvent;
+            AllEnable();
+        }
+
+        private void ResetEvents()
+        {
+            if (_currentEnemyInfoData != null)
+            {
+                _currentEnemyInfoData.EnemyHpValue.OnHpChanged -= HandleHPChangeEvent;
+                _currentEnemyInfoData.StatusValue.OnstateusChangeEvent -= HandleStatusChangeEvent;
+            }
         }
 
         private void OnEnemyHitEvent(EnemyHitEvent evt)
         {
-            Enemy hitTarget = evt.Target.GetComponent<Enemy>();
-            if (hitTarget == null || (_currentTargetEnemy != null && hitTarget == _currentTargetEnemy)) return;
-            _currentTargetEnemy = hitTarget;
+            //Enemy hitTarget = evt.Target.GetComponent<Enemy>();
+            //if (hitTarget == null || (_currentTargetEnemy != null && hitTarget == _currentTargetEnemy)) return;
+            //_currentTargetEnemy = hitTarget;
             if (!(evt.Info is EnemyInfoDataSO data)) return;
-            _currentEnemyInfoData = data;
-            _currentEnemyInfoData.EnemyHpValue.OnHpChanged += HandleHPChangeEvent;
-            _currentEnemyInfoData.StatusValue.OnstateusChangeEvent += HandleStatusChangeEvent;
-            AllEnable();
+            EnableFromInfo(data);
         }
 
         private void HandleStatusChangeEvent(StatusType type, bool state)
