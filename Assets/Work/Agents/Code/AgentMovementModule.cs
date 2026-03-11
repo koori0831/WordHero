@@ -6,7 +6,7 @@ namespace Work.Agents.Code
 {
     public class AgentMovementModule : MonoBehaviour, IAgentModule
     {
-        private Agent _owner;
+        protected Agent _owner;
 
         public virtual void Initialize(Agent agent)
         {

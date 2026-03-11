@@ -51,7 +51,7 @@ namespace Work.Agents.Code
         [field: SerializeField] public int MaxHealth { get; private set; } = 100;
 
 
-        public void Initialize(Agent agent)
+        public virtual void Initialize(Agent agent)
         {
             _owner = agent;
             HpValue = new HpValue(MaxHealth);

@@ -7,8 +7,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 using Work.Combat.Code;
-using Work.Enemies.Code;
-using Work.Entities;
 using Work.Information.Code;
 
 namespace Work.Agents.Code
@@ -33,7 +31,7 @@ namespace Work.Agents.Code
         {
             foreach (var module in _modules.Values)
             {
-                if (module is IAfterInit afterInitModule)
+                if (module is IAfterInitialize afterInitModule)
                 {
                     afterInitModule.AfterInitialize();
                 }

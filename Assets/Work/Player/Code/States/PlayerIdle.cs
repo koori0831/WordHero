@@ -1,17 +1,17 @@
-﻿using Code.Entities;
-using Code.FSM;
+﻿using Code.FSM;
 using UnityEngine;
+using Work.Agents.Code;
 
 namespace Work.Player.Code.States
 {
     public class PlayerIdle : PlayerCanAttackStates
     {
-        private PlayerInputRoot _input;
+        private PlayerInputModule _input;
 
-        public PlayerIdle(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
+        public PlayerIdle(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
         {
             if (_player == null) return;
-            _input = _player.GetCompo<PlayerInputRoot>();
+            _input = _player.GetModule<PlayerInputModule>(true);
         }
 
         public override void Update()

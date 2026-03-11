@@ -1,24 +1,24 @@
-﻿using Code.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Work.Agents.Code;
 
 namespace Code.FSM
 {
-    public class StateCompo : MonoBehaviour, IEntityComponent, IAfterInitCompo
+    public class StateCompo : MonoBehaviour, IAgentModule, IAfterInitialize
     {
-        public Entity Owner { get; protected set; }
+        public Agent Owner { get; protected set; }
         public StateMachine StateMachine { get; private set; }
 
         [SerializeField] private List<StateSO> stateDataList;
 
-        public void InitCompo(Entity entity)
+        public void Initialize(Agent owner)
         {
-            Owner = entity;
+            Owner = owner;
             StateMachine = new StateMachine();
         }
 
-        public void AfterInit()
+        public void AfterInitialize()
         {
             foreach (var data in stateDataList)
             {
@@ -28,7 +28,7 @@ namespace Code.FSM
                     try
                     {
                         int animationHash = data.animationHash;
-                        var state = Activator.CreateInstance(type, StateMachine, Owner, animationHash) as State;
+                        State state = Activator.CreateInstance(type, StateMachine, Owner, animationHash) as State;
                         StateMachine.AddState(data.stateName, state);
                     }
                     catch (Exception e)
@@ -50,12 +50,12 @@ namespace Code.FSM
 
         private void Update()
         {
-            StateMachine.Update();
+            StateMachine?.Update();
         }
 
         public void TriggerEvent(AnimationEventType eventType)
         {
-            StateMachine.TriggerEvent(eventType);
+            StateMachine?.TriggerEvent(eventType);
         }
 
         private void OnDestroy()

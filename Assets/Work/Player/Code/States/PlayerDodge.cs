@@ -1,23 +1,21 @@
-﻿using Code.Entities;
-using Code.FSM;
-using UnityEngine;
+﻿using Code.FSM;
 using Work.Core.Utils.EventBus;
+using Work.Agents.Code;
+using Work.Combat.Code;
 
 namespace Work.Player.Code.States
 {
-    public readonly record struct DodgeEvent : IEvent;
-
     public class PlayerDodge : PlayerStates
     {
-        private EntityHealth _health;
-        private PlayerInputRoot _inputRoot;
-        private EntityMover _mover;
+        private AgentStatusModule _statusModule;
+        private PlayerInputModule _inputRoot;
+        private PlayerMovementModule _mover;
 
-        public PlayerDodge(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
+        public PlayerDodge(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
         {
-            _health = _entity.GetCompo<EntityHealth>();
-            _inputRoot = _entity.GetCompo<PlayerInputRoot>();
-            _mover = _entity.GetCompo<EntityMover>();
+            _statusModule = _player.GetModule<AgentStatusModule>(true);
+            _inputRoot = _player.GetModule<PlayerInputModule>(true);
+            _mover = _player.GetModule<PlayerMovementModule>(true);
         }
 
         public override void Enter()
@@ -26,14 +24,14 @@ namespace Work.Player.Code.States
 
             _mover.Move(_inputRoot.MoveVector, false); 
 
-            _health.IsDamageImmune = true;
+            _statusModule.AddStatus(new StatusEffect { type = StatusType.HitImmunity, isInfinite = true });
             _animator.SetApplyRootMotion(true);
-            Bus<DodgeEvent>.Raise(new DodgeEvent());
+            Bus<CombatDodgeEvent>.Raise(new CombatDodgeEvent(_player.gameObject));
         }
 
         public override void Exit()
         {
-            _health.IsDamageImmune = false;
+            _statusModule.RemoveStatus(StatusType.HitImmunity);
             _animator.SetApplyRootMotion(false);
             base.Exit();
         }

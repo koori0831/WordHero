@@ -1,7 +1,7 @@
 ﻿using Code.FSM;
-using Code.Entities;
 using UnityEngine;
 using Work.Input.Code;
+using Work.Agents.Code;
 
 namespace Work.Player.Code.States
 {
@@ -16,7 +16,7 @@ namespace Work.Player.Code.States
         private bool _comboWindowOpen;
         private float _comboExpireTime;
 
-        public PlayerAttack(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
+        public PlayerAttack(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
         {
         }
 

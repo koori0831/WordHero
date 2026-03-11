@@ -1,24 +1,23 @@
-﻿using Code.Entities;
-using System;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
+using Work.Agents.Code;
 using Work.Core.Utils.EventBus;
 using Work.Input.Code;
 
 namespace Work.Interaction.Code
 {
-    public class InteractCompo : MonoBehaviour, IEntityComponent
+    public class InteractCompo : MonoBehaviour, IAgentModule
     {
-        public Entity Owner { get; private set; }
+        public Agent Owner { get; private set; }
 
         [SerializeField] private float interactRange = 2f;
         [SerializeField] private Transform trm;
 
 
 
-        public void InitCompo(Entity entity)
+        public void Initialize(Agent owner)
         {
-            Owner = entity;
+            Owner = owner;
             Bus<InputInteractEvent>.Events += OnInteract;
         }
 

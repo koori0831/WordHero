@@ -38,7 +38,14 @@ namespace Work.Agents.Code
 
         public void AddStatus(StatusEffect statusEffect)
         {
-            _status.Enqueue(statusEffect);
+            if (statusEffect == null) return;
+            _status.Enqueue(CloneStatus(statusEffect));
+        }
+
+        public void RemoveStatus(StatusType type)
+        {
+            if (!_activeEffects.ContainsKey(type)) return;
+            _removeEffects.Add(type);
         }
 
         public void Update()
@@ -141,6 +148,22 @@ namespace Work.Agents.Code
         public bool HasStatusEffect(StatusType type)
         {
             return _activeEffects.ContainsKey(type);
+        }
+
+        public float GetStatusValue(StatusType type)
+        {
+            if (_activeEffects.TryGetValue(type, out StatusEffect effect))
+            {
+                return effect.Value;
+            }
+
+            return 0f;
+        }
+
+        private static StatusEffect CloneStatus(StatusEffect source)
+        {
+            string json = JsonUtility.ToJson(source);
+            return JsonUtility.FromJson<StatusEffect>(json);
         }
     }
 }
