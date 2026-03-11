@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Work.Combat.Code;
 using Work.StatSystem.Code;
 
 namespace Code.Entities
@@ -55,6 +56,30 @@ namespace Code.Entities
             {
                 _controller.Move(motion);
             }
+        }
+
+        public async void KnockBack(KnockbackData knockbackData)
+        {
+
+            _owner.transform.rotation = Quaternion.LookRotation(new Vector3(-knockbackData.Direction.x, 0, -knockbackData.Direction.z));
+
+            float duration = knockbackData.Duration;
+            Vector3 direction = knockbackData.Direction.normalized;
+            direction.y = 0; 
+            float currentTime = 0;
+            float maxSpeed = knockbackData.Force;
+            AnimationCurve moveCurve = knockbackData.KnockbackCurve;
+
+            while (currentTime < duration)
+            {
+                float normalizeTime = currentTime / duration;
+                float currentSpeed = maxSpeed * moveCurve.Evaluate(normalizeTime);
+                Vector3 currentMovement = direction * currentSpeed;
+                _owner.transform.Translate(currentMovement * Time.fixedDeltaTime, Space.World);
+                currentTime += Time.fixedDeltaTime;
+                await Awaitable.FixedUpdateAsync();
+            }
+
         }
     }
 }

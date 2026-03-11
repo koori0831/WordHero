@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using Work.Core.Utils.EventBus;
 using Work.Player.Code.States;

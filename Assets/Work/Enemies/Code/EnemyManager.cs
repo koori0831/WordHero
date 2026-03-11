@@ -34,7 +34,7 @@ namespace Work.Enemies.Code
                     newPos.y = 0;
                     Enemy enemy = Instantiate(enemies[UnityEngine.Random.Range(0, enemies.Count - 1)], newPos, Quaternion.identity);
                     currentEnemies.Add(enemy);
-                    enemy.Init(this);
+                    enemy.Init();
                     enemy.gameObject.transform.parent = point.transform;
                 }
             }

@@ -14,7 +14,7 @@ public partial class SetCanMoveAction : Action
 
     protected override Status OnStart()
     {
-        EnemyMovementModule mover = Self.Value.GetModule<EnemyMovementModule>();
+        EnemyMovementModule mover = Self.Value.GetModule<EnemyMovementModule>(true);
         Debug.Assert(mover != null, "EnemyMovementModule is missing.");
         mover.SetMovement(Setting.Value);
         return Status.Success;

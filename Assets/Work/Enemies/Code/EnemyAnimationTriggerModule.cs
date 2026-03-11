@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using Work.Agents.Code;
 
 namespace Work.Enemies.Code
 {
-    public class EnemyAnimationTriggerModule : MonoBehaviour, IEnemyModule
+    public class EnemyAnimationTriggerModule : MonoBehaviour, IAgentModule
     {
         private Enemy _owner;
 
         public Action OnAnimationEnd;
         public Action OnAttackEvent;
 
-        public void Initialize(Enemy enemy)
+        public void Initialize(Agent agent)
         {
-            _owner = enemy;
+            _owner = agent as Enemy;
         }
 
         public void AnimationEndTrigger()

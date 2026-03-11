@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using Work.Agents.Code;
 
 namespace Work.Enemies.Code
 {
-    public class EnemyAnimatorModule : MonoBehaviour, IEnemyModule
+    public class EnemyAnimatorModule : MonoBehaviour, IAgentModule
     {
         private Animator _animator;
         public Animator Animator => _animator;
@@ -10,9 +11,9 @@ namespace Work.Enemies.Code
 
         public Renderer[] Renderers { get; private set; }
 
-        public void Initialize(Enemy enemy)
+        public void Initialize(Agent agent)
         {
-            _owner = enemy;
+            _owner = agent as Enemy;
             _animator = GetComponent<Animator>();
             Renderers = GetComponentsInChildren<Renderer>();
         }

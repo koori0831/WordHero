@@ -32,15 +32,15 @@ public partial class HitMaterialChangeAction : Action
         {
             LMotion.Create(0f, 1f, 0.12f)
             .WithEase(Ease.OutExpo)
-            .WithOnComplete(() => LMotion.Create(1f, 0f, 0.1f)
-            .WithEase(Ease.OutExpo)
+            .WithOnComplete(() => LMotion.Create(1f, 0f, 0.07f)
+            .WithEase(Ease.InBack)
             .Bind(x => mat.SetFloat("_Value", x)))
             .Bind(x => mat.SetFloat("_Value", x));
         }
 
         
         
-        return Status.Running;
+        return Status.Success;
     }
 
 }
