@@ -1,12 +1,13 @@
 ﻿using Alchemy.Inspector;
 using System.Collections.Generic;
 using UnityEngine;
+using Work.Agents.Code;
 using Work.Combat.Code;
 using Work.Entities;
 
 namespace Work.Enemies.Code
 {
-    public class EnemyAttackModule : MonoBehaviour, IEnemyModule, IVariableModule
+    public class EnemyAttackModule : MonoBehaviour, IAgentModule, IVariableModule
     {
         protected Enemy _owner;
 
@@ -21,17 +22,23 @@ namespace Work.Enemies.Code
 
         //[SerializeField] private 
 
-        public void Initialize(Enemy enemy)
+        public void Initialize(Agent agent)
         {
-            _owner = enemy;
-            targetSensor.Init(enemy);
+            _owner = agent as Enemy;
+            targetSensor.Init(agent);
         }
 
 
 
         public virtual void Attack()
         {
-            List<IDamageable> damageables = targetSensor.Cast();
+            List<IDamageable> damageables = targetSensor.Cast<IDamageable>();
+            List<IKnockbackable> knockbackables = targetSensor.Cast<IKnockbackable>();
+
+            knockbackables.ForEach(k =>
+            {
+                k.TakeKnockback(new KnockbackData(5f, 0.5f, (k.Transform.position - _owner.Transform.position).normalized, AnimationCurve.EaseInOut(0, 1, 1, 0)));
+            });
             damageables.ForEach(d => d.TakeDamage(damage));
         }
 

@@ -1,18 +1,16 @@
-﻿using Code.Entities;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
+using Work.Agents.Code;
 using Work.Combat.Code;
 
 namespace Work.Enemies.Code
 {
-    public class EnemyMovementModule : MonoBehaviour, IEnemyModule, IVariableModule
+    public class EnemyMovementModule : AgentMovementModule, IVariableModule
     {
-        private Enemy _owner;
+        private Enemy _enemy;
         private Transform _target;
         private NavMeshAgent _agent;
         private EnemyAnimatorModule _animator;
-        private List<ICrowd> nearNeighbors = new List<ICrowd>();
         private Vector3 _destination;
         private Vector3 velocity;
 
@@ -30,24 +28,35 @@ namespace Work.Enemies.Code
         [field: SerializeField] public float Speed { get; private set; } = 3f;
         [SerializeField] private float speedAnimationMultiflier = 1f;
 
-        public void Initialize(Enemy enemy)
+        public override void Initialize(Agent agent)
         {
-            _owner = enemy;
-            _animator = enemy.GetModule<EnemyAnimatorModule>();
-            _agent = enemy.NavAgent;
+            base.Initialize(agent);
+            _enemy = agent as Enemy;
+            _animator = _enemy.GetModule<EnemyAnimatorModule>();
+            _agent = _enemy.NavAgent;
             SetSpeed(Speed);
         }
 
         public void BTInit()
         {
-            _owner.SetBlackboardVariable<float>(BTVariables.RunSpeed, Speed);
-            if (_owner.ExistVarialbe(BTVariables.WalkSpeed))
-                _owner.SetBlackboardVariable<float>(BTVariables.WalkSpeed, Speed / 3);
+            _enemy.SetBlackboardVariable<float>(BTVariables.RunSpeed, Speed);
+            if (_enemy.ExistVarialbe(BTVariables.WalkSpeed))
+                _enemy.SetBlackboardVariable<float>(BTVariables.WalkSpeed, Speed / 3);
         }
 
         public void SetTarget(Transform target)
         {
             _target = target;
+        }
+
+        public override void KnockBack(KnockbackData knockbackData)
+        {
+            SetStop(true); //네비게이션은 정지시켜주고
+
+            base.KnockBack(knockbackData);
+
+            WarpToPosition(_enemy.transform.position);
+            SetStop(false); //넉백이 끝나면 다시 네비게이션을 시작합니다.
         }
 
         public void Update()
@@ -102,49 +111,24 @@ namespace Work.Enemies.Code
 
         public Quaternion LookAtTarget(Vector3 target, bool isSmooth = true)
         {
-            Vector3 direction = target - _owner.transform.position;
+            Vector3 direction = target - _enemy.transform.position;
             direction.y = 0;
             Quaternion lookRotation = Quaternion.LookRotation(direction.normalized);
 
             if (isSmooth)
             {
-                _owner.transform.rotation = Quaternion.Slerp(_owner.transform.rotation,
+                _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation,
                                                 lookRotation, Time.deltaTime * rotateSpeed);
             }
             else
             {
-                _owner.transform.rotation = lookRotation;
+                _enemy.transform.rotation = lookRotation;
             }
 
             return lookRotation;
         }
 
-        public async void KnockBack(KnockbackData knockbackData)
-        {
-            //넉백에 대한 면역이 있는지 체크하는건 EnemyKnockbackModule에서 하자.
-            SetStop(true); //네비게이션은 정지시켜주고
 
-            float duration = knockbackData.Duration;
-            Vector3 direction = knockbackData.Direction.normalized;
-            direction.y = 0; // 수평 방향으로만 넉백이 적용되도록 y축은 제거
-            float currentTime = 0;
-            float maxSpeed = knockbackData.Force;
-            AnimationCurve moveCurve = knockbackData.KnockbackCurve;
-
-            while (currentTime < duration)
-            {
-                float normalizeTime = currentTime / duration;
-                float currentSpeed = maxSpeed * moveCurve.Evaluate(normalizeTime);
-                Vector3 currentMovement = direction * currentSpeed;
-                _owner.transform.Translate(currentMovement * Time.fixedDeltaTime, Space.World);
-                currentTime += Time.fixedDeltaTime;
-                await Awaitable.FixedUpdateAsync();
-            }
-            //여기서 추가 작업을 안해주면 넉백이 이상해진다. 일단 이상하게 해서 봅시다.
-            WarpToPosition(_owner.transform.position);
-            SetStop(false); //넉백이 끝나면 다시 네비게이션을 시작합니다.
-
-        }
 
         public void SetMovement(bool isValue)
         {

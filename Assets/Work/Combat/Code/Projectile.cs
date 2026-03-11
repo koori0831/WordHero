@@ -40,6 +40,10 @@ namespace Work.Combat.Code
                     damageable.TakeDamage(_damage);
                 }
 
+                if (collision.gameObject.TryGetComponent(out IKnockbackable knockbackable))
+                {
+                    knockbackable.TakeKnockback(new KnockbackData(5f, 0.5f, (knockbackable.Transform.position - transform.position).normalized, AnimationCurve.EaseInOut(0, 1, 1, 0))); ;
+                }
 
                 Destroy(gameObject);
             }

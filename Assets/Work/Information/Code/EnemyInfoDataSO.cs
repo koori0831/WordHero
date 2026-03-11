@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Work.Agents.Code;
 using Work.Enemies.Code;
 
 namespace Work.Information.Code
@@ -15,7 +16,7 @@ namespace Work.Information.Code
             EnemyInfoDataSO data = base.GetInfo() as EnemyInfoDataSO;
             data.Owner = owner;
             data.EnemyHpValue = owner.GetModule<EnemyHealthModule>().HpValue;
-            data.StatusValue = owner.GetModule<EnemyStatusModule>().StatusValue;
+            data.StatusValue = owner.GetModule<AgentStatusModule>().StatusValue;
             return data;
         }
     }

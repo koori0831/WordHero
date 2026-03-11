@@ -1,17 +1,18 @@
 ﻿using Code.Entities;
 using Code.FSM;
-using Work.Entities;
 using UnityEngine;
-using Work.StatSystem.Code;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using Work.Combat.Code;
 using Work.Core.Utils.EventBus;
 using Work.Enemies.Code;
-using UnityEngine.InputSystem;
+using Work.Entities;
 using Work.Input.Code;
+using Work.StatSystem.Code;
 
 namespace Work.Player.Code
 {
-    public class Player : Entity, IDamageable
+    public class Player : Entity, IDamageable, IKnockbackable
     {
         [SerializeField] private BoxCollider _attackCollider;
         [SerializeField] private AnimationCurve _attackKnockbackCurve;
@@ -25,6 +26,11 @@ namespace Work.Player.Code
         [SerializeField, Range(0f, 1f)] private float _criticalChance = 0f;
 
         private PlayerInputRoot _inputRoot;
+
+        public UnityEvent<KnockbackData> OnKnockbackEvent;
+        public bool IsDead { get; private set; } = false;
+
+        public Transform Transform => gameObject != null ? transform : null;
 
         private void OnEnable()
         {
@@ -68,11 +74,16 @@ namespace Work.Player.Code
                 {
                     int damage = (int)_attackSO.Value;
                     bool isCritical = Random.value <= _criticalChance;
+
+                    if(isCritical)
+                        damage = Mathf.RoundToInt(damage * 1.5f); // 크리티컬 데미지 1.5배
+
                     damageable.TakeDamage(damage);
 
                     Component targetComponent = damageable as Component;
                     GameObject targetObject = targetComponent != null ? targetComponent.gameObject : null;
                     Bus<CombatHitEvent>.Raise(new CombatHitEvent(gameObject, targetObject, damage, isCritical));
+                    Bus<DamageTextEvent>.Raise(new DamageTextEvent(damage, targetObject, isCritical));
                 }
 
                 IKnockbackable knockbackable = hitCollider.GetComponent<IKnockbackable>();
@@ -148,6 +159,12 @@ namespace Work.Player.Code
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, _lockOnDetectRange);
+        }
+
+        public void TakeKnockback(KnockbackData knockbackData)
+        {
+            if (IsDead) return;
+            OnKnockbackEvent?.Invoke(knockbackData);
         }
     }
 }
