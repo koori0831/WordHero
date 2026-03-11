@@ -95,13 +95,6 @@ namespace Work.Input.Code
             }
         }
 
-        public void OnMenu(InputAction.CallbackContext context)
-        {
-            UpdateCurrentDevice(context);
-            if (context.performed)
-                Bus<InputMenuEvent>.Raise(new InputMenuEvent());
-        }
-
         public void OnAttack(InputAction.CallbackContext context)
         {
             UpdateCurrentDevice(context);
@@ -116,6 +109,27 @@ namespace Work.Input.Code
                 Bus<InputDodgeEvent>.Raise(new InputDodgeEvent());
         }
 
+        public void OnWeaponSwap(InputAction.CallbackContext context)
+        {
+            UpdateCurrentDevice(context);
+            if (context.performed)
+                Bus<WeaponSwapEvent>.Raise(new WeaponSwapEvent());
+        }
+
+        public void OnSkill1(InputAction.CallbackContext context)
+        {
+            UpdateCurrentDevice(context);
+            if (context.performed)
+                Bus<FirstWeaponSkillEvent>.Raise(new FirstWeaponSkillEvent());
+        }
+
+        public void OnSkill2(InputAction.CallbackContext context)
+        {
+            UpdateCurrentDevice(context);
+            if (context.performed)
+                Bus<SecondWeaponSkillEvent>.Raise(new SecondWeaponSkillEvent());
+        }
+
         private void UpdateCurrentDevice(InputAction.CallbackContext context)
         {
             var device = context.control?.device;
@@ -128,6 +142,14 @@ namespace Work.Input.Code
 
             CurrentDeviceType = newDevice;
             Bus<InputDeviceChangedEvent>.Raise(new InputDeviceChangedEvent(CurrentDeviceType));
+        }
+
+        #region UI Actions
+        public void OnMenu(InputAction.CallbackContext context)
+        {
+            UpdateCurrentDevice(context);
+            if (context.performed)
+                Bus<InputMenuEvent>.Raise(new InputMenuEvent());
         }
 
         public void OnNavigate(InputAction.CallbackContext context)
@@ -169,5 +191,6 @@ namespace Work.Input.Code
         public void OnTrackedDeviceOrientation(InputAction.CallbackContext context)
         {
         }
+        #endregion
     }
 }

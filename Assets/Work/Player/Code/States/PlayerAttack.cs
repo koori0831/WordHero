@@ -7,7 +7,7 @@ namespace Work.Player.Code.States
 {
     public class PlayerAttack : PlayerCanAttackStates
     {
-        private const int MaxCombo = 2;
+        private const int MaxCombo = 3;
         private const float ComboResetGrace = 0.15f;
         private static readonly int _attackIndexHash = Animator.StringToHash("AttackIndex");
 

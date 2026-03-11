@@ -17,5 +17,9 @@ namespace Work.Input.Code
     public readonly record struct InputDodgeEvent : IEvent;
     public readonly record struct InputAttackEvent : IEvent;
 
+    public readonly record struct WeaponSwapEvent : IEvent;
+    public readonly record struct FirstWeaponSkillEvent : IEvent;
+    public readonly record struct SecondWeaponSkillEvent : IEvent;
+
     public readonly record struct InputDeviceChangedEvent(InputDeviceType NewDevice) : IEvent;
 }
