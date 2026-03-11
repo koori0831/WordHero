@@ -1,66 +1,52 @@
-﻿using Code.Entities;
-using Code.FSM;
+﻿using Code.FSM;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Work.Agents.Code;
 using Work.Combat.Code;
 using Work.Core.Utils.EventBus;
 using Work.Enemies.Code;
-using Work.Entities;
 using Work.Input.Code;
-using Work.StatSystem.Code;
 
 namespace Work.Player.Code
 {
-    public class Player : Entity, IDamageable, IKnockbackable
+    public class Player : Agent
     {
         [SerializeField] private BoxCollider _attackCollider;
         [SerializeField] private AnimationCurve _attackKnockbackCurve;
         [SerializeField] private float _lockOnDetectRange = 5f;
         [SerializeField] private LayerMask _lockOnTargetLayer = ~0;
+        [SerializeField] private int _attackPower = 12;
 
-        private EntityHealth _health;
+        private PlayerHealthModule _health;
         private StateMachine _stateMachine;
-        private EntityStatCompo _stat;
-        private StatSO _attackSO;
         [SerializeField, Range(0f, 1f)] private float _criticalChance = 0f;
 
-        private PlayerInputRoot _inputRoot;
+        private PlayerInputModule _inputRoot;
+        private bool _isInitialized;
 
-        public UnityEvent<KnockbackData> OnKnockbackEvent;
-        public bool IsDead { get; private set; } = false;
-
-        public Transform Transform => gameObject != null ? transform : null;
-
-        private void OnEnable()
+        private void Awake()
         {
-            _health = GetCompo<EntityHealth>();
-            _stateMachine = GetCompo<StateCompo>().StateMachine;
-            _stat = GetCompo<EntityStatCompo>();
-            _inputRoot = GetCompo<PlayerInputRoot>();
-
-            _health.DeadTrigger += OnDead;
-            _health.DamagedTrigger += OnHit;
+            Init();
         }
 
-        private void Start()
+        public override void Init()
         {
-            _stat.TryGetStat("AttackPower", out _attackSO);
-        }
+            if (_isInitialized) return;
+            _isInitialized = true;
 
-        private void OnDisable()
-        {
-            _health.DeadTrigger -= OnDead;
-            _health.DamagedTrigger -= OnHit;
+            base.Init();
+            _health = GetModule<PlayerHealthModule>(true);
+            _inputRoot = GetModule<PlayerInputModule>(true);
+            StateCompo stateModule = GetModule<StateCompo>(true);
+            _stateMachine = stateModule.StateMachine;
+
+            OnHitEvent.AddListener(_health.TakeDamage);
+            _health.Damaged += OnHit;
+            _health.OnDeath.AddListener(OnDead);
         }
 
         private void OnDead() => _stateMachine.ChangeState("Death");
         private void OnHit() => _stateMachine.ChangeState("Hit");
-
-        public void TakeDamage(int damageAmount)
-        {
-            _health.DecreaseHP(damageAmount);
-        }
 
         public void Attack()
         {
@@ -72,7 +58,7 @@ namespace Work.Player.Code
                 IDamageable damageable = hitCollider.GetComponent<IDamageable>();
                 if (damageable != null)
                 {
-                    int damage = (int)_attackSO.Value;
+                    int damage = _attackPower;
                     bool isCritical = Random.value <= _criticalChance;
 
                     if(isCritical)
@@ -161,10 +147,5 @@ namespace Work.Player.Code
             Gizmos.DrawWireSphere(transform.position, _lockOnDetectRange);
         }
 
-        public void TakeKnockback(KnockbackData knockbackData)
-        {
-            if (IsDead) return;
-            OnKnockbackEvent?.Invoke(knockbackData);
-        }
     }
 }

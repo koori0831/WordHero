@@ -1,20 +1,19 @@
-﻿using Code.Entities;
-using UnityEngine;
+﻿using Work.Agents.Code;
 
 namespace Code.FSM
 {
     public class State
     {
         protected StateMachine _stateMachine;
-        protected Entity _entity;
-        protected EntityAnimator _animator;
+        protected Agent _owner;
+        protected IAgentAnimationModule _animator;
         protected int _animationHash;
 
-        public State(StateMachine stateMachine, Entity entity, int animationHash)
+        public State(StateMachine stateMachine, Agent owner, int animationHash)
         {
             _stateMachine = stateMachine;
-            _entity = entity;
-            _animator = _entity.GetCompo<EntityAnimator>();
+            _owner = owner;
+            _animator = _owner.GetModule<IAgentAnimationModule>(true);
             _animationHash = animationHash;
 
         }
@@ -23,7 +22,7 @@ namespace Code.FSM
         {
             if (_animationHash != 0)
             {
-                _animator.SetParam(_animationHash, true);
+                _animator?.SetParam(_animationHash, true);
             }
         }
 
@@ -31,7 +30,7 @@ namespace Code.FSM
         {
             if (_animationHash != 0)
             {
-                _animator.SetParam(_animationHash, false);
+                _animator?.SetParam(_animationHash, false);
             }
         }
 

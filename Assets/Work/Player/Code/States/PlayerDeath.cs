@@ -1,11 +1,11 @@
 ﻿using Code.FSM;
-using Code.Entities;
+using Work.Agents.Code;
 
 namespace Work.Player.Code.States
 {
     public class PlayerDeath : PlayerStates
     {
-        public PlayerDeath(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
+        public PlayerDeath(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
         {
         }
     }

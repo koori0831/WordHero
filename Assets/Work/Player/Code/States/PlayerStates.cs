@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Code.FSM;
-using Code.Entities;
+using Work.Agents.Code;
 
 namespace Work.Player.Code.States
 {
@@ -9,10 +9,10 @@ namespace Work.Player.Code.States
     {
         protected Player _player;
 
-        public PlayerStates(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
+        public PlayerStates(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
         {
-            _player = entity as Player;
-            Debug.Assert(_player != null, "PlayerStates can only be used with Player entity.");
+            _player = owner as Player;
+            Debug.Assert(_player != null, "PlayerStates can only be used with Player owner.");
         }
     }
 }
