@@ -21,12 +21,14 @@ namespace Work.Enemies.Code
 
         public bool IsDead { get; private set; } = false;
         public bool IsCanShowInfo { get; protected set; }
-        public EnemyManager Spawner { get; private set; }
+        public Transform Transform => gameObject != null ? transform : null;
+        public InfoDataSO InfoData => EnemyInfoData;
+
+
+        public EnemyManager EnemyManager { get; private set; }
         public NavMeshAgent NavAgent { get; private set; }
         public EnemyInfoDataSO EnemyInfoData { get; protected set; }
         public BehaviorGraphAgent BehaviorAgent { get; private set; }
-        public Transform Transform => gameObject != null ? transform : null;
-        public InfoDataSO InfoData => EnemyInfoData;
 
 
         [SerializeField] protected List<VariableSO> variableSOs = new List<VariableSO>();
@@ -40,7 +42,7 @@ namespace Work.Enemies.Code
 
         public void Init(EnemyManager spawner)
         {
-            Spawner = spawner;
+            EnemyManager = spawner;
             BehaviorAgent = GetComponent<BehaviorGraphAgent>();
             NavAgent = GetComponent<NavMeshAgent>();
             Debug.Assert(BehaviorAgent != null, "BehaviorAgent component is missing.");
