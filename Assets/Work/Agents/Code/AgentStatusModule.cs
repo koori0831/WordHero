@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Work.Agents.Code;
 using Work.Combat.Code;
 
-namespace Work.Enemies.Code
+namespace Work.Agents.Code
 {
     public class StatusValue
     {
@@ -14,9 +15,9 @@ namespace Work.Enemies.Code
         public bool isInvincible;
     }
 
-    public class EnemyStatusModule : MonoBehaviour, IEnemyModule
+    public class AgentStatusModule : MonoBehaviour, IAgentModule
     {
-        private Enemy _enemy;
+        private Agent _agent;
 
         private Queue<StatusEffect> _status = new Queue<StatusEffect>();
 
@@ -26,9 +27,9 @@ namespace Work.Enemies.Code
 
         public StatusValue StatusValue { get; private set; }
 
-        public void Initialize(Enemy enemy)
+        public void Initialize(Agent agent)
         {
-            _enemy = enemy;
+            _agent = agent;
             StatusValue = new StatusValue();
             StatusValue.isSuperArmor = HasStatusEffect(StatusType.SuperArmor);
             StatusValue.isInvincible = HasStatusEffect(StatusType.Invincible);

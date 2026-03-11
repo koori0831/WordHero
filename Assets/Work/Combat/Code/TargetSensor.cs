@@ -1,6 +1,7 @@
 ﻿using Alchemy.Inspector;
 using System.Collections.Generic;
 using UnityEngine;
+using Work.Agents.Code;
 using Work.Enemies.Code;
 using Work.Entities;
 
@@ -20,7 +21,7 @@ namespace Work.Combat.Code
 
     public class TargetSensor : MonoBehaviour
     {
-        private Enemy _owner;
+        private Agent _owner;
 
         [SerializeField] private TargetingType targetingType = TargetingType.AreaEnemy;
         [SerializeField] private TargetingShape targetingShape = TargetingShape.Circle;
@@ -41,7 +42,7 @@ namespace Work.Combat.Code
         [ShowIf(nameof(IsCircleShape))]
         [SerializeField] private float circleRadius = 0.5f;
 
-        public void Init(Enemy enemy)
+        public void Init(Agent enemy)
         {
             _owner = enemy;
         }

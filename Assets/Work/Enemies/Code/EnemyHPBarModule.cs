@@ -1,10 +1,11 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using Work.Agents.Code;
 
 namespace Work.Enemies.Code
 {
-    public class EnemyHPBarModule : MonoBehaviour, IEnemyModule
+    public class EnemyHPBarModule : MonoBehaviour, IAgentModule
     {
         [SerializeField] private TextMeshPro text;
         [SerializeField] private GameObject hpBarObject;
@@ -15,10 +16,10 @@ namespace Work.Enemies.Code
 
         private float _hpBarPercent;
 
-        public void Initialize(Enemy enemy)
+        public void Initialize(Agent agent)
         {
-            _owner = enemy;
-            _healthModule = _owner.GetModule<EnemyHealthModule>();
+            _owner = agent as Enemy;
+            _healthModule = _owner.GetModule<EnemyHealthModule>(true);
 
             _healthModule.OnHealthChanged.AddListener(UpdateHPBar);
 

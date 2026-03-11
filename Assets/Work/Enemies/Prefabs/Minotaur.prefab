@@ -1002,7 +1002,7 @@ MonoBehaviour:
   OnHitEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7683126333170159083}
+      - m_Target: {fileID: 6948093858822227654}
         m_TargetAssemblyTypeName: Work.Enemies.Code.EnemyHealthModule, Assembly-CSharp
         m_MethodName: TakeDamage
         m_Mode: 0
@@ -1801,7 +1801,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8861048994304160762}
-  - component: {fileID: 6045594472093254570}
+  - component: {fileID: 3122227595119698557}
   m_Layer: 0
   m_Name: Status
   m_TagString: Untagged
@@ -1824,7 +1824,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6865825756703392106}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6045594472093254570
+--- !u!114 &3122227595119698557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1833,9 +1833,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2433928973965550096}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b28bfd8ee0a580a4d92ddaf95b71a656, type: 3}
+  m_Script: {fileID: 11500000, guid: 7fba3305280e85d4cb27d0c3385a1ace, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.Enemies.Code.EnemyStatusModule
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Agents.Code.AgentStatusModule
 --- !u!1 &2454069704298931990
 GameObject:
   m_ObjectHideFlags: 0
@@ -3322,7 +3322,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9178420719739736281}
-  - component: {fileID: 7683126333170159083}
+  - component: {fileID: 6948093858822227654}
   m_Layer: 0
   m_Name: Health
   m_TagString: Untagged
@@ -3345,7 +3345,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6865825756703392106}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7683126333170159083
+--- !u!114 &6948093858822227654
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3375,19 +3375,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1738218845783288085}
-        m_TargetAssemblyTypeName: Work.Core.Utils.Feedbacks.FeedbackPlayer, Assembly-CSharp
-        m_MethodName: PlayFeedbacks
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  <MaxHealth>k__BackingField: 75
+  <MaxHealth>k__BackingField: 100
 --- !u!1 &5620785849079639726
 GameObject:
   m_ObjectHideFlags: 0

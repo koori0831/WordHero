@@ -1,12 +1,13 @@
 ﻿using Alchemy.Inspector;
 using System.Collections.Generic;
 using UnityEngine;
+using Work.Agents.Code;
 using Work.Combat.Code;
 using Work.Entities;
 
 namespace Work.Enemies.Code
 {
-    public class EnemyAttackModule : MonoBehaviour, IEnemyModule, IVariableModule
+    public class EnemyAttackModule : MonoBehaviour, IAgentModule, IVariableModule
     {
         protected Enemy _owner;
 
@@ -21,10 +22,10 @@ namespace Work.Enemies.Code
 
         //[SerializeField] private 
 
-        public void Initialize(Enemy enemy)
+        public void Initialize(Agent agent)
         {
-            _owner = enemy;
-            targetSensor.Init(enemy);
+            _owner = agent as Enemy;
+            targetSensor.Init(agent);
         }
 
 

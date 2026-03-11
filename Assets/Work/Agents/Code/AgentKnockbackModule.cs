@@ -1,21 +1,22 @@
 ﻿using System;
 using UnityEngine;
+using Work.Agents.Code;
 using Work.Combat.Code;
 
-namespace Work.Enemies.Code
+namespace Work.Agents.Code
 {
-    public class EnemyKnockbackModule : MonoBehaviour, IEnemyModule
+    public class AgentKnockbackModule : MonoBehaviour, IAgentModule
     {
-        private Enemy _owner;
-        private EnemyMovementModule _mover;
-        private EnemyStatusModule _statusModule;
+        private Agent _owner;
+        private AgentMovementModule _mover;
+        private AgentStatusModule _statusModule;
 
-        public void Initialize(Enemy enemy)
+        public void Initialize(Agent agent)
         {
-            _owner = enemy;
+            _owner = agent;
             _owner.OnKnockbackEvent.AddListener(ApplyKnockback);
-            _mover = _owner.GetModule<EnemyMovementModule>();
-            _statusModule = _owner.GetModule<EnemyStatusModule>();
+            _statusModule = _owner.GetModule<AgentStatusModule>();
+            _mover = _owner.GetModule<AgentMovementModule>(true);
         }
 
         public void ApplyKnockback(KnockbackData knockbackData)
