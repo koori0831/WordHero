@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LitMotion;
+using LitMotion.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -184,7 +186,7 @@ namespace Work.Sentence.Code.UI
         {
             if (panelRoot != null)
             {
-                panelRoot.SetActive(isVisible);
+                panelRoot.SetActive(true);
             }
             else
             {
@@ -193,9 +195,14 @@ namespace Work.Sentence.Code.UI
 
             if (panelCanvasGroup != null)
             {
-                panelCanvasGroup.alpha = isVisible ? 1f : 0f;
-                panelCanvasGroup.interactable = isVisible;
-                panelCanvasGroup.blocksRaycasts = isVisible;
+                LMotion.Create(panelCanvasGroup.alpha, isVisible ? 1f : 0f, 0.12f)
+                    .WithEase(Ease.OutQuad)
+                    .WithOnComplete(() =>
+                    {
+                        panelCanvasGroup.interactable = isVisible;
+                        panelCanvasGroup.blocksRaycasts = isVisible;
+                    })
+                    .BindToAlpha(panelCanvasGroup);
             }
 
             if (isVisible)

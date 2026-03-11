@@ -18,7 +18,7 @@ namespace Work.Player.Code.States
         {
             base.Update();
             Vector2 moveVector = _input.MoveVector;
-            if (moveVector.magnitude > 0.1f)
+            if (moveVector.sqrMagnitude > 0.01f || _input.IsMovePressed)
             {
                 _stateMachine.ChangeState("Move");
             }
