@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using UnityEngine;
+using Work.Combat.Code;
 using Work.Core.Utils.EventBus;
-using Work.Player.Code.States;
 
 namespace Work.Sentence.Code.Runtime.Triggers
 {
@@ -19,7 +19,7 @@ namespace Work.Sentence.Code.Runtime.Triggers
         public void Bind(Action<SentenceTriggerSignal> onTriggered)
         {
             _onTriggered = onTriggered;
-            _binding = EventBinding.Bind<DodgeEvent>(OnDodge);
+            _binding = EventBinding.Bind<CombatDodgeEvent>(OnDodge);
         }
 
         public void Tick(float deltaTime)
@@ -33,8 +33,9 @@ namespace Work.Sentence.Code.Runtime.Triggers
             _onTriggered = null;
         }
 
-        private void OnDodge(DodgeEvent evt)
+        private void OnDodge(CombatDodgeEvent evt)
         {
+            if (evt.Source != _owner) return;
             _onTriggered?.Invoke(new SentenceTriggerSignal(_owner, _owner, 0, false));
         }
     }

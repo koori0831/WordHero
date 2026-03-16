@@ -1,17 +1,16 @@
-﻿using Code.Entities;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+using Work.Agents.Code;
 using Work.Input.Code;
 
 namespace Work.Player.Code
 {
-    public class PlayerInputRoot : MonoBehaviour, IEntityComponent
+    public class PlayerInputModule : MonoBehaviour, IAgentModule
     {
-        public Entity Owner { get; private set; }
+        private Agent _owner;
 
-        public void InitCompo(Entity entity)
+        public void Initialize(Agent agent)
         {
-            Owner = entity;
+            _owner = agent;
         }
 
         public InputContainer Input { get; private set; }

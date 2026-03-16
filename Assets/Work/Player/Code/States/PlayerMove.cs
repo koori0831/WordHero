@@ -1,24 +1,24 @@
 ﻿using UnityEngine;
 using Code.FSM;
-using Code.Entities;
+using Work.Agents.Code;
 
 namespace Work.Player.Code.States
 {
     public class PlayerMove : PlayerCanAttackStates
     {
-        private PlayerInputRoot _input;
-        private EntityMover _mover;
+        private PlayerInputModule _input;
+        private PlayerMovementModule _mover;
         private static int _moveSpeedHash = Animator.StringToHash("MoveSpeed");
         private static int _moveInputHash = Animator.StringToHash("MoveInput");
         private const float _idleTransitionBufferTime = 0.06f;
         private float _idleTransitionTimer;
 
 
-        public PlayerMove(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
+        public PlayerMove(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
         {
             if (_player == null) return;
-            _input = _entity.GetCompo<PlayerInputRoot>();
-            _mover = _entity.GetCompo<EntityMover>();
+            _input = _player.GetModule<PlayerInputModule>(true);
+            _mover = _player.GetModule<PlayerMovementModule>(true);
         }
 
         public override void Update()

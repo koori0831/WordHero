@@ -1,13 +1,11 @@
-﻿using UnityEngine;
-using System.Collections;
-using Code.FSM;
-using Code.Entities;
+﻿using Code.FSM;
+using Work.Agents.Code;
 
 namespace Work.Player.Code.States
 {
     public class PlayerHit : PlayerStates
     {
-        public PlayerHit(StateMachine stateMachine, Entity entity, int animationHash) : base(stateMachine, entity, animationHash)
+        public PlayerHit(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
         {
         }
 

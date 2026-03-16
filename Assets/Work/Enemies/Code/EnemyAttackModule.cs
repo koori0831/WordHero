@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Work.Agents.Code;
 using Work.Combat.Code;
-using Work.Entities;
 
 namespace Work.Enemies.Code
 {
