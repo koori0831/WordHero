@@ -8,28 +8,68 @@ namespace Work.Stages.Code
 {
     public class StageManager : MonoBehaviour
     {
-        [SerializeField] private List<Stage> stageList = new List<Stage>();
+        [SerializeField] private List<Stage> woodStageList = new List<Stage>();
+        [SerializeField] private List<Stage> stoneStageList = new List<Stage>();
+        [SerializeField] private List<Stage> ironStageList = new List<Stage>();
+        [SerializeField] private List<Stage> goldStageList = new List<Stage>();
+        [SerializeField] private Stage shopStage;
+        [SerializeField] private Stage bossStage;
+        [SerializeField] private List<int> openingShopCountList;
+        [SerializeField] private int bossStageCount;
+
+        public bool IsOpeningShop
+        {
+            get
+            {
+                for (int i = 0; i < openingShopCountList.Count; i++)
+                {
+                    if(openingShopCountList[i] == CurrentStageCount)
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        public bool IsNextStageInBossStage => bossStageCount == CurrentStageCount;
+
+        private Dictionary<DoorType, List<Stage>> stages;
+
+        private int _currentStageCount = 0;
+        public int CurrentStageCount => _currentStageCount;
+
         public Stage CurrentStage { get; private set; }
 
         private void Awake()
         {
-            GeneratStage();
+            stages = new Dictionary<DoorType, List<Stage>>
+            {
+                { DoorType.Wood, woodStageList },
+                { DoorType.Stone, stoneStageList },
+                { DoorType.Iron, ironStageList },
+                { DoorType.Gold, goldStageList },
+                { DoorType.Shop, new List<Stage> { shopStage } },
+                { DoorType.Boss, new List<Stage> { bossStage } }
+            };
+            GeneratStage(DoorType.Wood);
         }
 
-        public Stage GetStage()
+        public Stage GetStage(DoorType doorType) // 특정 상황에서 상점이나 보스 스테이지를 반환하도록 수정해야함
         {
-            if (stageList.Count == 0)
+            if (stages[doorType].Count == 0)
             {
                 Debug.LogError("Stage list is empty!");
                 return null;
             }
-            int randomIndex = Random.Range(0, stageList.Count);
-            return stageList[randomIndex];
+
+
+            int randomIndex = Random.Range(0, stages[doorType].Count);
+            _currentStageCount++;
+            return stages[doorType][randomIndex];
         }
 
-        public void GeneratStage()
+        public void GeneratStage(DoorType doorType)
         {
-            Stage selectedStage = GetStage();
+            Stage selectedStage = GetStage(doorType);
             if (selectedStage == null) return;
 
             LMotion.Create(0f, 1f, 0.5f)

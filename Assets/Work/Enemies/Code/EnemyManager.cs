@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Work.Core.Utils.EventBus;
+using Work.Stages.Code;
 
 namespace Work.Enemies.Code
 {
@@ -35,12 +37,13 @@ namespace Work.Enemies.Code
                     Enemy enemy = Instantiate(enemies[UnityEngine.Random.Range(0, enemies.Count - 1)], newPos, Quaternion.identity);
                     currentEnemies.Add(enemy);
                     enemy.Init();
+                    enemy.EnemyInfoData.EnemyHpValue.OnDead += HandleDeadEvent;
                     enemy.gameObject.transform.parent = point.transform;
                 }
             }
         }
 
-        private void Update()
+        private void HandleDeadEvent()
         {
             for (int i = currentEnemies.Count - 1; i >= 0; i--)
             {
@@ -51,9 +54,15 @@ namespace Work.Enemies.Code
                 }
                 else if (currentEnemies[i].IsDead == true)
                 {
+                    currentEnemies[i].EnemyInfoData.EnemyHpValue.OnDead -= HandleDeadEvent;
                     currentEnemies.RemoveAt(i);
                     break;
                 }
+            }
+
+            if(IsCanMoveRoom)
+            {
+                Bus<StageClearEvent>.Raise(new StageClearEvent());
             }
         }
 
