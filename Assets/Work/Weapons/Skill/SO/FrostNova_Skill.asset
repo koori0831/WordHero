@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68d61019c5a447c4fa906eaeadc6a8a4, type: 3}
+  m_Name: FrostNova_Skill
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Weapons.Skill.Code.SkillDataSO
+  SkillName: "\uB0C9\uAE30 \uBC1C\uC0B0"
+  SkillDescription: "\uC8FC\uC704\uB85C \uB0C9\uAE30\uB97C \uBFDC\uC5B4\uB0B4, \uC801\uB4E4\uC744
+    \uC77C\uC2DC\uC801\uC73C\uB85C \uC5BC\uB9BD\uB2C8\uB2E4."
+  SkillIcon: {fileID: 21300000, guid: 803a8e6db01b73e44a63f88acf438cc0, type: 3}
+  Cost: 2
+  AnimParam: {fileID: 11400000, guid: 9587803ec76297844add2b7a89219249, type: 2}
+  Effects:
+  - rid: 7069608252854501492
+  references:
+    version: 2
+    RefIds:
+    - rid: 7069608252854501492
+      type: {class: AoEStatusEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        Radius: 5
+        StatusEffect:
+          type: 403
+          isInfinite: 0
+          <Duration>k__BackingField: 5
+          <TickInterval>k__BackingField: 0
+          <Value>k__BackingField: 30
+          timer: 0
+          tickTimer: 0
