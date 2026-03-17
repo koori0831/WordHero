@@ -38,7 +38,11 @@ namespace Work.Enemies.Code
             {
                 k.TakeKnockback(new KnockbackData(5f, 0.5f, (k.Transform.position - _owner.Transform.position).normalized, AnimationCurve.EaseInOut(0, 1, 1, 0)));
             });
-            damageables.ForEach(d => d.TakeDamage(damage));
+            damageables.ForEach(d =>
+            {
+                DamageContext context = new DamageContext(_owner.gameObject, (d as Component).gameObject, damage);
+                DamageResolver.TryApplyDamage(context);
+            });
         }
 
         private void OnDrawGizmos()

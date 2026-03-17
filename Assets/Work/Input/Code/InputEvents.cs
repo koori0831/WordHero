@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Work.Core.Utils.EventBus;
+﻿using Work.Core.Utils.EventBus;
 
 namespace Work.Input.Code
 {

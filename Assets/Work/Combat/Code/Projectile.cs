@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Work.Combat.Code
 {
@@ -7,15 +7,17 @@ namespace Work.Combat.Code
         [SerializeField] private LayerMask collisionLayer;
         private int _damage;
         private float _speed;
+        private GameObject _source;
 
         private const float LIFE_TIME = 15;
         private float _timer;
 
-        public void Init(int damage, float speed, Vector3 forward)
+        public void Init(int damage, float speed, Vector3 forward, GameObject source = null)
         {
             _damage = damage;
             _speed = speed;
             transform.forward = forward;
+            _source = source;
         }
 
         private void Update()
@@ -34,10 +36,8 @@ namespace Work.Combat.Code
             {
                 Debug.Log(collision.gameObject.name);
 
-                if (collision.gameObject.TryGetComponent(out IDamageable damageable))
-                {
-                    damageable.TakeDamage(_damage);
-                }
+                DamageContext context = new DamageContext(_source != null ? _source : gameObject, collision.gameObject, _damage);
+                DamageResolver.TryApplyDamage(context);
 
                 if (collision.gameObject.TryGetComponent(out IKnockbackable knockbackable))
                 {
