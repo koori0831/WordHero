@@ -15,7 +15,7 @@ namespace Work.Enemies.Code
         [field: SerializeField] public int onePointInMaxEnemyCount = 20;
         [field: SerializeField] public float spawnRadius = 8f;
 
-        private int _minEnemyCount => onePointInMaxEnemyCount - 5 <= 0 ? 0 : onePointInMaxEnemyCount - 5;
+        private int _minEnemyCount => onePointInMaxEnemyCount - 5 <= 1 ? 1 : onePointInMaxEnemyCount - 5;
         private List<Enemy> currentEnemies = new List<Enemy>();
         
         public bool IsCanMoveRoom => currentEnemies.Count <= 0;

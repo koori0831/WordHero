@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -3237571717220559266, guid: fa0c53b6809440e42bab8e2deca189d4, type: 2}
+  - {fileID: -3237571717220559266, guid: daf3fb42628e8664eb46b5d74af24c00, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,14 +110,14 @@ MonoBehaviour:
   m_text: 200
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a90c73592ad540c40bd820016315a4fb, type: 2}
-  m_sharedMaterial: {fileID: -3237571717220559266, guid: fa0c53b6809440e42bab8e2deca189d4, type: 2}
+  m_sharedMaterial: {fileID: -3237571717220559266, guid: daf3fb42628e8664eb46b5d74af24c00, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278255610
-  m_fontColor: {r: 0.9816241, g: 1, b: 0, a: 1}
+    rgba: 4278193576
+  m_fontColor: {r: 0.6603774, g: 0.05283019, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -196,4 +196,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Work.Combat.Code.DamageText
   _textMeshPro: {fileID: 7577177245555524013}
   ease: 27
-  fontAsset: {fileID: 11400000, guid: fa0c53b6809440e42bab8e2deca189d4, type: 2}
+  criticalFontAsset: {fileID: 11400000, guid: fa0c53b6809440e42bab8e2deca189d4, type: 2}
+  playerFontAsset: {fileID: 11400000, guid: daf3fb42628e8664eb46b5d74af24c00, type: 2}

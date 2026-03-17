@@ -10,23 +10,29 @@ namespace Work.Combat.Code
 
         public void Awake()
         {
-            Bus<DamageTextEvent>.Events += HandleDamageTextEvent;
+            Bus<CombatHitEvent>.Events += HandleDamageTextEvent;
         }
 
-        private void HandleDamageTextEvent(DamageTextEvent evt) =>
-            GenerateDamageText(evt.Damage, evt.Owner, evt.IsCritical);
+        private void HandleDamageTextEvent(CombatHitEvent evt) =>
+            GenerateDamageText(evt.Damage, evt.Target, evt.IsCritical);
 
-        public void GenerateDamageText(int damage, GameObject owner, bool isCritical = false)
+        public void GenerateDamageText(int damage, GameObject target, bool isCritical = false)
         {
             float randomX = Random.Range(-offset.x, offset.x);
             float randomY = Random.Range(-offset.y, offset.y);
-            Debug.Log($"DamageTextGenerator: Generating damage text at position {owner.transform.position} with random offset ({randomX}, {randomY})");
-            Vector3 pos = owner.transform.position + new Vector3(randomX, randomY + 5, -2);
+            Debug.Log($"DamageTextGenerator: Generating damage text at position {target.transform.position} with random offset ({randomX}, {randomY})");
+            Vector3 pos = target.transform.position + new Vector3(randomX, randomY + 5, -2);
 
             GameObject damageTextObj = Instantiate(damageTextPrefab, pos, Camera.main.transform.rotation);
             //damageTextObj.transform.parent = owner.transform;
             DamageText damageText = damageTextObj.GetComponent<DamageText>();
-            damageText.Init(damage, isCritical);
+
+            bool isPlayer = false;
+            if (target.layer  == LayerMask.NameToLayer("Player"))
+                isPlayer = true;
+           
+
+            damageText.Init(damage, isCritical, isPlayer);
         }
     }
 }
