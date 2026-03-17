@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Code.FSM
 {
@@ -20,20 +20,19 @@ namespace Code.FSM
 
         public void ChangeState(string stateName, bool isForcing = false)
         {
-            if (CurrentState != null && !isForcing && CurrentState == states[stateName])
+            if (!states.TryGetValue(stateName, out State nextState))
+            {
+                Debug.LogError($"State '{stateName}' not found in the state machine.");
+                return;
+            }
+
+            if (CurrentState != null && !isForcing && CurrentState == nextState)
                 return;
 
-            if (states.ContainsKey(stateName))
-            {
-                CurrentState?.Exit();
-                PreviousState = CurrentState;
-                CurrentState = states[stateName];
-                CurrentState?.Enter();
-            }
-            else
-            {
-                throw new Exception($"State '{stateName}' not found in the state machine.");
-            }
+            CurrentState?.Exit();
+            PreviousState = CurrentState;
+            CurrentState = nextState;
+            CurrentState?.Enter();
         }
 
         public void Update()
