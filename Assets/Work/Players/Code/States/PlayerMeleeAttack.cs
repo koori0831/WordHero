@@ -26,8 +26,14 @@ namespace Work.Players.Code.States
 
         protected override void OnRequestAttack(InputAttackEvent @event)
         {
+            if (_stateMachine.CurrentState != this) return;
             if (_comboWindowOpen)
                 _queueNext = true;
+        }
+
+        protected override void OnRequestDodge(InputDodgeEvent @event)
+        {
+            return;
         }
 
         public override void OnTriggerEnter(AnimationEventType eventType)

@@ -9,5 +9,7 @@ namespace Work.Players.Code.States
         public const string Dodge = "Dodge";
         public const string Hit = "Hit";
         public const string Death = "Death";
+        public const string SwordCast = "SwordCast";
+        public const string Slash = "Slash";
     }
 }

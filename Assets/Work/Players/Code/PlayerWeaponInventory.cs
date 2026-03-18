@@ -1,4 +1,3 @@
-using Work.Agents.Code;
 using Work.Weapons.Code;
 
 namespace Work.Players.Code
@@ -42,7 +41,7 @@ namespace Work.Players.Code
             return true;
         }
 
-        public void SetOwner(Agent owner)
+        public void SetOwner(Player owner)
         {
             if (CurrentWeapon != null)
             {
