@@ -9,7 +9,6 @@ namespace Work.Stages.Code
     public class Stage : MonoBehaviour
     {
         [SerializeField] private Transform spawnPoint;
-        [SerializeField] private Door doorPrefab;
         [SerializeField] private List<Transform> doorPoints = new List<Transform>();
         private List<Door> doors = new List<Door>();
         private DoorType _nextRoomType;
@@ -38,9 +37,8 @@ namespace Work.Stages.Code
             for (int i = 0; i <= random; i++)
             {
                 Transform x = doorPoints[i];
-                Door door = Instantiate(doorPrefab, x.position, Quaternion.identity);
+                Door door = Instantiate(_stageManager.DoorPrefab, x.position, Quaternion.identity);
                 door.transform.parent = x;
-                door.transform.localScale = Vector3.one;
                 door.transform.localRotation = Quaternion.identity;
                 door.DoorInit(this);
                 DoorType nextDoorType = (DoorType)Random.Range(0, 4);

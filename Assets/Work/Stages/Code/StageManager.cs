@@ -17,6 +17,9 @@ namespace Work.Stages.Code
         [SerializeField] private List<int> openingShopCountList;
         [SerializeField] private int bossStageCount;
 
+        [SerializeField] private Door doorPrefab;
+        public Door DoorPrefab => doorPrefab;
+
         public bool IsOpeningShop
         {
             get
@@ -77,7 +80,7 @@ namespace Work.Stages.Code
                .Bind(a => { })
                .AddTo(gameObject);
 
-            Stage stage = Instantiate(selectedStage, Vector3.zero, Quaternion.identity);
+            Stage stage = Instantiate(selectedStage, transform);
             CurrentStage?.ExitStage();
             CurrentStage = stage;
             CurrentStage.EnterStage(this);
