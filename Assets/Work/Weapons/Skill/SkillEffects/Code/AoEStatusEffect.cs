@@ -11,10 +11,11 @@ namespace Work.Weapons.Skill.SkillEffects.Code
     {
         public float Radius;
         public StatusEffect StatusEffect;
+        public LayerMask TargetLayer;
 
         public void ExecuteEffect(Transform caster, Vector3 target, Vector3 direction)
         {
-            Collider[] hitColliders = Physics.OverlapSphere(caster.transform.position, Radius);
+            Collider[] hitColliders = Physics.OverlapSphere(caster.transform.position, Radius, TargetLayer);
 
             foreach (var hitCollider in hitColliders)
             {

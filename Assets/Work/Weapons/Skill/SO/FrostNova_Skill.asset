@@ -20,6 +20,8 @@ MonoBehaviour:
   AnimParam: {fileID: 11400000, guid: 9587803ec76297844add2b7a89219249, type: 2}
   Effects:
   - rid: 7069608252854501492
+  - rid: 7069608376354996514
+  - rid: 7069608376354996311
   references:
     version: 2
     RefIds:
@@ -33,5 +35,22 @@ MonoBehaviour:
           <Duration>k__BackingField: 5
           <TickInterval>k__BackingField: 0
           <Value>k__BackingField: 30
+          timer: 0
+          tickTimer: 0
+    - rid: 7069608376354996311
+      type: {class: SpawnGameObjectEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        Prefab: {fileID: 9111272710908258508, guid: 02f48b40db3c3b448ab67099886eeda1, type: 3}
+        Offset: {x: 0, y: 0, z: 0}
+    - rid: 7069608376354996514
+      type: {class: AoEStatusEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        Radius: 5
+        StatusEffect:
+          type: 401
+          isInfinite: 0
+          <Duration>k__BackingField: 5
+          <TickInterval>k__BackingField: 0.5
+          <Value>k__BackingField: 2.5
           timer: 0
           tickTimer: 0
