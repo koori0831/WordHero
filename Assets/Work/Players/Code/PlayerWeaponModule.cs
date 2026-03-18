@@ -21,8 +21,6 @@ namespace Work.Players.Code
         #region Weapon Properties
         public bool IsCanSwapWeapon => _inventory != null && _inventory.CanSwap;
 
-        public float AttackRange => CurrentWeapon != null ? CurrentWeapon.Data.Range : 0f;
-
         public float AttackSpeed => CurrentWeapon != null ? CurrentWeapon.Data.AttackSpeed : 0f;
 
         public float AttackDamage => CurrentWeapon != null ? CurrentWeapon.Data.BaseDamage : 0f;
