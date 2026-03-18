@@ -7,7 +7,6 @@ namespace Code.FSM
     {
         public string stateName;
         public string targetClass;
-        public string statePath;
 
         [SerializeField, HideInInspector] private int _animationHash;
 
