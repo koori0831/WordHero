@@ -27,6 +27,7 @@ namespace Work.Players.Code.States
 
         protected virtual void OnRequestAttack(InputAttackEvent @event)
         {
+            if (_stateMachine.CurrentState != this) return;
             if (_weaponModule.CurrentWeapon == null) return;
 
             switch (_weaponModule.WeaponType)
@@ -44,8 +45,9 @@ namespace Work.Players.Code.States
             }
         }
 
-        private void OnRequestDodge(InputDodgeEvent @event)
+        protected virtual void OnRequestDodge(InputDodgeEvent @event)
         {
+            if ( _stateMachine.CurrentState != this) return;
             _stateMachine.ChangeState(PlayerStateKeys.Dodge);
         }
     }

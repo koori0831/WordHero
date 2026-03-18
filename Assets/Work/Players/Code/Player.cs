@@ -48,5 +48,10 @@ namespace Work.Players.Code
         { 
             _weaponModule.EquipWeapon(weapon);
         }
+
+        public void ChangeState(string stateKey)
+        {
+            _stateMachine.ChangeState(stateKey);
+        }
     }
 }
