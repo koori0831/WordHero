@@ -14,7 +14,6 @@ namespace Work.Weapons.Code
         public Sprite WeaponIcon;
         public int BaseDamage;
         public float AttackSpeed;
-        public float Range;
         public SkillDataSO PrimarySkill;
         public SkillDataSO SecondarySkill;
         public SkillDataSO TriggerSkill;
