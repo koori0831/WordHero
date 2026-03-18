@@ -28,6 +28,7 @@ namespace Work.Cursor.Code
 
                 _lastTarget = hit.collider.gameObject;
                 ISelectable inforable = hit.collider.GetComponent<ISelectable>();
+                Debug.Log(inforable);
 
                 if (inforable != null)
                 {

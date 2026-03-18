@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5124738656834202892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1199048649610431872}
+  - component: {fileID: 1900758950306850552}
+  - component: {fileID: 3416158046183009920}
+  m_Layer: 0
+  m_Name: Door
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1199048649610431872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5124738656834202892}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -11.138389, y: -0.0000010095537, z: -2.249999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1900758950306850552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5124738656834202892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c55d6ff9d5b2384682ba026a55760a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Stages.Code.Door
+  doorModels:
+  - <DoorType>k__BackingField: 0
+    <DoorObject>k__BackingField: {fileID: 8224692173259864344, guid: c053dfc53631dc44bbdb0c672342c4ac, type: 3}
+  - <DoorType>k__BackingField: 1
+    <DoorObject>k__BackingField: {fileID: 8224692173259864344, guid: c053dfc53631dc44bbdb0c672342c4ac, type: 3}
+  - <DoorType>k__BackingField: 2
+    <DoorObject>k__BackingField: {fileID: 6888703090561219293, guid: 739140fd86482b54da722bb0acf7acb7, type: 3}
+  - <DoorType>k__BackingField: 3
+    <DoorObject>k__BackingField: {fileID: 8224692173259864344, guid: c053dfc53631dc44bbdb0c672342c4ac, type: 3}
+  - <DoorType>k__BackingField: 4
+    <DoorObject>k__BackingField: {fileID: 6888703090561219293, guid: 739140fd86482b54da722bb0acf7acb7, type: 3}
+  - <DoorType>k__BackingField: 5
+    <DoorObject>k__BackingField: {fileID: 8224692173259864344, guid: c053dfc53631dc44bbdb0c672342c4ac, type: 3}
+  - <DoorType>k__BackingField: 6
+    <DoorObject>k__BackingField: {fileID: 6888703090561219293, guid: 739140fd86482b54da722bb0acf7acb7, type: 3}
+--- !u!65 &3416158046183009920
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5124738656834202892}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.26394403, y: 2.136461, z: 1.5368954}
+  m_Center: {x: 0.012639746, y: 1.0564159, z: 0.0025770664}

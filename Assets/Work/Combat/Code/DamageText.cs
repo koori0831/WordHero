@@ -11,20 +11,28 @@ namespace Work.Combat.Code
 
         [SerializeField] private TMPro.TextMeshPro _textMeshPro;
         [SerializeField] private Ease ease = Ease.InOutBack;
-        [SerializeField] private TMP_FontAsset fontAsset;
+        [SerializeField] private TMP_FontAsset criticalFontAsset, playerFontAsset;
 
 
-        public void Init(int damage, bool isCritical = false)
+        public void Init(int damage, bool isCritical = false, bool isPlayer = false)
         {
             _damage = damage;
             _isCritical = isCritical;
 
-            _textMeshPro.color = _isCritical ? Color.yellow : Color.white;
+            if (!isPlayer)
+                _textMeshPro.color = _isCritical ? Color.yellow : Color.white;
+            else
+                _textMeshPro.color = Color.red;
+
+
             _textMeshPro.text = _damage.ToString();
             if (isCritical)
-                _textMeshPro.font = fontAsset;
+                _textMeshPro.font = criticalFontAsset;
 
-            float maxFontSize = 0;
+            if (isPlayer)
+                _textMeshPro.font = playerFontAsset;
+
+                float maxFontSize = 0;
             float minFontSize = 0;
 
             float startFontMaxSize = _isCritical ? 19f : 13f;
