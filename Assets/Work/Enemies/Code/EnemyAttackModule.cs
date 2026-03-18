@@ -12,13 +12,14 @@ namespace Work.Enemies.Code
 
         //아래 두개는 나중에 하나로 묶을예정 지금은 테스트용
         [SerializeField] protected float attackRange;
-        public float AttackRange => attackRange;
         [SerializeField] protected int damage;
         [SerializeField] private bool _isComboAttacked;
+
         [ShowIf(nameof(_isComboAttacked))][SerializeField] protected int attackCount;
 
         [SerializeField] protected TargetSensor targetSensor;
 
+        public float AttackRange => attackRange;
         //[SerializeField] private 
 
         public void Initialize(Agent agent)
@@ -32,16 +33,12 @@ namespace Work.Enemies.Code
         public virtual void Attack()
         {
             List<IDamageable> damageables = targetSensor.Cast<IDamageable>();
-            List<IKnockbackable> knockbackables = targetSensor.Cast<IKnockbackable>();
 
-            knockbackables.ForEach(k =>
-            {
-                k.TakeKnockback(new KnockbackData(5f, 0.5f, (k.Transform.position - _owner.Transform.position).normalized, AnimationCurve.EaseInOut(0, 1, 1, 0)));
-            });
             damageables.ForEach(d =>
             {
+                KnockbackData knockbackData = new KnockbackData(5f, 0.5f, ((d as Component).transform.position - _owner.Transform.position).normalized, AnimationCurve.EaseInOut(0, 1, 1, 0));
                 DamageContext context = new DamageContext(_owner.gameObject, (d as Component).gameObject, damage);
-                DamageResolver.TryApplyDamage(context);
+                DamageResolver.TryApplyDamage(context, true, knockbackData);
             });
         }
 

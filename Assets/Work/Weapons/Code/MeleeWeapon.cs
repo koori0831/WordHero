@@ -1,5 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Work.Combat.Code;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Work.Weapons.Code
 {
@@ -28,7 +29,8 @@ namespace Work.Weapons.Code
             if (Owner != null && collision.gameObject == Owner.gameObject) return;
 
             DamageContext context = new DamageContext(Owner != null ? Owner.gameObject : gameObject, collision.gameObject, Data.BaseDamage);
-            DamageResolver.TryApplyDamage(context);
+            KnockbackData knockbackData = new KnockbackData(5f, 0.5f, (collision.transform.position - Owner.Transform.position).normalized, AnimationCurve.EaseInOut(0, 1, 1, 0));
+            DamageResolver.TryApplyDamage(context, true , knockbackData);
         }
     }
 }

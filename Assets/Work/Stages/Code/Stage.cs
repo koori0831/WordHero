@@ -1,41 +1,90 @@
-﻿using LitMotion;
-using System;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using Work.Core.Utils.EventBus;
 using Work.Fade;
+using Random = UnityEngine.Random;
 
 namespace Work.Stages.Code
 {
     public class Stage : MonoBehaviour
     {
+        [SerializeField] private Transform spawnPoint;
+        [SerializeField] private List<Transform> doorPoints = new List<Transform>();
+        private List<Door> doors = new List<Door>();
+        private DoorType _nextRoomType;
         private GameObject _interactor;
         private StageManager _stageManager;
+
+        private void DoorOpen(StageClearEvent evt)
+        {
+            doors.ForEach(x =>
+            {
+                x.Open();
+            });
+        }
 
         public void EnterStage(StageManager stageManager)
         {
             _stageManager = stageManager;
+            DoorSpawn();
+            Bus<StageClearEvent>.Events += DoorOpen;
         }
-            
+
+        private void DoorSpawn()
+        {
+            int random = Random.Range(1, doors.Count);
+
+            for (int i = 0; i <= random; i++)
+            {
+                Transform x = doorPoints[i];
+                Door door = Instantiate(_stageManager.DoorPrefab, x.position, Quaternion.identity);
+                door.transform.parent = x;
+                door.transform.localRotation = Quaternion.identity;
+                door.DoorInit(this);
+                DoorType nextDoorType = (DoorType)Random.Range(0, 4);
+
+                if (_stageManager.IsOpeningShop)
+                {
+                    nextDoorType = DoorType.Shop;
+                    door.SetDoorType(nextDoorType);
+                    doors.Add(door);
+                    return;
+                }
+
+                if(_stageManager.IsNextStageInBossStage)
+                {
+                    nextDoorType = DoorType.Boss;
+                    door.SetDoorType(nextDoorType);
+                    doors.Add(door);
+                    return;
+                }
+
+                door.SetDoorType(nextDoorType);
+                doors.Add(door);
+            }
+        }
+
         public void ExitStage()
         {
+            Bus<StageClearEvent>.Events -= DoorOpen;
             Destroy(gameObject);
         }
 
-        public void HandleGoNextRoom(GameObject interactor)
+        public void HandleGoNextRoom(GameObject interactor, DoorType doorType)
         {
             _interactor = interactor;
+            _nextRoomType = doorType;
             Bus<OnFadeCompletedEvent>.Events += HandleFadeComplete;
             Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));
-            
+
         }
 
         private void HandleFadeComplete(OnFadeCompletedEvent evt)
         {
-            _interactor.transform.position = Vector3.zero;
+            _interactor.transform.position = spawnPoint.position;
             Bus<OnFadeCompletedEvent>.Events -= HandleFadeComplete;
-           
-            _stageManager.GeneratStage();
+
+            _stageManager.GeneratStage(_nextRoomType);
         }
     }
 }

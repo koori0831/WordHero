@@ -68,6 +68,8 @@ namespace Work.Players.Code.States
                     _comboIndex = 0;
                     _stateMachine.ChangeState(PlayerStateKeys.Idle);
                 }
+
+                _weaponModule.CurrentWeapon?.GetComponent<MeleeWeapon>()?.EndAttack();
             }
         }
 

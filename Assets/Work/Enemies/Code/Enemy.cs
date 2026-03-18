@@ -33,12 +33,9 @@ namespace Work.Enemies.Code
             NavAgent = GetComponent<NavMeshAgent>();
             Debug.Assert(BehaviorAgent != null, "BehaviorAgent component is missing.");
             IsCanShowInfo = EnemyInfoData != null;
+            
             base.Init();
-        }
 
-        public override void InitInfo(InfoDataSO infoData)
-        {
-            base.InitInfo(infoData);
             EnemyInfoData = enemyInfoData.GetInfo(this);
             InitInfo(EnemyInfoData);
         }
