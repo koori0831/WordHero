@@ -24,7 +24,9 @@ namespace Work.Weapons.Skill.SkillEffects.Code
         {
             if (other.TryGetComponent(out Enemy damageable))
             {
-                DamageResolver.TryApplyDamage(new DamageContext(gameObject, other.gameObject, Damage));
+                DamageContext context = new DamageContext(gameObject, other.gameObject, Damage);
+                KnockbackData knockbackData = new KnockbackData(speed * 0.3f, 0.5f, transform.forward, AnimationCurve.EaseInOut(0, 1, 1, 0));
+                DamageResolver.TryApplyDamage(context, true, knockbackData);
 
                 if (hitEffectPrefab != null)
                 {
