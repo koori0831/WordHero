@@ -23,6 +23,12 @@ public class IronCageEffecter : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (nextDoor)
+            Bus<StageClearEvent>.Events += HandleOpenEvent;
+    }
+
     private void HandleOpenEvent(StageClearEvent evt)
     {
         Open();

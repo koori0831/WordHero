@@ -32,9 +32,9 @@ namespace Work.Stages.Code
 
         private void DoorSpawn()
         {
-            int random = Random.Range(1, doors.Count);
+            int random = Random.Range(1, doorPoints.Count);
 
-            for (int i = 0; i <= random; i++)
+            for (int i = 0; i < random; i++)
             {
                 Transform x = doorPoints[i];
                 Door door = Instantiate(_stageManager.DoorPrefab, x.position, Quaternion.identity);
@@ -51,7 +51,7 @@ namespace Work.Stages.Code
                     return;
                 }
 
-                if(_stageManager.IsNextStageInBossStage)
+                if (_stageManager.IsNextStageInBossStage)
                 {
                     nextDoorType = DoorType.Boss;
                     door.SetDoorType(nextDoorType);
@@ -81,7 +81,7 @@ namespace Work.Stages.Code
 
         private void HandleFadeComplete(OnFadeCompletedEvent evt)
         {
-            _interactor.transform.position = spawnPoint.position;
+            _interactor.transform.position = spawnPoint.localPosition;
             Bus<OnFadeCompletedEvent>.Events -= HandleFadeComplete;
 
             _stageManager.GeneratStage(_nextRoomType);

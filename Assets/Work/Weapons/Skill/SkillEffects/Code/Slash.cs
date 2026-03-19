@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Work.Combat.Code;
-using Work.Enemies.Code;
 
 namespace Work.Weapons.Skill.SkillEffects.Code
 {
@@ -22,17 +21,14 @@ namespace Work.Weapons.Skill.SkillEffects.Code
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out Enemy damageable))
-            {
-                DamageContext context = new DamageContext(gameObject, other.gameObject, Damage);
-                KnockbackData knockbackData = new KnockbackData(speed * 0.3f, 0.5f, transform.forward, AnimationCurve.EaseInOut(0, 1, 1, 0));
-                DamageResolver.TryApplyDamage(context, true, knockbackData);
+            DamageContext context = new DamageContext(gameObject, other.gameObject, Damage);
+            KnockbackData knockbackData = new KnockbackData(speed * 0.3f, 0.5f, transform.forward, AnimationCurve.EaseInOut(0, 1, 1, 0));
+            DamageResolver.TryApplyDamage(context, true, knockbackData);
 
-                if (hitEffectPrefab != null)
-                {
-                    Vector3 hitPoint = other.ClosestPoint(transform.position);
-                    Instantiate(hitEffectPrefab, hitPoint, Quaternion.identity);
-                }
+            if (hitEffectPrefab != null)
+            {
+                Vector3 hitPoint = other.ClosestPoint(transform.position);
+                Instantiate(hitEffectPrefab, hitPoint, Quaternion.identity);
             }
         }
 
