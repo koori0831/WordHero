@@ -37,7 +37,7 @@ namespace Work.Enemies.Code
                     Enemy enemy = Instantiate(enemies[UnityEngine.Random.Range(0, enemies.Count - 1)], newPos, Quaternion.identity);
                     currentEnemies.Add(enemy);
                     enemy.Init();
-                    enemy.EnemyInfoData.EnemyHpValue.OnDead += HandleDeadEvent;
+                    enemy.EnemyInfoData.HpValue.OnDead += HandleDeadEvent;
                     enemy.gameObject.transform.parent = point.transform;
                 }
             }
@@ -54,7 +54,7 @@ namespace Work.Enemies.Code
                 }
                 else if (currentEnemies[i].IsDead == true)
                 {
-                    currentEnemies[i].EnemyInfoData.EnemyHpValue.OnDead -= HandleDeadEvent;
+                    currentEnemies[i].EnemyInfoData.HpValue.OnDead -= HandleDeadEvent;
                     currentEnemies.RemoveAt(i);
                     break;
                 }
