@@ -14,7 +14,7 @@ namespace Work.HPBar.Code
         [SerializeField] private NameField nameField;
         [SerializeField] private LmmunityInformationField lmmunityInformationField;
 
-        private EnemyInfoDataSO _currentEnemyInfoData;
+        private HpBarInfoData _currentTargetInfoData;
         private Enemy _currentTargetEnemy;
 
         public void Awake()
@@ -38,34 +38,34 @@ namespace Work.HPBar.Code
                 return;
             ResetEvents();
             AllDisable();
-            _currentEnemyInfoData = null;
+            _currentTargetInfoData = null;
             _currentTargetEnemy = null;
         }
 
         private void OnInfoDataEvent(InfoDataEvent evt)
         {
-            if (_currentEnemyInfoData != null) return;
+            if (_currentTargetInfoData != null) return;
             if (_currentTargetEnemy != null) return;
-            if (!(evt.Info is EnemyInfoDataSO data)) return;
+            if (!(evt.Info is HpBarInfoData data)) return;
             EnableFromInfo(data);
         }
 
-        private void EnableFromInfo(EnemyInfoDataSO data)
+        private void EnableFromInfo(HpBarInfoData data)
         {
             ResetEvents();
-            _currentEnemyInfoData = data;
-            _currentEnemyInfoData.EnemyHpValue.OnDead += HandleEnemyDeathEvent;
-            _currentEnemyInfoData.EnemyHpValue.OnHpChanged += HandleHPChangeEvent;
-            _currentEnemyInfoData.StatusValue.OnstateusChangeEvent += HandleStatusChangeEvent;
+            _currentTargetInfoData = data;
+            _currentTargetInfoData.HpValue.OnDead += HandleEnemyDeathEvent;
+            _currentTargetInfoData.HpValue.OnHpChanged += HandleHPChangeEvent;
+            _currentTargetInfoData.StatusValue.OnstateusChangeEvent += HandleStatusChangeEvent;
             AllEnable();
         }
 
         private void ResetEvents()
         {
-            if (_currentEnemyInfoData != null)
+            if (_currentTargetInfoData != null)
             {
-                _currentEnemyInfoData.EnemyHpValue.OnHpChanged -= HandleHPChangeEvent;
-                _currentEnemyInfoData.StatusValue.OnstateusChangeEvent -= HandleStatusChangeEvent;
+                _currentTargetInfoData.HpValue.OnHpChanged -= HandleHPChangeEvent;
+                _currentTargetInfoData.StatusValue.OnstateusChangeEvent -= HandleStatusChangeEvent;
             }
         }
 
@@ -74,8 +74,8 @@ namespace Work.HPBar.Code
             Enemy hitTarget = evt.Target.GetComponent<Enemy>();
             if (hitTarget == null || (_currentTargetEnemy != null && hitTarget == _currentTargetEnemy)) return;
             _currentTargetEnemy = hitTarget;
-            if (!(evt.Info is EnemyInfoDataSO data)) return;
-            data.EnemyHpValue.OnDead += HandleEnemyDeathEvent;
+            if (!(evt.Info is HpBarInfoData data)) return;
+            data.HpValue.OnDead += HandleEnemyDeathEvent;
             EnableFromInfo(data);
         }
 
@@ -84,7 +84,7 @@ namespace Work.HPBar.Code
             ResetEvents();
             AllDisable();
             _currentTargetEnemy = null;
-            _currentEnemyInfoData = null;
+            _currentTargetInfoData = null;
         }
 
         private void HandleStatusChangeEvent(StatusType type, bool state)
@@ -103,23 +103,23 @@ namespace Work.HPBar.Code
         {
             string statusText = "면역 없음";
 
-            if (_currentEnemyInfoData.StatusValue.isHitImmunity)
+            if (_currentTargetInfoData.StatusValue.isHitImmunity)
             {
                 statusText = "피격이상 면역";
 
-                if (_currentEnemyInfoData.StatusValue.isSuperArmor)
+                if (_currentTargetInfoData.StatusValue.isSuperArmor)
                 {
                     statusText += " / ";
                     statusText += "상태이상 면역";
                 }
             }
 
-            else if (_currentEnemyInfoData.StatusValue.isSuperArmor)
+            else if (_currentTargetInfoData.StatusValue.isSuperArmor)
             {
                 statusText = "상태이상 면역";
             }
 
-            if (_currentEnemyInfoData.StatusValue.isInvincible)
+            if (_currentTargetInfoData.StatusValue.isInvincible)
                 statusText = "모든 면역";
 
             return statusText;
@@ -135,8 +135,8 @@ namespace Work.HPBar.Code
         {
             string statusText = GetLmmunityIfo();
             gameObject.SetActive(true);
-            hpField.EnableFor(_currentEnemyInfoData.EnemyHpValue.CurrentHp, _currentEnemyInfoData.EnemyHpValue.MaxHp);
-            nameField.EnableFor(_currentEnemyInfoData.Name);
+            hpField.EnableFor(_currentTargetInfoData.HpValue.CurrentHp, _currentTargetInfoData.HpValue.MaxHp);
+            nameField.EnableFor(_currentTargetInfoData.Name);
             lmmunityInformationField.EnableFor(statusText);
         }
 

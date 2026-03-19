@@ -24,6 +24,8 @@ namespace Work.ETC.Effect.Code
                     particle.transform.localPosition += new Vector3((Random.value - 0.5f * 2) * range, (Random.value - 0.5f * 2) * range, (Random.value - 0.5f * 2) * range);
                 }
 
+
+                
                 particle.Stop();
             }
         }
@@ -44,6 +46,12 @@ namespace Work.ETC.Effect.Code
             }
 
             Destroy(gameObject);
+        }
+
+        private void Update()
+        {
+            if (paticles[0].isStopped)
+                Destroy(gameObject);
         }
     }
 }
