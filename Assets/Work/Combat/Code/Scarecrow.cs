@@ -16,7 +16,7 @@ namespace Work.Combat.Code
         private ScarecrowInfoDataSO _scarecrowInfo;
         [SerializeField] private ScarecrowInfoDataSO scarecrowInfoPrefab;
 
-        private int _maxHealth = 1000000000;
+        private int _maxHealth = 10000;
         public int CurrentHealth
         {
             get => _hpValue.CurrentHp;
@@ -36,15 +36,14 @@ namespace Work.Combat.Code
             _hpValue = new HpValue(_maxHealth);
             _statusValue = new StatusValue();
 
-            scarecrowInfoPrefab.GetInfo(_hpValue, _statusValue);
+            _scarecrowInfo = scarecrowInfoPrefab.GetInfo(_hpValue, _statusValue) as ScarecrowInfoDataSO;
         }
 
         public void TakeDamage(int damageAmount)
         {
-            int prev = CurrentHealth;
             CurrentHealth -= damageAmount;
-            if (CurrentHealth < 0) { CurrentHealth = _maxHealth; }
-            _hpValue.OnHpChanged?.Invoke(prev, CurrentHealth);
+            if (CurrentHealth <= 0) { CurrentHealth = _maxHealth; }
+            _hpValue.OnHpChanged?.Invoke(CurrentHealth,_maxHealth );
             animator.SetBool(animHash, true);
             OnHitEvent?.Invoke();
             SetFalseAnim();
