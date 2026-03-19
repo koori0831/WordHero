@@ -1,7 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
+using Alchemy;
 using Work.Weapons.Code;
+using Alchemy.Inspector;
 
 namespace Work.Weapons.Skill.SkillEffects.Code
 {
@@ -10,12 +12,15 @@ namespace Work.Weapons.Skill.SkillEffects.Code
     {
         public GameObject Prefab;
         public Vector3 Offset;
+        public bool UseScaleOverride = false;
+        [ShowIf(nameof(UseScaleOverride))]
+        public Vector3 ScaleOverride = Vector3.one;
         public bool SetParentToCaster = false;
         public float Delay = 0f;
 
         public void ExecuteEffect(Transform caster, Vector3 target, Vector3 direction)
         {
-            Spawn(caster);
+            Spawn(caster).Forget(); 
         }
 
         private async UniTaskVoid Spawn(Transform caster)
@@ -27,9 +32,21 @@ namespace Work.Weapons.Skill.SkillEffects.Code
             Quaternion spawnRotation = caster.rotation * prefabRotation;
 
             if (SetParentToCaster)
-                GameObject.Instantiate(Prefab, spawnPosition, spawnRotation, caster);
+            {
+                GameObject temp = GameObject.Instantiate(Prefab, spawnPosition, spawnRotation, caster);
+                if (temp != null && UseScaleOverride)
+                {
+                    temp.transform.localScale = ScaleOverride;
+                }
+            }
             else
-                GameObject.Instantiate(Prefab, spawnPosition, spawnRotation);
+            {
+                GameObject temp = GameObject.Instantiate(Prefab, spawnPosition, spawnRotation);
+                if (temp != null && UseScaleOverride)
+                {
+                    temp.transform.localScale = ScaleOverride;
+                }
+            }
         }
     }
 }

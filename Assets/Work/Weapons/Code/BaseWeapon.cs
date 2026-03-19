@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Work.Interaction.Code;
 using Work.Players.Code;
+using Work.Weapons.Skill.Code;
 
 namespace Work.Weapons.Code
 {
@@ -9,41 +10,20 @@ namespace Work.Weapons.Code
         public Player Owner { get; set; }
 
         [field: SerializeField] public WeaponDataSO Data { get; private set; }
-        public void UsePrimary(Transform target, Vector3 direction)
-        {
-            if (Owner == null || Data == null) return;
 
-            if (Data.PrimarySkill != null)
-            {
-                Vector3 targetPosition = target != null ? target.position : Owner.transform.position;
-                Vector3 castDirection = direction.sqrMagnitude > 0f ? direction : Owner.transform.forward;
-                Data.PrimarySkill.Cast(Owner.transform, targetPosition, castDirection);
-                if (Data.PrimarySkill.AnimParam) Owner.ChangeState(Data.PrimarySkill.AnimParam.stateName);
-            }
-        }
-        public void UseSecondary(Transform target, Vector3 direction)
-        {
-            if (Owner == null || Data == null) return;
+        public void UsePrimary(Transform target, Vector3 direction) => ExecuteSkill(Data?.PrimarySkill, target, direction);
+        public void UseSecondary(Transform target, Vector3 direction) => ExecuteSkill(Data?.SecondarySkill, target, direction);
+        public void UseTrigger(Transform target, Vector3 direction) => ExecuteSkill(Data?.TriggerSkill, target, direction);
 
-            if (Data.SecondarySkill != null)
-            {
-                Vector3 targetPosition = target != null ? target.position : Owner.transform.position;
-                Vector3 castDirection = direction.sqrMagnitude > 0f ? direction : Owner.transform.forward;
-                Data.SecondarySkill.Cast(Owner.transform, targetPosition, castDirection);
-                if (Data.SecondarySkill.AnimParam) Owner.ChangeState(Data.SecondarySkill.AnimParam.stateName);
-            }
-        }
-        public void UseTrigger(Transform target, Vector3 direction)
+        private void ExecuteSkill(SkillDataSO skill, Transform target, Vector3 direction)
         {
-            if (Owner == null || Data == null) return;
+            if (Owner == null || skill == null) return;
 
-            if (Data.TriggerSkill != null)
-            {
-                Vector3 targetPosition = target != null ? target.position : Owner.transform.position;
-                Vector3 castDirection = direction.sqrMagnitude > 0f ? direction : Owner.transform.forward;
-                Data.TriggerSkill.Cast(Owner.transform, targetPosition, castDirection);
-                if(Data.TriggerSkill.AnimParam) Owner.ChangeState(Data.TriggerSkill.AnimParam.stateName);
-            }
+            Vector3 targetPosition = target != null ? target.position : Owner.transform.position;
+            Vector3 castDirection = direction.sqrMagnitude > 0f ? direction : Owner.transform.forward;
+
+            skill.Cast(Owner.transform, targetPosition, castDirection);
+            if (skill.AnimParam) Owner.ChangeState(skill.AnimParam.stateName);
         }
 
         public virtual void Attack(Transform target, Vector3 direction)

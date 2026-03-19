@@ -36,7 +36,7 @@ namespace Work.Weapons.Skill.SkillEffects.Code
             }
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             _rb.AddForce(transform.forward * speed, ForceMode.Acceleration);
         }
