@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Work.Information.Code;
 
 namespace Work.Shops.Code
 {
@@ -9,14 +10,14 @@ namespace Work.Shops.Code
         Weapon,
     }
 
-    [CreateAssetMenu(fileName = "ShopItemDataSO", menuName = "Scriptable Objects/ShopItemDataSO")]
+    [CreateAssetMenu(fileName = "ShopItemDataSO", menuName = "SO/Shops/ShopItemDataSO")]
     public class ShopItemDataSO : ScriptableObject
     {
         [SerializeField] private ShopItemType type;
+        [field:SerializeField] public int Price {  get; private set; }
+        [field:SerializeField] public ModelInfoDataSO ModelInfo {  get; private set; }
 
-        private bool _isText => type == ShopItemType.Text;
-        private bool _isWeapon => type == ShopItemType.Weapon;
-
-
+        public bool _isText => type == ShopItemType.Text;
+        public bool _isWeapon => type == ShopItemType.Weapon;
     }
 }
