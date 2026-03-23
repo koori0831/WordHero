@@ -40,7 +40,7 @@ namespace Work.Stages.Code
         private int _currentStageCount = 0;
         public int CurrentStageCount => _currentStageCount;
 
-        public Stage CurrentStage { get; private set; }
+        public static Stage CurrentStage { get; private set; }
 
         private void Awake()
         {
