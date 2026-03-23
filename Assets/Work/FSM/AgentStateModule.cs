@@ -28,7 +28,7 @@ namespace Code.FSM
                     try
                     {
                         int animationHash = data.animationHash;
-                        State state = Activator.CreateInstance(type, StateMachine, Owner, animationHash) as State;
+                        State state = Activator.CreateInstance(type, StateMachine, Owner, animationHash, data.isSkillAnimation) as State;
                         StateMachine.AddState(data.stateName, state);
                     }
                     catch (Exception e)

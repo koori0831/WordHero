@@ -13,19 +13,15 @@ namespace Work.Players.Code
         private PlayerWeaponInventory _inventory;
         private PlayerWeaponController _controller;
 
-        public BaseWeapon CurrentWeapon => _inventory != null ? _inventory.CurrentWeapon : null;
-        public BaseWeapon StandbyWeapon => _inventory != null ? _inventory.StandbyWeapon : null;
+        public BaseWeapon CurrentWeapon => _inventory?.CurrentWeapon;
+        public BaseWeapon StandbyWeapon => _inventory?.StandbyWeapon;
 
         [field: SerializeField] public Transform WeaponHandler { get; private set; }
 
         #region Weapon Properties
-        public bool IsCanSwapWeapon => _inventory != null && _inventory.CanSwap;
+        public bool IsCanSwapWeapon => _inventory?.CanSwap ?? false;
 
-        public float AttackSpeed => CurrentWeapon != null ? CurrentWeapon.Data.AttackSpeed : 0f;
-
-        public float AttackDamage => CurrentWeapon != null ? CurrentWeapon.Data.BaseDamage : 0f;
-
-        public WeaponType WeaponType => CurrentWeapon != null ? CurrentWeapon.Data.Type : WeaponType.Melee; 
+        public WeaponType WeaponType => CurrentWeapon?.Data.Type ?? WeaponType.Melee; 
         #endregion
 
         public void Initialize(Agent agent)
@@ -42,6 +38,7 @@ namespace Work.Players.Code
             Bus<WeaponSwapEvent>.Events += OnWeaponSwap;
             Bus<FirstWeaponSkillEvent>.Events += OnPrimarySkill;
             Bus<SecondWeaponSkillEvent>.Events += OnSecondarySkill;
+            Bus<SkillMotionEndEvent>.Events += OnSkillMotionEnd;
         }
 
         private void OnDestroy()
@@ -49,6 +46,7 @@ namespace Work.Players.Code
             Bus<WeaponSwapEvent>.Events -= OnWeaponSwap;
             Bus<FirstWeaponSkillEvent>.Events -= OnPrimarySkill;
             Bus<SecondWeaponSkillEvent>.Events -= OnSecondarySkill;
+            Bus<SkillMotionEndEvent>.Events -= OnSkillMotionEnd;
         }
 
         public void EquipWeapon(BaseWeapon weapon)
@@ -58,6 +56,7 @@ namespace Work.Players.Code
             BaseWeapon droppedWeapon = _inventory.Equip(weapon);
             if (droppedWeapon != null)
             {
+                droppedWeapon.IsSkillUsing = false;
                 Vector3 dropPosition = _owner.transform.position + (_owner.transform.forward * 1.2f);
                 DropService.DropWeapon(droppedWeapon, dropPosition);
             }
@@ -76,54 +75,25 @@ namespace Work.Players.Code
             // TODO: 대기 상태로 전환시, 트리거 체크를 시작하도록 해야함.
         }
 
-        public void HandlerSetting(WeaponDataSO weaponData)
-        {
-            if (CurrentWeapon == null || weaponData == null) return;
-            _controller.ApplyVisualState(CurrentWeapon, StandbyWeapon);
-        }
-
-        public void CastPrimarySkill(Transform target, Vector3 direction)
-        {
-            if (CurrentWeapon != null)
-            {
-                CurrentWeapon.UsePrimary(target, direction);
-            }
-        }
-
-        public void CastSecondarySkill(Transform target, Vector3 direction)
-        {
-            if (CurrentWeapon != null)
-            {
-                CurrentWeapon.UseSecondary(target, direction);
-            }
-        }
-
-        public void CastTriggerSkill(Transform target, Vector3 direction)
-        {
-            if (CurrentWeapon != null)
-            {
-                CurrentWeapon.UseTrigger(target, direction);
-            }
-        }
-
         private void OnWeaponSwap(WeaponSwapEvent evt)
         {
-            if (IsCanSwapWeapon)
-            {
-                SwapWeapon();
-            }
+            if (IsCanSwapWeapon) SwapWeapon();
         }
 
         private void OnPrimarySkill(FirstWeaponSkillEvent evt)
         {
-            if (_owner == null) return;
-            CastPrimarySkill(null, _owner.transform.forward);
+            if (_owner != null) CurrentWeapon?.UsePrimary(null, _owner.transform.forward);
         }
 
         private void OnSecondarySkill(SecondWeaponSkillEvent evt)
         {
-            if (_owner == null) return;
-            CastSecondarySkill(null, _owner.transform.forward);
+            if (_owner != null) CurrentWeapon?.UseSecondary(null, _owner.transform.forward);
+        }
+
+        private void OnSkillMotionEnd(SkillMotionEndEvent @event)
+        {
+            if (CurrentWeapon == null) return;
+            CurrentWeapon.IsSkillUsing = false;
         }
     }
 }

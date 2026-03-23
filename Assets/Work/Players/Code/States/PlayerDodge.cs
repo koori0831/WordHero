@@ -11,7 +11,7 @@ namespace Work.Players.Code.States
         private PlayerInputModule _inputRoot;
         private PlayerMovementModule _mover;
 
-        public PlayerDodge(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
+        public PlayerDodge(StateMachine stateMachine, Agent owner, int animationHash, bool isSkillAnimation) : base(stateMachine, owner, animationHash, isSkillAnimation)
         {
             _statusModule = _player.GetModule<AgentStatusModule>(true);
             _inputRoot = _player.GetModule<PlayerInputModule>(true);

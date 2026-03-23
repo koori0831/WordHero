@@ -7,7 +7,7 @@ namespace Work.Players.Code
         public BaseWeapon CurrentWeapon { get; private set; }
         public BaseWeapon StandbyWeapon { get; private set; }
 
-        public bool CanSwap => CurrentWeapon != null && StandbyWeapon != null;
+        public bool CanSwap => CurrentWeapon != null && StandbyWeapon != null && CurrentWeapon.IsSkillUsing != true;
 
         public BaseWeapon Equip(BaseWeapon newWeapon)
         {

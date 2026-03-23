@@ -39,12 +39,14 @@ MonoBehaviour:
           tickTimer: 0
         TargetLayer:
           serializedVersion: 2
-          m_Bits: 0
+          m_Bits: 256
     - rid: 7069608376354996311
       type: {class: SpawnGameObjectEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
       data:
         Prefab: {fileID: 9111272710908258508, guid: 02f48b40db3c3b448ab67099886eeda1, type: 3}
         Offset: {x: 0, y: 0, z: 0}
+        UseScaleOverride: 0
+        ScaleOverride: {x: 1, y: 1, z: 1}
         SetParentToCaster: 0
         Delay: 0.3
     - rid: 7069608376354996514
@@ -61,4 +63,4 @@ MonoBehaviour:
           tickTimer: 0
         TargetLayer:
           serializedVersion: 2
-          m_Bits: 0
+          m_Bits: 256

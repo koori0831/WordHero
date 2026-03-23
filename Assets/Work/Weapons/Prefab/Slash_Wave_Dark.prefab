@@ -34652,7 +34652,8 @@ GameObject:
   - component: {fileID: 8325581932422311699}
   - component: {fileID: 2020670475281405267}
   - component: {fileID: -6640116982174492605}
-  - component: {fileID: -2343358513473312597}
+  - component: {fileID: 5773534975496830226}
+  - component: {fileID: 8846789912531134004}
   m_Layer: 0
   m_Name: Slash_Wave_Dark
   m_TagString: Untagged
@@ -39536,7 +39537,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
---- !u!114 &-2343358513473312597
+--- !u!114 &5773534975496830226
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -39545,12 +39546,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 5330741602868527595}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb83b47b863ca543a17b55dad87ab41, type: 3}
+  m_Script: {fileID: 11500000, guid: c80ca9506510a224bbc19cb9ff59dbe9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.Weapons.Skill.SkillEffects.Code.Slash
-  <Damage>k__BackingField: 25
-  speed: -65
-  hitEffectPrefab: {fileID: 6653779132487927355, guid: bfffde36ed80efb40ac051522251ff7d, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Weapons.HitBox.Code.GenericHitbox
+  TargetLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  DestroyOnHit: 0
+  OnHitEffects:
+  - rid: 7069608408986681705
+  - rid: 7069608408986681714
+  references:
+    version: 2
+    RefIds:
+    - rid: 7069608408986681705
+      type: {class: DamageHitEffect, ns: Work.Weapons.HitBox.Effects.Code, asm: Assembly-CSharp}
+      data:
+        Damage: 25
+        UseKnockback: 1
+        KnockbackForce: 20
+        KnockbackDuration: 0.25
+    - rid: 7069608408986681714
+      type: {class: SpawnVFXHitEffect, ns: Work.Weapons.HitBox.Effects.Code, asm: Assembly-CSharp}
+      data:
+        VFXPrefab: {fileID: 6653779132487927355, guid: bfffde36ed80efb40ac051522251ff7d, type: 3}
+--- !u!114 &8846789912531134004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5330741602868527595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ddbdf338abec4b4b8466ca24df55b6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Weapons.Projectiles.AccelerateProjectileMover
+  Speed: -50
+  MaxLifeTime: 5
 --- !u!1 &6175980010236340153
 GameObject:
   m_ObjectHideFlags: 0
