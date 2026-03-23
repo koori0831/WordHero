@@ -11,7 +11,7 @@ namespace Work.Players.Code.States
 	{
         private PlayerWeaponModule _weaponModule;
 
-		public PlayerCanAttackStates(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
+		public PlayerCanAttackStates(StateMachine stateMachine, Agent owner, int animationHash, bool isSkillAnimation) : base(stateMachine, owner, animationHash, isSkillAnimation)
 		{
 			Bus<InputAttackEvent>.Events += OnRequestAttack;
 			Bus<InputDodgeEvent>.Events += OnRequestDodge;

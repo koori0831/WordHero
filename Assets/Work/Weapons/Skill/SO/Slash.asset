@@ -18,6 +18,7 @@ MonoBehaviour:
   Cost: 2
   AnimParam: {fileID: 11400000, guid: 24cdb2a544ce4ef44940393466a66ac4, type: 2}
   Effects:
+  - rid: 7069608418194227326
   - rid: 7069608389530615808
   references:
     version: 2
@@ -27,5 +28,10 @@ MonoBehaviour:
       data:
         Prefab: {fileID: 5330741602868527595, guid: 363d00966503af2478f66ab16c18149b, type: 3}
         Offset: {x: 0, y: 2, z: 4}
+        UseScaleOverride: 0
+        ScaleOverride: {x: 1, y: 1, z: 1}
         SetParentToCaster: 0
         Delay: 0.2
+    - rid: 7069608418194227326
+      type: {class: LookToMouseEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data: 

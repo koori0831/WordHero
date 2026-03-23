@@ -2,6 +2,7 @@
 using UnityEngine;
 using Work.Agents.Code;
 using Work.Combat.Code;
+using Work.Players.Code;
 using Work.Weapons.Code;
 
 namespace Work.Weapons.Skill.SkillEffects.Code
@@ -13,7 +14,7 @@ namespace Work.Weapons.Skill.SkillEffects.Code
         public StatusEffect StatusEffect;
         public LayerMask TargetLayer;
 
-        public void ExecuteEffect(Transform caster, Vector3 target, Vector3 direction)
+        public void ExecuteEffect(Player caster, Vector3 target, Vector3 direction)
         {
             Collider[] hitColliders = Physics.OverlapSphere(caster.transform.position, Radius, TargetLayer);
 

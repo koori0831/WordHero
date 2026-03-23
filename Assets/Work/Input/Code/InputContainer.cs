@@ -91,7 +91,6 @@ namespace Work.Input.Code
             if (context.performed)
             {
                 Bus<InputInteractEvent>.Raise(new InputInteractEvent());
-                Debug.Log("아니 시발 되잖아요");
             }
         }
 
@@ -121,6 +120,8 @@ namespace Work.Input.Code
             UpdateCurrentDevice(context);
             if (context.performed)
                 Bus<FirstWeaponSkillEvent>.Raise(new FirstWeaponSkillEvent());
+            if (context.canceled)
+                Bus<FirstWeaponSkillEvent>.Raise(new FirstWeaponSkillEvent(true));
         }
 
         public void OnSkill2(InputAction.CallbackContext context)
@@ -128,6 +129,8 @@ namespace Work.Input.Code
             UpdateCurrentDevice(context);
             if (context.performed)
                 Bus<SecondWeaponSkillEvent>.Raise(new SecondWeaponSkillEvent());
+            if (context.canceled)
+                Bus<SecondWeaponSkillEvent>.Raise(new SecondWeaponSkillEvent(true));
         }
 
         private void UpdateCurrentDevice(InputAction.CallbackContext context)
