@@ -1,16 +1,44 @@
-using UnityEngine;
+﻿using UnityEngine;
+using Work.Core.Utils.EventBus;
 
-public class GoodsManager : MonoBehaviour
+namespace Work.Goods.Code
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class GoodsManager : MonoBehaviour
     {
-        
-    }
+        #region Gold Region
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+
+
+        [field :SerializeField] public int Gold { get; private set; }
+
+        private void Awake()
+        {
+            Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Events += HandleTryDecreaseGoldEvent;
+        }
+
+        private BooleanReturnValue HandleTryDecreaseGoldEvent(TryDecreaseGoldEvent evt)
+        {
+            bool isSuccess = TryDecreaseCoin(evt.Amount);
+            BooleanReturnValue value = new BooleanReturnValue(isSuccess);
+            return value;
+        }
+
+        public void SetGold(int amount) => Gold = amount;
+
+        public void AddCoin(int amount) => Gold += amount;
+
+        public void DecreaseCoin(int amount) => Gold -= amount;
+
+        public bool TryDecreaseCoin(int amount)
+        {
+            if (Gold >= amount)
+                Gold -= amount;
+            else
+                return false;
+            return true;
+        }
+
+
+        #endregion
     }
 }

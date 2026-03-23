@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 namespace Work.Shops.Code
 {
     [Serializable]
-    class ItemData
+    public class ItemData
     {
         public ShopItemDataSO item;
         [HideInInspector] public bool isShowItem;
@@ -46,7 +46,7 @@ namespace Work.Shops.Code
 
                 if (selectItem == null) return;
 
-                x.SetItemData(selectItem.item);
+                x.SetItemData(selectItem);
                 selectItem.isShowItem = true;
             });
         }

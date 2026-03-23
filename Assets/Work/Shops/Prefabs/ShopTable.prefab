@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1035562176955472856}
   - component: {fileID: 192372624019791090}
+  - component: {fileID: 412570728001342495}
   m_Layer: 0
   m_Name: ShopTable
   m_TagString: Untagged
@@ -47,6 +48,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Shops.Code.ShopTable
   modelTrm: {fileID: 3839223290022622542}
+--- !u!65 &412570728001342495
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948357797866788675}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.207312, y: 1.7179207, z: 2.5933156}
+  m_Center: {x: 0.000028372011, y: 0.8592642, z: 0.0035666225}
 --- !u!1 &2676152471828107308
 GameObject:
   m_ObjectHideFlags: 0
