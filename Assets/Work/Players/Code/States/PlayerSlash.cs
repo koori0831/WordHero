@@ -5,7 +5,7 @@ namespace Work.Players.Code.States
 {
     public class PlayerSlash : PlayerStates
     {
-        public PlayerSlash(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
+        public PlayerSlash(StateMachine stateMachine, Agent owner, int animationHash, bool isSkillAnimation) : base(stateMachine, owner, animationHash, isSkillAnimation)
         {
         }
 

@@ -8,7 +8,7 @@ namespace Work.Players.Code.States
     {
         private PlayerInputModule _input;
 
-        public PlayerIdle(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
+        public PlayerIdle(StateMachine stateMachine, Agent owner, int animationHash, bool isSkillAnimation) : base(stateMachine, owner, animationHash, isSkillAnimation)
         {
             if (_player == null) return;
             _input = _player.GetModule<PlayerInputModule>(true);

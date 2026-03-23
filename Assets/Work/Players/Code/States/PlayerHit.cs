@@ -5,7 +5,7 @@ namespace Work.Players.Code.States
 {
     public class PlayerHit : PlayerStates
     {
-        public PlayerHit(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
+        public PlayerHit(StateMachine stateMachine, Agent owner, int animationHash, bool isSkillAnimation) : base(stateMachine, owner, animationHash, isSkillAnimation)
         {
         }
 

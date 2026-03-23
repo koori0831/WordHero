@@ -1,6 +1,7 @@
 ﻿using Code.FSM;
 using System.Collections.Generic;
 using UnityEngine;
+using Work.Players.Code;
 using Work.Weapons.Code;
 
 namespace Work.Weapons.Skill.Code
@@ -17,7 +18,7 @@ namespace Work.Weapons.Skill.Code
         [SerializeReference]
         public List<ISkillEffect> Effects = new List<ISkillEffect>();
 
-        public void Cast(Transform caster, Vector3 target, Vector3 direction)
+        public void Cast(Player caster, Vector3 target, Vector3 direction)
         {
             foreach (var effect in Effects)
             {

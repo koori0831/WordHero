@@ -107,7 +107,7 @@ public partial class @Console: IInputActionCollection2, IDisposable
                     ""id"": ""852140f2-7766-474d-8707-702459ba45f3"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
@@ -270,7 +270,7 @@ public partial class @Console: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""9401eecd-b502-45c8-b506-25dc5a8f0a2b"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -314,7 +314,7 @@ public partial class @Console: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""29279fa0-728d-41d9-9df8-5144f582d4eb"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",

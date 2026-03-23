@@ -19,7 +19,7 @@ namespace Work.Players.Code.States
 
         private PlayerWeaponModule _weaponModule;
 
-        public PlayerMeleeAttack(StateMachine stateMachine, Agent owner, int animationHash) : base(stateMachine, owner, animationHash)
+        public PlayerMeleeAttack(StateMachine stateMachine, Agent owner, int animationHash, bool isSkillAnimation) : base(stateMachine, owner, animationHash, isSkillAnimation)
         {
             _weaponModule = owner.GetModule<PlayerWeaponModule>(true);
         }
