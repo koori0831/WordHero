@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 1311268699616372246}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.2, y: 0, z: 0}
+  m_LocalPosition: {x: 47.4, y: 0, z: 8.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -115,7 +115,7 @@ MonoBehaviour:
   - {fileID: 1665273524460436048}
   - {fileID: 402914810171546426}
   - {fileID: 7742766487095414343}
-  onePointInMaxEnemyCount: 11
+  onePointInMaxEnemyCount: 1
   spawnRadius: 6.8
 --- !u!1 &1665273524460436048
 GameObject:
@@ -296,7 +296,6 @@ Transform:
   - {fileID: 8835923023557527858}
   - {fileID: 6673181315706434730}
   - {fileID: 63893172793851540}
-  - {fileID: 1997512873473805597}
   - {fileID: 748855752768113122}
   - {fileID: 6241509830683033719}
   m_Father: {fileID: 0}
@@ -315,7 +314,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Work.Stages.Code.Stage
   spawnPoint: {fileID: 63893172793851540}
   doorPoints:
-  - {fileID: 1997512873473805597}
   - {fileID: 748855752768113122}
   - {fileID: 6241509830683033719}
 --- !u!114 &8331818911714426130
@@ -584,38 +582,7 @@ Transform:
   m_GameObject: {fileID: 7893665016150306163}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.2, y: 0, z: -25.3}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1461988054462450212}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8015993095927201417
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1997512873473805597}
-  m_Layer: 0
-  m_Name: DoorSpawnPoint_1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1997512873473805597
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8015993095927201417}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.2, y: 0, z: 21.8}
+  m_LocalPosition: {x: 47.4, y: 0, z: -17.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
