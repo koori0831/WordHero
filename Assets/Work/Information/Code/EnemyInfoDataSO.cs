@@ -4,7 +4,7 @@ using Work.Enemies.Code;
 
 namespace Work.Information.Code
 {
-    [CreateAssetMenu(fileName = "EnemyInfoDataSO", menuName = "Scriptable Objects/EnemyInfoDataSO")]
+    [CreateAssetMenu(fileName = "EnemyInfoDataSO", menuName = "SO/Information/EnemyInfoDataSO")]
     public class EnemyInfoDataSO : HpBarInfoData
     {
         public Enemy Owner { get; private set; }

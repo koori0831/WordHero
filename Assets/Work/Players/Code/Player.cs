@@ -1,7 +1,8 @@
-using Code.FSM;
+﻿using Code.FSM;
 using Work.Agents.Code;
 using Work.Input.Code;
 using Work.Players.Code.States;
+using Work.Stages.Code;
 using Work.Weapons.Code;
 
 namespace Work.Players.Code
@@ -18,6 +19,11 @@ namespace Work.Players.Code
         private void Awake()
         {
             Init();
+        }
+
+        private void Start()
+        {
+            transform.position = StageManager.CurrentStage.SpawnPoint;
         }
 
         public override void Init()
