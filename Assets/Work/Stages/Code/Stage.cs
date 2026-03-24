@@ -15,6 +15,8 @@ namespace Work.Stages.Code
         private GameObject _interactor;
         private StageManager _stageManager;
 
+        public Vector3 SpawnPoint => spawnPoint.position;
+
         private void DoorOpen(StageClearEvent evt)
         {
             doors.ForEach(x =>
@@ -81,7 +83,7 @@ namespace Work.Stages.Code
 
         private void HandleFadeComplete(OnFadeCompletedEvent evt)
         {
-            _interactor.transform.position = spawnPoint.localPosition;
+            _interactor.transform.position = SpawnPoint;
             Bus<OnFadeCompletedEvent>.Events -= HandleFadeComplete;
 
             _stageManager.GeneratStage(_nextRoomType);

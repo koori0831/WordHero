@@ -16,4 +16,14 @@ namespace Work.Core.Utils.EventBus
             OnLog?.Invoke(evt.ToString());
         }
     }
+
+    public static class Bus<T,T1> where T : IEvent where T1 : IReturnValue
+    {
+        public static Func<T,T1> Events;
+
+        public static T1 Raise(T evt)
+        {
+            return Events.Invoke(evt);
+        }
+    }
 }
