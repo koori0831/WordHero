@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Work.Agents.Code;
 using Work.Combat.Code;
 
 namespace Work.Agents.Code
@@ -140,6 +139,7 @@ namespace Work.Agents.Code
                 Debug.Log($"Applied status effect: {effect.type}");
             }
         }
+
         public void ApplyTickEffect(StatusType type)
         {
             StatusValue.OnStatusTickEvent?.Invoke(type);
