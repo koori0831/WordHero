@@ -20,9 +20,11 @@ namespace Work.Weapons.Skill.SkillEffects.Code
 
             foreach (var hitCollider in hitColliders)
             {
-                AgentStatusModule statusModule = hitCollider.GetComponent<AgentStatusModule>();
+                Agent agent = hitCollider.GetComponent<Agent>();
+                AgentStatusModule statusModule = agent.GetModule<AgentStatusModule>();
                 if (statusModule != null)
                 {
+                    Debug.Log("아니 되자나요");
                     statusModule.AddStatus(StatusEffect);
                 }
             }

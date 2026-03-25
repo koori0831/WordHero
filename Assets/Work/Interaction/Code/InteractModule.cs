@@ -25,7 +25,6 @@ namespace Work.Interaction.Code
 
         private void OnInteract(InputInteractEvent evt)
         {
-            Debug.Log("Interact event received");
 
             if (Owner == null) return;
 

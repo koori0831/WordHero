@@ -32,7 +32,6 @@ public partial class SetPatralPointsAction : Action
 
                 patralPoint = pos + UnityEngine.Random.insideUnitSphere * range;
                 patralPoint.y = pos.y;
-                Debug.Log($"move path is complate : {mover.CanMovePoint(patralPoint)}");
                 count++;
             }
 

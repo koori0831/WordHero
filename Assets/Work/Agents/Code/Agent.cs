@@ -55,7 +55,6 @@ namespace Work.Agents.Code
 
                 m += $"{kvp.Value.GetType().ToString()} \n";
             }
-            Debug.Log(m);
         }
 
         public T GetModule<T>(bool isAssignable = false) where T : class, IAgentModule
