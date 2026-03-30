@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 using Work.Agents.Code;
 using Work.Combat.Code;
 
 namespace Work.Enemies.Code
 {
-    public class EnemyMovementModule : AgentMovementModule, IVariableModule
+    public class EnemyMovementModule : AgentMovementModule, IVariableModule, IAfterInitialize
     {
         private Enemy _enemy;
         private Transform _target;
@@ -26,6 +27,7 @@ namespace Work.Enemies.Code
         [SerializeField] private float stopDistance = 0.05f;
         [SerializeField] private float rotateSpeed = 5f;
         [field: SerializeField] public float Speed { get; private set; } = 3f;
+        private float defualtSpeed = 0f;
         [SerializeField] private float speedAnimationMultiflier = 1f;
 
         public override void Initialize(Agent agent)
@@ -35,6 +37,32 @@ namespace Work.Enemies.Code
             _animator = _enemy.GetModule<EnemyAnimatorModule>();
             _agent = _enemy.NavAgent;
             SetSpeed(Speed);
+            defualtSpeed = Speed;
+        }
+
+        public void AfterInitialize()
+        {
+            _enemy.EnemyInfoData.StatusValue.OnstateusChangeEvent += HandleStatusChangeEvent;
+        }
+
+        private void HandleStatusChangeEvent(StatusType statusType, bool isTrue)
+        {
+
+            Debug.Log(statusType.ToString() + " : " + isTrue);
+
+            switch(statusType)
+            {
+                case StatusType.Slow:
+                    {
+                        if(isTrue)
+                        {
+                            SetSpeed(defualtSpeed/10);
+                        }
+                        else
+                            SetSpeed(defualtSpeed);
+                    }
+                    break;
+            }
         }
 
         public void BTInit()
@@ -186,6 +214,6 @@ namespace Work.Enemies.Code
             _agent.updatePosition = !enable;
         }
 
-
+       
     }
 }

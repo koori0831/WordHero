@@ -34,10 +34,13 @@ namespace Work.Enemies.Code
             Debug.Assert(BehaviorAgent != null, "BehaviorAgent component is missing.");
             IsCanShowInfo = EnemyInfoData != null;
             
-            base.Init();
+            AddModule();
+            ModuleInit();
+            
 
             EnemyInfoData = enemyInfoData.GetInfo(this);
             InitInfo(EnemyInfoData);
+            ModuleAfterInit();
         }
 
         protected void Start()
