@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using Work.Combat.Code;
-using Work.Enemies.Code;
 
 namespace Work.Agents.Code
 {
     public class AgentMovementModule : MonoBehaviour, IAgentModule
     {
+        [SerializeField] private LayerMask groundLayerMask;
         protected Agent _owner;
 
         public virtual void Initialize(Agent agent)
@@ -22,6 +22,23 @@ namespace Work.Agents.Code
             float currentTime = 0;
             float maxSpeed = knockbackData.Force;
             AnimationCurve moveCurve = knockbackData.KnockbackCurve;
+
+
+            Vector3 endPoint = _owner.transform.position + direction * maxSpeed; // 넉백이 끝나는 지점 계산
+            Ray ray = new Ray(_owner.transform.position + Vector3.up * 0.5f, direction);
+
+            // 넉백으로 인해서 밀려나는 동안에 장애물과 충돌하는지 체크
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, maxSpeed, groundLayerMask))
+            {
+                endPoint = hitInfo.point; // 충돌 지점으로 넉백 끝나는 지점 수정
+                //해당 지점을 지나치게 넉백이 적용되는 것을 방지하기 위해서 넉백의 최대 속도를 조정
+                float distanceToObstacle = Vector3.Distance(_owner.transform.position, endPoint);
+                if (distanceToObstacle < maxSpeed)
+                {
+                    maxSpeed = distanceToObstacle; // 장애물까지의 거리가 넉백 최대 속도보다 짧으면, 최대 속도를 장애물까지의 거리로 조정
+                }
+            }
+
 
             while (currentTime < duration)
             {

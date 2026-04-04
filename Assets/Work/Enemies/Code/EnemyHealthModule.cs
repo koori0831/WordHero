@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using Work.Agents.Code;
+using Work.Combat.Code;
 using Work.Core.Utils.EventBus;
 
 namespace Work.Enemies.Code
@@ -10,6 +11,24 @@ namespace Work.Enemies.Code
     public class EnemyHealthModule : AgentHealthModule
     {
         private Enemy Enemy => _owner as Enemy;
+
+        public override void AfterInitialize()
+        {
+            Enemy.EnemyInfoData.StatusValue.OnStatusTickEvent += HandleStatusTickEvent;
+        }
+
+        private void HandleStatusTickEvent(StatusType statusType, float value)
+        {
+            switch (statusType)
+            {
+                case StatusType.Freeze:
+                    {
+                        TakeDamage((int)value);
+                    }
+                    break;
+            }
+        }
+
         public override void TakeDamage(int damageAmount)
         {
             Enemy.StateChangeChannel.SendEventMessage(EnemyState.Hit);

@@ -29,7 +29,8 @@ namespace Work.Players.Code
 
         private void Start()
         {
-            transform.position = StageManager.CurrentStage.SpawnPoint;
+            if (StageManager.CurrentStage != null)
+                transform.position = StageManager.CurrentStage.SpawnPoint;
         }
 
         public override void Init()
@@ -57,7 +58,7 @@ namespace Work.Players.Code
         }
 
         public void GetWeapon(BaseWeapon weapon)
-        { 
+        {
             _weaponModule.EquipWeapon(weapon);
         }
 

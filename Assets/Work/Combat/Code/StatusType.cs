@@ -31,25 +31,25 @@ namespace Work.Combat.Code
         [InspectorName("넉백 면역")] KnockbackImmune = 207,    // 넉백 면역 - 밀리지 않음
 
         // =========================
-        // 3. DoT (지속 피해 계열) 수치필요 X , 틱당 효과 필요 O
+        // 3. DoT (지속 피해 계열) 수치필요 O , 틱당 효과 필요 O
         // =========================
 
         [InspectorName("화상")] Burn = 301,               // 화상 - 일정 시간 동안 지속 화염 피해
         [InspectorName("중독")] Poison = 302,             // 중독 - 일정 시간 지속 독 피해
         [InspectorName("출혈")] Bleed = 303,              // 출혈 - 체력 비례 또는 고정 지속 피해
         [InspectorName("감전")] Shock = 304,              // 감전 - 지속 전기 피해 + 추가 효과 가능
+        [InspectorName("빙결")] Freeze = 305,              // 감전 - 지속 전기 피해 + 추가 효과 가능
 
         // =========================
         // 4. Crowd Control (행동 변화 계열) 수치필요 X , 틱당 효과 필요 X
         // =========================
 
-        [InspectorName("빙결")] Freeze = 401,             // 빙결 - 완전 행동 정지 (강한 CC)
-        [InspectorName("동상")] Frostbite = 402,          // 동상 - 이동/공속 감소
-        [InspectorName("슬로우")] Slow = 403,             // 슬로우 - 이동 속도 감소
-        [InspectorName("공격 속도 감소")] AttackSpeedDown = 404,    // 공격 속도 감소
-        [InspectorName("혼란")] Confuse = 405,            // 혼란 - 랜덤 이동 또는 타겟 혼동
-        [InspectorName("공포")] Fear = 406,               // 공포 - 플레이어 반대 방향으로 도망
-        [InspectorName("실명")] Blind = 407,              // 실명 - 명중률 감소 또는 시야 감소
+        [InspectorName("동상")] Frostbite = 401,          // 동상 - 이동/공속 감소
+        [InspectorName("슬로우")] Slow = 402,             // 슬로우 - 이동 속도 감소
+        [InspectorName("공격 속도 감소")] AttackSpeedDown = 403,    // 공격 속도 감소
+        [InspectorName("혼란")] Confuse = 404,            // 혼란 - 랜덤 이동 또는 타겟 혼동
+        [InspectorName("공포")] Fear = 405,               // 공포 - 플레이어 반대 방향으로 도망
+        [InspectorName("실명")] Blind = 406,              // 실명 - 명중률 감소 또는 시야 감소
 
         // =========================
         // 5. Buff (강화 계열) 수치필요 O , 틱당 효과 필요 X
@@ -67,14 +67,14 @@ namespace Work.Combat.Code
     public class StatusEffect
     {
         public bool IsTickEffect => (int)type / 100 == 3; // DoT 계열인지 여부
-        public bool IsValueEffect => (int)type / 100 == 5; // Buff 계열인지 여부
+        public bool IsValueEffect => (int)type / 100 == 5 || (int)type / 100 == 3; //DoT, Buff 계열인지 여부
 
         public StatusType type;
         public bool isInfinite; // 무한 지속 여부
         private bool isDuration => !isInfinite; // 지속 시간 필요 여부
-        [ShowIf(nameof(isDuration))][field: SerializeField] public float Duration { get; private set; } // 지속 시간 (초)
-        [ShowIf(nameof(IsTickEffect))][field: SerializeField] public float TickInterval { get; private set; }
-        [ShowIf(nameof(IsValueEffect))][field: SerializeField] public float Value { get; private set; }
+        [ShowIf(nameof(isDuration))] public float Duration; // 지속 시간 (초)
+        [ShowIf(nameof(IsTickEffect))] public float TickInterval;
+        [ShowIf(nameof(IsValueEffect))] public float Value;
 
         [HideInInspector] public float timer; // 내부 타이머 (틱 간격 또는 지속 시간 계산용)
         [HideInInspector] public float tickTimer; // 내부 타이머 (틱 간격 또는 지속 시간 계산용)

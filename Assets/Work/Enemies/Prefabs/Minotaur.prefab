@@ -4746,6 +4746,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa69c812688c40a4ca31de4fb1d1c9db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Enemies.Code.EnemyMovementModule
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 65
   stopDistance: 0.5
   rotateSpeed: 15
   <Speed>k__BackingField: 7
@@ -5544,7 +5547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0503fb0c43788ca4c835f7615b718d3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Enemies.Code.EnemyAttackModule
-  attackRange: 2.54
+  attackRange: 3.5
   damage: 5
   _isComboAttacked: 1
   attackCount: 5

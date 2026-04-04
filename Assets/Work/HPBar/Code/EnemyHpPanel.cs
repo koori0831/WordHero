@@ -127,7 +127,6 @@ namespace Work.HPBar.Code
 
         private void HandleHPChangeEvent(int current, int max)
         {
-            Debug.Log($"HP Change: {current}/{max}");
             hpField.HpChange(current, max);
         }
 

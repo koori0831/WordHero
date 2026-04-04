@@ -31,7 +31,7 @@ namespace Work.Agents.Code
         }
     }
 
-    public class AgentHealthModule : MonoBehaviour, IAgentModule
+    public class AgentHealthModule : MonoBehaviour, IAgentModule, IAfterInitialize
     {
         protected Agent _owner;
         public int CurrentHealth
@@ -75,5 +75,7 @@ namespace Work.Agents.Code
             OnDeath?.Invoke();
             HpValue.OnDead?.Invoke();
         }
+
+        public virtual void AfterInitialize() { }
     }
 }

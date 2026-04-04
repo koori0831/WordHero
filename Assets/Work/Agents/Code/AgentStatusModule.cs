@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Work.Agents.Code;
 using Work.Combat.Code;
 
 namespace Work.Agents.Code
@@ -9,7 +8,7 @@ namespace Work.Agents.Code
     public class StatusValue
     {
         public Action<StatusType, bool> OnstateusChangeEvent;
-        public Action<StatusType> OnStatusTickEvent;
+        public Action<StatusType,float> OnStatusTickEvent;
         public bool isHitImmunity;
         public bool isSuperArmor;
         public bool isInvincible;
@@ -81,7 +80,7 @@ namespace Work.Agents.Code
         {
             for (int i = 0; i < _tickEffects.Count; i++)
             {
-                ApplyTickEffect(_tickEffects[i]);
+                ApplyTickEffect(_tickEffects[i], _activeEffects[_tickEffects[i]].Value);
             }
 
             _tickEffects.Clear();
@@ -140,9 +139,10 @@ namespace Work.Agents.Code
                 Debug.Log($"Applied status effect: {effect.type}");
             }
         }
-        public void ApplyTickEffect(StatusType type)
+
+        public void ApplyTickEffect(StatusType type, float value)
         {
-            StatusValue.OnStatusTickEvent?.Invoke(type);
+            StatusValue.OnStatusTickEvent?.Invoke(type,value);
         }
 
         public bool HasStatusEffect(StatusType type)
