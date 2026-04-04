@@ -1,4 +1,5 @@
-﻿using Code.FSM;
+﻿using UnityEngine;
+using Code.FSM;
 using Work.Agents.Code;
 using Work.Input.Code;
 using Work.Players.Code.States;
@@ -9,12 +10,17 @@ namespace Work.Players.Code
 {
     public class Player : Agent
     {
+        private const string DEFAULTLAYER = "Player";
+        private const string VANISHLAYER = "PlayerDodge";
+
         private StateMachine _stateMachine;
         private PlayerInputModule _inputRoot;
         private PlayerMovementModule _movementModule;
         private PlayerWeaponModule _weaponModule;
 
         private PlayerHealthModule _health;
+
+        public bool HaveWeapon => _weaponModule.HaveWeapon;
 
         private void Awake()
         {
@@ -58,6 +64,11 @@ namespace Work.Players.Code
         public void ChangeState(string stateKey)
         {
             _stateMachine.ChangeState(stateKey);
+        }
+
+        public void SetVanished(bool vanished)
+        {
+            gameObject.layer = LayerMask.NameToLayer(vanished ? VANISHLAYER : DEFAULTLAYER);
         }
     }
 }

@@ -56,20 +56,18 @@ namespace Work.Players.Code.States
                 if (_queueNext && _comboIndex < MaxCombo - 1)
                 {
                     _comboIndex++;
-                    _stateMachine.ChangeState(PlayerStateKeys.MeleeAttack, true);
+                    _stateMachine.ChangeState(PlayerStateKeys.Attack, true);
                 }
                 else if(_queueNext)
                 {
                     _comboIndex = 0;
-                    _stateMachine.ChangeState(PlayerStateKeys.MeleeAttack, true);
+                    _stateMachine.ChangeState(PlayerStateKeys.Attack, true);
                 }
                 else
                 {
                     _comboIndex = 0;
                     _stateMachine.ChangeState(PlayerStateKeys.Idle);
                 }
-
-                _weaponModule.CurrentWeapon?.GetComponent<MeleeWeapon>()?.EndAttack();
             }
         }
 
@@ -77,7 +75,7 @@ namespace Work.Players.Code.States
         {
             if (_weaponModule.WeaponType == WeaponType.Melee)
             {
-                _weaponModule.CurrentWeapon?.GetComponent<MeleeWeapon>()?.StartAttack();
+                _weaponModule.CurrentWeapon?.Attack(_comboIndex);
             }
             else 
             {
@@ -110,7 +108,6 @@ namespace Work.Players.Code.States
         public override void Exit()
         {
             _animator.SetApplyRootMotion(false);
-            _weaponModule.CurrentWeapon?.GetComponent<MeleeWeapon>()?.EndAttack();
             base.Exit();
         }
     }

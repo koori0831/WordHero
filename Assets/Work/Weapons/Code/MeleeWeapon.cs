@@ -1,36 +1,21 @@
 ﻿using UnityEngine;
-using Work.Combat.Code;
-using static UnityEngine.UI.GridLayoutGroup;
 
 namespace Work.Weapons.Code
 {
     public class MeleeWeapon : BaseWeapon
     {
-        private Collider _hitBox;
-
-        private void Awake()
+        public override void Attack(int comboCount = 0)
         {
-            _hitBox = GetComponent<Collider>();
-            _hitBox.enabled = false;
-        }
+            base.Attack(comboCount);
+            if (Data.ComboHitBoxes.Count < 0) return;
+            if (comboCount >= Data.ComboHitBoxes.Count) return;
 
-        public void StartAttack()
-        {
-            _hitBox.enabled = true;
-        }
+            ComboHitBox hitBox = Data.ComboHitBoxes[comboCount];
 
-        public void EndAttack()
-        {
-            _hitBox.enabled = false;
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (Owner != null && collision.gameObject == Owner.gameObject) return;
-
-            DamageContext context = new DamageContext(Owner != null ? Owner.gameObject : gameObject, collision.gameObject, Data.BaseDamage);
-            KnockbackData knockbackData = new KnockbackData(5f, 0.5f, (collision.transform.position - Owner.Transform.position).normalized, AnimationCurve.EaseInOut(0, 1, 1, 0));
-            DamageResolver.TryApplyDamage(context, true , knockbackData);
+            Vector3 spawnPosition = Owner.transform.TransformPoint(hitBox.LocalPosition);
+            Quaternion prefabRotation = Quaternion.Euler(hitBox.LocalRotation);
+            Quaternion spawnRotation = Owner.transform.rotation * prefabRotation;
+            Instantiate(hitBox.HitBoxPrefab, spawnPosition, spawnRotation);
         }
     }
 }

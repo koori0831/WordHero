@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Work.Interaction.Code;
 using Work.Players.Code;
 using Work.Weapons.Skill.Code;
 
@@ -12,6 +11,11 @@ namespace Work.Weapons.Code
         [field: SerializeField] public WeaponDataSO Data { get; private set; }
 
         public bool IsSkillUsing { get; set; }
+
+        public virtual void Attack(int comboCount = 0) 
+        {
+            
+        }
 
         public void UsePrimary(Transform target, Vector3 direction) => ExecuteSkill(Data?.PrimarySkill, target, direction);
         public void UseSecondary(Transform target, Vector3 direction) => ExecuteSkill(Data?.SecondarySkill, target, direction);

@@ -40,7 +40,7 @@ namespace Code.FSM
             CurrentState?.Update();
         }
 
-        internal void TriggerEvent(AnimationEventType eventType)
+        public void TriggerEvent(AnimationEventType eventType)
         {
             CurrentState?.OnTriggerEnter(eventType);
         }
