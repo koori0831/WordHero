@@ -12,10 +12,11 @@ namespace Work.Stages.Code
         [SerializeField] private List<Transform> doorPoints = new List<Transform>();
         private List<Door> doors = new List<Door>();
         private DoorType _nextRoomType;
-        private GameObject _interactor;
         private StageManager _stageManager;
 
         public Vector3 SpawnPoint => spawnPoint.position;
+
+        public GameObject Interator { get; private set; }
 
         private void DoorOpen(StageClearEvent evt)
         {
@@ -74,7 +75,7 @@ namespace Work.Stages.Code
 
         public void HandleGoNextRoom(GameObject interactor, DoorType doorType)
         {
-            _interactor = interactor;
+            Interator = interactor;
             _nextRoomType = doorType;
             Bus<OnFadeCompletedEvent>.Events += HandleFadeComplete;
             Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));
@@ -83,7 +84,6 @@ namespace Work.Stages.Code
 
         private void HandleFadeComplete(OnFadeCompletedEvent evt)
         {
-            _interactor.transform.position = SpawnPoint;
             Bus<OnFadeCompletedEvent>.Events -= HandleFadeComplete;
 
             _stageManager.GeneratStage(_nextRoomType);

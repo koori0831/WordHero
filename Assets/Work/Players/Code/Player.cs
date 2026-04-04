@@ -1,4 +1,5 @@
 ﻿using Code.FSM;
+using GondrLib.Dependencies;
 using Work.Agents.Code;
 using Work.Input.Code;
 using Work.Players.Code.States;
@@ -7,7 +8,8 @@ using Work.Weapons.Code;
 
 namespace Work.Players.Code
 {
-    public class Player : Agent
+    [Provide]
+    public class Player : Agent, IDependencyProvider
     {
         private StateMachine _stateMachine;
         private PlayerInputModule _inputRoot;

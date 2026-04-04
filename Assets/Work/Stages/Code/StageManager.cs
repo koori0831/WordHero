@@ -1,4 +1,5 @@
-﻿using LitMotion;
+﻿using Cysharp.Threading.Tasks.Triggers;
+using LitMotion;
 using System.Collections.Generic;
 using UnityEngine;
 using Work.Core.Utils.EventBus;
@@ -72,6 +73,8 @@ namespace Work.Stages.Code
 
         public void GeneratStage(DoorType doorType)
         {
+            GameObject interactor = CurrentStage?.Interator;
+
             Stage selectedStage = GetStage(doorType);
             if (selectedStage == null) return;
 
@@ -83,6 +86,8 @@ namespace Work.Stages.Code
             Stage stage = Instantiate(selectedStage, transform);
             CurrentStage?.ExitStage();
             CurrentStage = stage;
+            if(interactor != null)
+            interactor.transform.position = CurrentStage.SpawnPoint;
             CurrentStage.EnterStage(this);
         }
     }

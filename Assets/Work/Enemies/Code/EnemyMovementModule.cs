@@ -70,6 +70,8 @@ namespace Work.Enemies.Code
             _enemy.SetBlackboardVariable<float>(BTVariables.RunSpeed, Speed);
             if (_enemy.ExistVarialbe(BTVariables.WalkSpeed))
                 _enemy.SetBlackboardVariable<float>(BTVariables.WalkSpeed, Speed / 3);
+
+            SetTarget(_enemy.GetBlackboardVariable<Transform>(BTVariables.Target));
         }
 
         public void SetTarget(Transform target)

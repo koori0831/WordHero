@@ -61,8 +61,8 @@ namespace Work.Shops.Code
             if (!_isInBoundry) return;
             if (_currentItem == null) return;
             _currentItem.isSoldItem = true;
-            BooleanReturnValue value = Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Raise(new TryDecreaseGoldEvent(_currentItem.item.Price));
-            if (value.Value)
+            bool value = Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Raise(new TryDecreaseGoldEvent(_currentItem.item.Price)).Value;
+            if (value)
             {
                 Player player = interactor.GetComponent<Player>();
 
