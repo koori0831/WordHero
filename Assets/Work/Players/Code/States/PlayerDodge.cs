@@ -27,12 +27,14 @@ namespace Work.Players.Code.States
             _statusModule.AddStatus(new StatusEffect { type = StatusType.HitImmunity, isInfinite = true });
             _animator.SetApplyRootMotion(true);
             Bus<CombatDodgeEvent>.Raise(new CombatDodgeEvent(_player.gameObject));
+            _player.SetVanished(true);
         }
 
         public override void Exit()
         {
             _statusModule.RemoveStatus(StatusType.HitImmunity);
             _animator.SetApplyRootMotion(false);
+            _player.SetVanished(false);
             base.Exit();
         }
 

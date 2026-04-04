@@ -30,6 +30,11 @@ namespace Work.Players.Code
             _animator.applyRootMotion = apply;
         }
 
+        public void SetAnimationController(AnimatorOverrideController controller)
+        {
+            _animator.runtimeAnimatorController = controller;
+        }
+
         public float GetStateLength(int layer = 0)
         {
             if (_animator == null) return 0f;

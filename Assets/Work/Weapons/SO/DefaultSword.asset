@@ -16,11 +16,22 @@ MonoBehaviour:
   WeaponDescription: "\uC5EC\uC2E0, \uD2F0\uC544\uB9C8\uD2B8\uC5D0\uAC8C \uBC1B\uC740
     \uAC80."
   Type: 0
+  TrailPrefab: {fileID: 211711048654108181, guid: cc382a5d9a656c9479e00a2398b21cb0, type: 3}
+  ComboHitBoxes:
+  - HitBoxPrefab: {fileID: 1872147318604286, guid: effb3edb5c1327040ab7ddcd911a8553, type: 3}
+    LocalPosition: {x: 0, y: 2, z: 1}
+    LocalRotation: {x: -30, y: 35, z: -145}
+  - HitBoxPrefab: {fileID: 1872147318604286, guid: effb3edb5c1327040ab7ddcd911a8553, type: 3}
+    LocalPosition: {x: 0, y: 2, z: 1}
+    LocalRotation: {x: 25, y: 325, z: 37}
+  - HitBoxPrefab: {fileID: 1872147318604286, guid: effb3edb5c1327040ab7ddcd911a8553, type: 3}
+    LocalPosition: {x: 0, y: 2, z: 1.2}
+    LocalRotation: {x: -55, y: 0, z: -90}
   HandlerPosition: {x: 0.000319, y: 0.000314, z: 0.000559}
   HandlerRotation: {x: -34.641, y: 129.574, z: 0}
   WeaponIcon: {fileID: 21300000, guid: 719c2201c2f5f6c4aafffaeb5abdf5f9, type: 3}
-  BaseDamage: 10
   AttackSpeed: 10
   PrimarySkill: {fileID: 11400000, guid: bd14225121de87442990af4ba29fcbad, type: 2}
   SecondarySkill: {fileID: 0}
   TriggerSkill: {fileID: 0}
+  AnimSet: {fileID: 22100000, guid: 162d413ccf8ae1948adf4839a80cebbc, type: 2}
