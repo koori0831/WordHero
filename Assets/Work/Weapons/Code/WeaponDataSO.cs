@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using Work.Weapons.Skill.Code;
+using Alchemy.Inspector;
+using System.Collections.Generic;
 
 namespace Work.Weapons.Code
 {
@@ -9,13 +11,18 @@ namespace Work.Weapons.Code
         public string WeaponName;
         public string WeaponDescription;
         public WeaponType Type;
+        private bool _isMelee { get { return Type == WeaponType.Melee; } }
+        [ShowIf(nameof(_isMelee))]
+        public GameObject TrailPrefab;
+        [ShowIf(nameof(_isMelee))]
+        public List<ComboHitBox> ComboHitBoxes;
         public Vector3 HandlerPosition;
         public Vector3 HandlerRotation;
         public Sprite WeaponIcon;
-        public int BaseDamage;
         public float AttackSpeed;
         public SkillDataSO PrimarySkill;
         public SkillDataSO SecondarySkill;
         public SkillDataSO TriggerSkill;
+        public AnimatorOverrideController AnimSet;
     }
 }

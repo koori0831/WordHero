@@ -9,6 +9,8 @@ namespace Work.Players.Code
 
         public bool CanSwap => CurrentWeapon != null && StandbyWeapon != null && CurrentWeapon.IsSkillUsing != true;
 
+        public bool HaveWeapon => CurrentWeapon != null;
+
         public BaseWeapon Equip(BaseWeapon newWeapon)
         {
             if (newWeapon == null) return null;
