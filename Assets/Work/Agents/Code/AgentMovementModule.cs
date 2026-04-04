@@ -8,6 +8,7 @@ namespace Work.Agents.Code
         [SerializeField] private LayerMask groundLayerMask;
         protected Agent _owner;
 
+
         public virtual void Initialize(Agent agent)
         {
             _owner = agent;
@@ -15,6 +16,7 @@ namespace Work.Agents.Code
 
         public virtual async void KnockBack(KnockbackData knockbackData)
         {
+
             //넉백에 대한 면역이 있는지 체크하는건 EnemyKnockbackModule에서 하자.
             float duration = knockbackData.Duration;
             Vector3 direction = knockbackData.Direction.normalized;
