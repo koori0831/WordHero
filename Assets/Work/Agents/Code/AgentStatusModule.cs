@@ -147,6 +147,7 @@ namespace Work.Agents.Code
 
         public bool HasStatusEffect(StatusType type)
         {
+
             return _activeEffects.ContainsKey(type);
         }
 

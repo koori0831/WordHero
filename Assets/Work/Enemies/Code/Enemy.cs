@@ -1,23 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using GondrLib.Dependencies;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Behavior;
 using Unity.Behavior.GraphFramework;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.AI;
 using Work.Agents.Code;
+using Work.Core.RequestInjectors;
+using Work.Core.Utils.EventBus;
 using Work.Information.Code;
+using Work.Players.Code;
 
 namespace Work.Enemies.Code
 {
     public abstract class Enemy : Agent, ISelectable
     {
+        protected Player _target;
+
         protected ChangeStateEvent _stateChangeChannel;
         public ChangeStateEvent StateChangeChannel => _stateChangeChannel;
         public EnemyInfoDataSO EnemyInfoData { get; protected set; }
         public NavMeshAgent NavAgent { get; private set; }
         public BehaviorGraphAgent BehaviorAgent { get; private set; }
         public bool IsCanShowInfo { get; protected set; }
-
 
         [SerializeField] protected List<VariableSO> variableSOs = new List<VariableSO>();
         [SerializeField] protected EnemyInfoDataSO enemyInfoData;
@@ -60,6 +66,11 @@ namespace Work.Enemies.Code
 
         public virtual void VariableSetting()
         {
+            Player player = Bus<RequestInjectEvent, DependencyReturnValue>.Raise(new RequestInjectEvent(typeof(Player))).dependencyProvider as Player;
+            if (player == null) return;
+            _target = player;
+            SetBlackboardVariable<Transform>(BTVariables.Target, _target.transform);
+
             _modules.Values.ToList().ForEach(item =>
             {
                 if (item is IVariableModule variable)

@@ -1,3 +1,4 @@
+using GondrLib.Dependencies;
 ﻿using UnityEngine;
 using Code.FSM;
 using Work.Agents.Code;
@@ -8,7 +9,8 @@ using Work.Weapons.Code;
 
 namespace Work.Players.Code
 {
-    public class Player : Agent
+    [Provide]
+    public class Player : Agent, IDependencyProvider
     {
         private const string DEFAULTLAYER = "Player";
         private const string VANISHLAYER = "PlayerDodge";

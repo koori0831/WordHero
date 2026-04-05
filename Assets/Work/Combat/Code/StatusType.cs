@@ -1,10 +1,11 @@
 ﻿using Alchemy.Inspector;
 using System;
+using Unity.Behavior;
 using UnityEngine;
 
 namespace Work.Combat.Code
 {
-
+    [BlackboardEnum]
     public enum StatusType
     {
         // =========================

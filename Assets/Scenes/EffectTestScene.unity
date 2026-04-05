@@ -5139,6 +5139,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 253538092385596767, guid: d9d98d70c1f4f3d44b0d9419bd497001, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3068230173374871021, guid: d9d98d70c1f4f3d44b0d9419bd497001, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298586940558611926, guid: d9d98d70c1f4f3d44b0d9419bd497001, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4906383968985803406, guid: d9d98d70c1f4f3d44b0d9419bd497001, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7106239632005908416, guid: d9d98d70c1f4f3d44b0d9419bd497001, type: 3}
       propertyPath: m_Name
       value: Hammer (1)
@@ -18113,6 +18129,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481c44d0d0e71bb4785681208044ebd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Player.Code.PlayerMovementModule
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   baseMoveSpeed: 1
 --- !u!114 &741489970
 MonoBehaviour:
