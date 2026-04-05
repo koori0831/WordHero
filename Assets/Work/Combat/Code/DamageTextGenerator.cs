@@ -3,6 +3,12 @@ using Work.Core.Utils.EventBus;
 
 namespace Work.Combat.Code
 {
+    public enum DamageTextType
+    {
+        Normal,
+        Freeze
+    }
+
     public class DamageTextGenerator : MonoBehaviour
     {
         [SerializeField] private GameObject damageTextPrefab;
@@ -10,11 +16,16 @@ namespace Work.Combat.Code
 
         public void Awake()
         {
-            Bus<CombatHitEvent>.Events += HandleDamageTextEvent;
+            Bus<DamageTextEvent>.Events += HandleDamageTextEvent; // 나중에 DmageTextType에 맞춰서 텍스트 색상이나 폰트 바꿔주는 기능 추가
+            Bus<CombatHitEvent>.Events += HandleDamageTextEvent; // 나중에 DmageTextType에 맞춰서 텍스트 색상이나 폰트 바꿔주는 기능 추가
+
         }
 
         private void HandleDamageTextEvent(CombatHitEvent evt) =>
             GenerateDamageText(evt.Damage, evt.Target, evt.IsCritical);
+
+        private void HandleDamageTextEvent(DamageTextEvent evt) =>
+            GenerateDamageText(evt.Damage, evt.Owner, evt.IsCritical);
 
         public void GenerateDamageText(int damage, GameObject target, bool isCritical = false)
         {
@@ -27,9 +38,9 @@ namespace Work.Combat.Code
             DamageText damageText = damageTextObj.GetComponent<DamageText>();
 
             bool isPlayer = false;
-            if (target.layer  == LayerMask.NameToLayer("Player"))
+            if (target.layer == LayerMask.NameToLayer("Player"))
                 isPlayer = true;
-           
+
 
             damageText.Init(damage, isCritical, isPlayer);
         }

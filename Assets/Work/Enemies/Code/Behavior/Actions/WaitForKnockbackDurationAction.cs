@@ -18,7 +18,7 @@ public partial class WaitForKnockbackDurationAction : Action
     protected override Status OnStart()
     {
         KnockbackData data = Self.Value.GetModule<AgentKnockbackModule>().LastKnockbackData;
-        _waitTime = data.Duration;
+        _waitTime = data.StiffDuration;
         
         return Status.Running;
     }

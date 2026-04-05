@@ -20,15 +20,31 @@ MonoBehaviour:
   AnimParam: {fileID: 11400000, guid: 550e20d6bc770674e9f541d5b8a376d8, type: 2}
   Effects:
   - rid: 7069608252854501492
+  - rid: 2148152267635163833
   - rid: 7069608376354996514
   - rid: 7069608376354996311
   references:
     version: 2
     RefIds:
+    - rid: 2148152267635163833
+      type: {class: AoEStatusEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        Radius: 8
+        StatusEffect:
+          type: 201
+          isInfinite: 0
+          Duration: 5
+          TickInterval: 0
+          Value: 0
+          timer: 0
+          tickTimer: 0
+        TargetLayer:
+          serializedVersion: 2
+          m_Bits: 256
     - rid: 7069608252854501492
       type: {class: AoEStatusEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
       data:
-        Radius: 5
+        Radius: 8
         StatusEffect:
           type: 402
           isInfinite: 0
@@ -52,12 +68,12 @@ MonoBehaviour:
     - rid: 7069608376354996514
       type: {class: AoEStatusEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
       data:
-        Radius: 5
+        Radius: 8
         StatusEffect:
           type: 305
           isInfinite: 0
           Duration: 5
-          TickInterval: 0.25
+          TickInterval: 0.3
           Value: 2
           timer: 0
           tickTimer: 0

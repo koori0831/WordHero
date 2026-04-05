@@ -27,8 +27,8 @@ namespace Work.Enemies.Code
         [SerializeField] private float stopDistance = 0.05f;
         [SerializeField] private float rotateSpeed = 5f;
         [field: SerializeField] public float Speed { get; private set; } = 3f;
-        private float defualtSpeed = 0f;
-        [SerializeField] private float speedAnimationMultiflier = 1f;
+        private float _speedMultiflier = 1f;
+        [SerializeField] private float moveAnimationMultiflier = 1f;
 
         public override void Initialize(Agent agent)
         {
@@ -37,7 +37,7 @@ namespace Work.Enemies.Code
             _animator = _enemy.GetModule<EnemyAnimatorModule>();
             _agent = _enemy.NavAgent;
             SetSpeed(Speed);
-            defualtSpeed = Speed;
+            _speedMultiflier = 1f;
         }
 
         public void AfterInitialize()
@@ -47,7 +47,6 @@ namespace Work.Enemies.Code
 
         private void HandleStatusChangeEvent(StatusType statusType, bool isTrue)
         {
-
             Debug.Log(statusType.ToString() + " : " + isTrue);
 
             switch(statusType)
@@ -56,10 +55,10 @@ namespace Work.Enemies.Code
                     {
                         if(isTrue)
                         {
-                            SetSpeed(defualtSpeed/10);
+                            SetSpeedMultiflier(0.1f);
                         }
                         else
-                            SetSpeed(defualtSpeed);
+                            SetSpeedMultiflier(1);
                     }
                     break;
             }
@@ -185,9 +184,20 @@ namespace Work.Enemies.Code
         {
             this.Speed = speed;
             //float mul = IsPatroling ? speedAnimationMultiflier / 2 : speedAnimationMultiflier;
-            _animator.SetParam(Animator.StringToHash("MOVE_SPEED"), speed * speedAnimationMultiflier);
+            ApplySpeed();
+        }
+
+        public void ApplySpeed()
+        {
+            _animator.SetParam(Animator.StringToHash("MOVE_SPEED"), Speed * _speedMultiflier * moveAnimationMultiflier);
             if (_agent.enabled == false) return;
-            _agent.speed = speed;
+            _agent.speed = Speed * _speedMultiflier;
+        }
+
+        public void SetSpeedMultiflier(float value)
+        {
+            _speedMultiflier = value;
+            ApplySpeed();
         }
 
         public void SetRotate(Vector3 position)
