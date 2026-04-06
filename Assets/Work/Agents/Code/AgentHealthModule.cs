@@ -10,7 +10,7 @@ namespace Work.Agents.Code
     {
         public int CurrentHp { get; private set; }
         public int MaxHp { get; private set; }
-        public Action<int, int> OnHpChanged;
+        public Action<int, int> OnHpChanged; // CurrentHp, MaxHp
         public Action OnDead;
 
         public HpValue(int maxHp)
@@ -43,12 +43,12 @@ namespace Work.Agents.Code
             }
         }
 
-        public HpValue HpValue { get; private set; }
+        public HpValue HpValue { get; protected set; }
 
         public UnityEvent<int, int> OnHealthChanged;
         public UnityEvent OnDeath;
 
-        [field: SerializeField] public int MaxHealth { get; private set; } = 100;
+        [field: SerializeField] public int MaxHealth { get; protected set; } = 100;
 
 
         public virtual void Initialize(Agent agent)
@@ -70,7 +70,7 @@ namespace Work.Agents.Code
             }
         }
 
-        private void Die()
+        protected void Die()
         {
             OnDeath?.Invoke();
             HpValue.OnDead?.Invoke();

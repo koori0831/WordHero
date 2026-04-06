@@ -1,9 +1,7 @@
-﻿using GondrLib.Dependencies;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Unity.Behavior;
 using Unity.Behavior.GraphFramework;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.AI;
 using Work.Agents.Code;
@@ -39,10 +37,10 @@ namespace Work.Enemies.Code
             NavAgent = GetComponent<NavMeshAgent>();
             Debug.Assert(BehaviorAgent != null, "BehaviorAgent component is missing.");
             IsCanShowInfo = EnemyInfoData != null;
-            
+
             AddModule();
             ModuleInit();
-            
+
 
             EnemyInfoData = enemyInfoData.GetInfo(this);
             InitInfo(EnemyInfoData);

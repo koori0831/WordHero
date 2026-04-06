@@ -17,6 +17,8 @@ namespace Work.Weapons.Code
             
         }
 
+        //다른곳에서 코스트 확인 함수를 만들고 해당 함수를 통해서 스킬발동이 가능한지 확인
+        //Player Cost Module 만들고 해당 클래스에서 이벤트를 통해서 코스트 변결ㅇd
         public void UsePrimary(Transform target, Vector3 direction) => ExecuteSkill(Data?.PrimarySkill, target, direction);
         public void UseSecondary(Transform target, Vector3 direction) => ExecuteSkill(Data?.SecondarySkill, target, direction);
         public void UseTrigger(Transform target, Vector3 direction) => ExecuteSkill(Data?.TriggerSkill, target, direction);
