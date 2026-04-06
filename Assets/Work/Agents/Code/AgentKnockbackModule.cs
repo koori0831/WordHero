@@ -11,6 +11,9 @@ namespace Work.Agents.Code
         private AgentMovementModule _mover;
         private AgentStatusModule _statusModule;
 
+        public KnockbackData LastKnockbackData { get; private set; }
+
+
         public void Initialize(Agent agent)
         {
             _owner = agent;
@@ -30,6 +33,7 @@ namespace Work.Agents.Code
             if (_statusModule.HasStatusEffect(StatusType.KnockbackImmune))
                 return;
 
+            LastKnockbackData = knockbackData;
             _mover.KnockBack(knockbackData);
         }
     }

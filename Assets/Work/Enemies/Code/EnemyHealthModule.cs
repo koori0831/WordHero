@@ -23,6 +23,7 @@ namespace Work.Enemies.Code
             {
                 case StatusType.Freeze:
                     {
+                        Bus<DamageTextEvent>.Raise(new DamageTextEvent((int)value, Enemy.gameObject, false, DamageTextType.Freeze));
                         TakeDamage((int)value);
                     }
                     break;

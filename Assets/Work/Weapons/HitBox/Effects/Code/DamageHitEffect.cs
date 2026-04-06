@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using Work.Combat.Code;
 using Alchemy.Inspector;
@@ -15,6 +15,8 @@ namespace Work.Weapons.HitBox.Effects.Code
         public float KnockbackForce = 5f;
         [ShowIf(nameof(UseKnockback))]
         public float KnockbackDuration = 0.5f;
+        [ShowIf(nameof(UseKnockback))]
+        public float StiffDuration = 0.2f;
 
         public void ExecuteHit(GameObject caster, GameObject target, Vector3 hitPoint)
         {
@@ -26,7 +28,8 @@ namespace Work.Weapons.HitBox.Effects.Code
                 Force = KnockbackForce,
                 Duration = KnockbackDuration,
                 Direction = knockbackDirection,
-                KnockbackCurve = AnimationCurve.EaseInOut(0, 0, 1, 1)
+                KnockbackCurve = AnimationCurve.EaseInOut(0, 0, 1, 1),
+                StiffDuration = StiffDuration
             };
 
             DamageResolver.TryApplyDamage(context, UseKnockback, knockbackData);

@@ -20,13 +20,14 @@ public class IronCageEffecter : MonoBehaviour
         else
         {
             Close();
+            
         }
     }
 
     private void OnDestroy()
     {
         if (nextDoor)
-            Bus<StageClearEvent>.Events += HandleOpenEvent;
+            Bus<StageClearEvent>.Events -= HandleOpenEvent;
     }
 
     private void HandleOpenEvent(StageClearEvent evt)
@@ -34,21 +35,6 @@ public class IronCageEffecter : MonoBehaviour
         Open();
     }
 
-    private void Update()
-    {
-        if (Keyboard.current.gKey.wasPressedThisFrame)
-        {
-            Open();
-        }
-
-        if (Keyboard.current.hKey.wasPressedThisFrame)
-        {
-            Close();
-        }
-
-    }
-
-    [ContextMenu("Open Test")]
     public async void Open()
     {
 
