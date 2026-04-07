@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Work.Combat.Code;
 using Work.Players.Code;
+using Work.Weapons.Imprint.Code;
 using Work.Weapons.Skill.Code;
 
 namespace Work.Weapons.Code
@@ -10,6 +11,8 @@ namespace Work.Weapons.Code
         public Player Owner { get; set; }
 
         [field: SerializeField] public WeaponDataSO Data { get; private set; }
+
+        public WeaponImprintSlots Imprints = new();
 
         public bool IsSkillUsing { get; set; }
 
