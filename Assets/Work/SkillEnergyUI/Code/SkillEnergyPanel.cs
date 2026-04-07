@@ -1,5 +1,4 @@
 ﻿using GondrLib.Dependencies;
-using System;
 using UnityEngine;
 using Work.Combat.Code;
 using Work.Players.Code;
@@ -23,17 +22,29 @@ namespace Work.SkillEnergyUI.Code
             SkillEnergyModule energyModule = _player.GetModule<SkillEnergyModule>(true);
             EnergyContainer = energyModule.EnergyContainer;
             EnergyContainer.OnChangedEvent += HandleEnergyChangeEvent;
+            EnergyContainer.OnInsufficientCostEvent += HandleInsufficientCostEvent;
             EnableAllUI();
         }
 
         private void OnDestroy()
         {
+            if (EnergyContainer == null)
+            {
+                return;
+            }
+
             EnergyContainer.OnChangedEvent -= HandleEnergyChangeEvent;
+            EnergyContainer.OnInsufficientCostEvent -= HandleInsufficientCostEvent;
         }
 
         private void HandleEnergyChangeEvent()
         {
             energyFillUI.RefreshUI(EnergyContainer);
+        }
+
+        private void HandleInsufficientCostEvent(int requiredCost, float currentEnergy)
+        {
+            energyFillUI.PlayInsufficientShake(requiredCost, currentEnergy);
         }
 
         private void EnableAllUI()

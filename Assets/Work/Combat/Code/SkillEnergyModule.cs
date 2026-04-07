@@ -12,6 +12,7 @@ namespace Work.Combat.Code
         private float _energy = 0;
 
         public Action OnChangedEvent;
+        public Action<int, float> OnInsufficientCostEvent;
 
         public SkillEnergyValue(int maxEnergy)
         {
@@ -81,6 +82,8 @@ namespace Work.Combat.Code
 
                 return true;
             }
+
+            EnergyContainer.OnInsufficientCostEvent?.Invoke(requiredCost, EnergyContainer.Energy);
             return false;
         }
     }

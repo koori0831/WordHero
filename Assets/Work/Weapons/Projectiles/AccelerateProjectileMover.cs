@@ -4,9 +4,9 @@ namespace Work.Weapons.Projectiles
 {
 	public class AccelerateProjectileMover: BaseProjectileMover
 	{
-        private void Update()
+        private void FixedUpdate()
         {
-            _rb.AddForce(transform.forward * Speed, ForceMode.Acceleration);
+            _rb.AddForce(transform.forward * Speed * Time.deltaTime * 100, ForceMode.Acceleration);
         }
     }
 }
