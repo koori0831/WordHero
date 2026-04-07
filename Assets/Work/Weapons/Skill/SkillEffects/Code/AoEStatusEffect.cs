@@ -20,6 +20,8 @@ namespace Work.Weapons.Skill.SkillEffects.Code
             foreach (var hitCollider in hitColliders)
             {
                 Agent agent = hitCollider.GetComponent<Agent>();
+                if (agent == null) continue;
+
                 AgentStatusModule statusModule = agent.GetModule<AgentStatusModule>();
                 if (statusModule != null)
                 {

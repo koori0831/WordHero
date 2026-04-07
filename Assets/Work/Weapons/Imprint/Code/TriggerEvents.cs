@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Work.Weapons.Imprint.Code
+namespace Work.Weapons.Imprint.Code
 {
     [Serializable]
     public sealed record OnDodgeSuccessTrigger : SimpleImprintTrigger<OnDodgeSuccessTrigger>;

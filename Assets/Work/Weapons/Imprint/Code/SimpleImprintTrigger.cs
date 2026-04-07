@@ -2,7 +2,7 @@
 using Work.Core.Utils.EventBus;
 using Work.Weapons.Code;
 
-namespace Assets.Work.Weapons.Imprint.Code
+namespace Work.Weapons.Imprint.Code
 {
     [Serializable]
     public abstract record SimpleImprintTrigger<TEvent> : IImprintTriggerEvent
