@@ -36,5 +36,14 @@ namespace Work.Players.Code
 			}
 			return imprintWords;
         }
+
+        public int GetAmount(ImprintWordSO imprintWord)
+        {
+            if (imprintWord != null && _imprintDic.TryGetValue(imprintWord, out int amount))
+            {
+                return amount;
+            }
+            return 0;
+        }
     }
 }
