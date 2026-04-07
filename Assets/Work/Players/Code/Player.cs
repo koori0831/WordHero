@@ -21,8 +21,9 @@ namespace Work.Players.Code
         private PlayerInputModule _inputRoot;
         private PlayerMovementModule _movementModule;
         private PlayerWeaponModule _weaponModule;
-
         private PlayerHealthModule _health;
+
+        private PlayerImprintWordInventory _imprintWordInventory;
 
         public bool HaveWeapon => _weaponModule.HaveWeapon;
 
@@ -50,6 +51,8 @@ namespace Work.Players.Code
             OnHitEvent.AddListener(_health.TakeDamage);
             _health.Damaged += OnHit;
             _health.OnDeath.AddListener(OnDead);
+
+            _imprintWordInventory = new PlayerImprintWordInventory();
         }
 
         private void OnDead() => _stateMachine.ChangeState(PlayerStateKeys.Death);
@@ -68,6 +71,11 @@ namespace Work.Players.Code
         public void GetWeapon(BaseWeapon weapon)
         {
             _weaponModule.EquipWeapon(weapon);
+        }
+
+        public void GetImprintWord(ImprintWordSO imprintWord, int amount)
+        {
+            _imprintWordInventory.AddImprintWord(imprintWord, amount);
         }
 
         public void ChangeState(string stateKey)
