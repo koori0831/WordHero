@@ -26,6 +26,9 @@ namespace Work.Players.Code
 
         private PlayerImprintWordInventory _imprintWordInventory;
 
+        public PlayerImprintWordInventory ImprintWordInventory => _imprintWordInventory;
+        public PlayerWeaponModule WeaponModule => _weaponModule;
+
         public bool HaveWeapon => _weaponModule.HaveWeapon;
 
         private void Awake()
