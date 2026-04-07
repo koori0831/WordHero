@@ -49,6 +49,11 @@ namespace Work.Players.Code
             _controller = new PlayerWeaponController(WeaponHandler);
             _imprintActivationRunner = new ImprintActivationRunner();
 
+            Bus<WeaponSwapEvent>.Events -= OnWeaponSwap;
+            Bus<FirstWeaponSkillEvent>.Events -= OnPrimarySkill;
+            Bus<SecondWeaponSkillEvent>.Events -= OnSecondarySkill;
+            Bus<SkillMotionEndEvent>.Events -= OnSkillMotionEnd;
+
             Bus<WeaponSwapEvent>.Events += OnWeaponSwap;
             Bus<FirstWeaponSkillEvent>.Events += OnPrimarySkill;
             Bus<SecondWeaponSkillEvent>.Events += OnSecondarySkill;
@@ -105,19 +110,25 @@ namespace Work.Players.Code
 
         private void SyncRuntimeInstances()
         {
-            _currentRuntime = CreateOrReuseRuntime(_currentRuntime, CurrentWeapon);
-            _standbyRuntime = CreateOrReuseRuntime(_standbyRuntime, StandbyWeapon);
+            WeaponRuntimeInstance prevCurrent = _currentRuntime;
+            WeaponRuntimeInstance prevStandby = _standbyRuntime;
+
+            _currentRuntime = FindOrCreateRuntime(CurrentWeapon, prevCurrent, prevStandby);
+            _standbyRuntime = FindOrCreateRuntime(StandbyWeapon, prevCurrent, prevStandby);
         }
 
-        private WeaponRuntimeInstance CreateOrReuseRuntime(WeaponRuntimeInstance runtime, BaseWeapon weapon)
+        private WeaponRuntimeInstance FindOrCreateRuntime(BaseWeapon targetWeapon, WeaponRuntimeInstance prevCurrent, WeaponRuntimeInstance prevStandby)
         {
-            if (weapon == null)
+            if (targetWeapon == null)
                 return null;
 
-            if (runtime != null && runtime.Weapon == weapon)
-                return runtime;
+            if (prevCurrent != null && prevCurrent.Weapon == targetWeapon)
+                return prevCurrent;
 
-            return new WeaponRuntimeInstance(weapon);
+            if (prevStandby != null && prevStandby.Weapon == targetWeapon)
+                return prevStandby;
+
+            return new WeaponRuntimeInstance(targetWeapon);
         }
 
         private void RefreshStandbyTriggerSubscription()
@@ -177,13 +188,17 @@ namespace Work.Players.Code
 
         private void OnPrimarySkill(FirstWeaponSkillEvent evt)
         {
-            if (_owner != null)
+            if (evt.isReleased) return;
+
+            if (_owner != null && _owner.gameObject.activeInHierarchy)
                 CurrentWeapon?.UsePrimary(null, _owner.transform.forward);
         }
 
         private void OnSecondarySkill(SecondWeaponSkillEvent evt)
         {
-            if (_owner != null)
+            if (evt.isReleased) return;
+
+            if (_owner != null && _owner.gameObject.activeInHierarchy)
                 CurrentWeapon?.UseSecondary(null, _owner.transform.forward);
         }
 
