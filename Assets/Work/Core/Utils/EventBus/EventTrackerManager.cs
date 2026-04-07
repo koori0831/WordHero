@@ -15,7 +15,7 @@ namespace Work.Core.Utils.EventBus
             // 1. 현재 어셈블리에서 IEvent를 상속받은 모든 타입을 찾습니다.
             var eventTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
-                .Where(p => typeof(IEvent).IsAssignableFrom(p) && !p.IsInterface);
+                .Where(p => typeof(IEvent).IsAssignableFrom(p) && !p.IsInterface && !p.IsAbstract && !p.ContainsGenericParameters);
 
             foreach (var type in eventTypes)
             {

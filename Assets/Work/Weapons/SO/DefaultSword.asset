@@ -16,7 +16,8 @@ MonoBehaviour:
   WeaponDescription: "\uC5EC\uC2E0, \uD2F0\uC544\uB9C8\uD2B8\uC5D0\uAC8C \uBC1B\uC740
     \uAC80."
   Type: 0
-  TrailPrefab: {fileID: 211711048654108181, guid: cc382a5d9a656c9479e00a2398b21cb0, type: 3}
+  ImprintTriggerEvent:
+    rid: 5220572626937446670
   ComboHitBoxes:
   - HitBoxPrefab: {fileID: 1872147318604286, guid: effb3edb5c1327040ab7ddcd911a8553, type: 3}
     LocalPosition: {x: 0, y: 2, z: 1}
@@ -33,5 +34,10 @@ MonoBehaviour:
   AttackSpeed: 10
   PrimarySkill: {fileID: 11400000, guid: bd14225121de87442990af4ba29fcbad, type: 2}
   SecondarySkill: {fileID: 0}
-  TriggerSkill: {fileID: 0}
   AnimSet: {fileID: 22100000, guid: 162d413ccf8ae1948adf4839a80cebbc, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5220572626937446670
+      type: {class: OnTookDamageTrigger, ns: Work.Weapons.Imprint.Code, asm: Assembly-CSharp}
+      data: 
