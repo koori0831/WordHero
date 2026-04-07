@@ -15,7 +15,8 @@ MonoBehaviour:
   WeaponName: "\uC5BC\uC74C \uB300\uAC80"
   WeaponDescription: "\uC5BC\uC5B4\uBD99\uC740 \uB300\uAC80\uC774\uB2E4."
   Type: 0
-  TrailPrefab: {fileID: 0}
+  ImprintTriggerEvent:
+    rid: 5220572634136445218
   ComboHitBoxes:
   - HitBoxPrefab: {fileID: 1872147318604286, guid: c8545072fc8291d46a6c0b061e28e7f9, type: 3}
     LocalPosition: {x: 0, y: 1.6, z: 0.8}
@@ -32,5 +33,10 @@ MonoBehaviour:
   AttackSpeed: 10
   PrimarySkill: {fileID: 11400000, guid: 4f34dcc5fc73d9d49a32854085cb4f93, type: 2}
   SecondarySkill: {fileID: 0}
-  TriggerSkill: {fileID: 0}
   AnimSet: {fileID: 22100000, guid: a42561be28573e14eb5b6af4169f6c48, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5220572634136445218
+      type: {class: OnHitSuccessTrigger, ns: Work.Weapons.Imprint.Code, asm: Assembly-CSharp}
+      data: 
