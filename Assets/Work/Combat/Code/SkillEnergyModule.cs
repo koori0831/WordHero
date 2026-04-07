@@ -10,9 +10,10 @@ namespace Work.Combat.Code
         [SerializeField] private int _maxEnergy;
 
         private float _energy;
-        public int Energy
+        public float Energy
         {
             get => (int)_energy;
+            private set => _energy = Mathf.Clamp(value, 0, _maxEnergy);
         }
 
         public void Initialize(Agent agent)
@@ -24,7 +25,7 @@ namespace Work.Combat.Code
         private void OnGetEnergyEvent(GetSkillEnergyEvent evt)
         {
             float amount = evt.amount;
-            _energy += Mathf.Clamp(amount, 0, _maxEnergy);
+            Energy += amount;
         }
 
         public bool TryUseCost(int requiredCost)
