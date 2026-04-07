@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Work.Combat.Code;
 using Work.Players.Code;
 using Work.Weapons.Skill.Code;
 
@@ -25,6 +26,7 @@ namespace Work.Weapons.Code
         private void ExecuteSkill(SkillDataSO skill, Transform target, Vector3 direction)
         {
             if (Owner == null || skill == null || IsSkillUsing == true) return;
+            if (Owner.GetModule<SkillEnergyModule>().TryUseCost(skill.Cost) == false) return;
 
             Vector3 targetPosition = target != null ? target.position : Owner.transform.position;
             Vector3 castDirection = direction.sqrMagnitude > 0f ? direction : Owner.transform.forward;
