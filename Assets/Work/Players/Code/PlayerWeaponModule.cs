@@ -153,7 +153,7 @@ namespace Work.Players.Code
             if (!_currentRuntime.TriggerRuntime.CanActivate())
                 return;
 
-            if (!_currentRuntime.Imprints.HasAnyImprint())
+            if (!_currentRuntime.Weapon.Imprints.HasAnyImprint())
             {
                 _currentRuntime.TriggerRuntime.Consume();
                 return;

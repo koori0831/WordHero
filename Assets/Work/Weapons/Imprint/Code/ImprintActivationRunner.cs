@@ -6,10 +6,10 @@ namespace Work.Weapons.Imprint.Code
     {
         public void Activate(WeaponRuntimeInstance runtimeWeapon, SkillContext context)
         {
-            if (runtimeWeapon == null || runtimeWeapon.Imprints == null)
+            if (runtimeWeapon == null || runtimeWeapon.Weapon.Imprints == null)
                 return;
 
-            foreach (var imprint in runtimeWeapon.Imprints.EnumerateInOrder())
+            foreach (var imprint in runtimeWeapon.Weapon.Imprints.EnumerateInOrder())
             {
                 if (imprint == null || imprint.Effects == null)
                     continue;

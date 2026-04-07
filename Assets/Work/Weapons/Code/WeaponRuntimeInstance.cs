@@ -7,7 +7,6 @@ namespace Work.Weapons.Code
     public class WeaponRuntimeInstance
     {
         public BaseWeapon Weapon;
-        public WeaponImprintSlots Imprints = new();
         public WeaponTriggerRuntime TriggerRuntime = new();
 
         public WeaponRuntimeInstance(BaseWeapon weapon)
