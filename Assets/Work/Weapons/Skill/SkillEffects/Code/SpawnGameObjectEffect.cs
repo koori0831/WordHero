@@ -43,6 +43,11 @@ namespace Work.Weapons.Skill.SkillEffects.Code
                     hitbox.Owner = caster.gameObject;
                 }
 
+                if (temp.TryGetComponent(out SurikenHitbox surikenHitbox))
+                {
+                    surikenHitbox.Owner = caster.gameObject;
+                }
+
                 if (UseScaleOverride)
                 {
                     temp.transform.localScale = ScaleOverride;
