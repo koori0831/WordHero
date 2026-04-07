@@ -30,7 +30,6 @@ public partial class WaitForKnockbackDurationAction : Action
         {
             return Status.Success;
         }
-        Debug.Log(_waitTime);
         return Status.Running;
     }
 }
