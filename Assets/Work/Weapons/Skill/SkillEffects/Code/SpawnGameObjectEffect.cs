@@ -5,6 +5,7 @@ using UnityEngine;
 using Work.Players.Code;
 using Work.Weapons.Code;
 using Work.Weapons.HitBox.Code;
+using Work.Weapons.Skill.Code;
 
 namespace Work.Weapons.Skill.SkillEffects.Code
 {
@@ -19,9 +20,9 @@ namespace Work.Weapons.Skill.SkillEffects.Code
         public bool SetParentToCaster = false;
         public float Delay = 0f;
 
-        public void ExecuteEffect(Player caster, Vector3 target, Vector3 direction)
+        public void ExecuteEffect(SkillContext context)
         {
-            Spawn(caster).Forget(); 
+            Spawn(context.Caster).Forget();
         }
 
         private async UniTaskVoid Spawn(Player caster)

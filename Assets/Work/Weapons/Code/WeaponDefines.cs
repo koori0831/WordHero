@@ -7,7 +7,12 @@ namespace Work.Weapons.Code
 {
     public interface ISkillEffect
     {
-        void ExecuteEffect(Player caster, Vector3 target, Vector3 direction);
+        void ExecuteEffect(SkillContext context);
+    }
+
+    public interface IImprintTriggerEvent : IEvent
+    {
+        Action Subscribe(Action onTriggered);
     }
 
     public enum WeaponType
@@ -25,5 +30,13 @@ namespace Work.Weapons.Code
         public Vector3 LocalRotation;
     }
 
+    public enum ImprintType
+    {
+        Attack,
+        Effect,
+        Stat
+    }
+
     public readonly record struct SkillMotionEndEvent() : IEvent;
+    public record SkillContext(Player Caster, Vector3 Target, Vector3 Direction);
 }

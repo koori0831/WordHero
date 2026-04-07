@@ -7,7 +7,7 @@ namespace Work.Weapons.Code
         public override void Attack(int comboCount = 0)
         {
             base.Attack(comboCount);
-            if (Data.ComboHitBoxes.Count < 0) return;
+            if (Data?.ComboHitBoxes == null || Data.ComboHitBoxes.Count <= 0) return;
             if (comboCount >= Data.ComboHitBoxes.Count) return;
 
             ComboHitBox hitBox = Data.ComboHitBoxes[comboCount];

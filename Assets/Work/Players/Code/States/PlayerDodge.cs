@@ -2,6 +2,7 @@
 using Work.Core.Utils.EventBus;
 using Work.Agents.Code;
 using Work.Combat.Code;
+using Work.Weapons.Imprint.Code;
 
 namespace Work.Players.Code.States
 {
@@ -35,6 +36,7 @@ namespace Work.Players.Code.States
             _statusModule.RemoveStatus(StatusType.HitImmunity);
             _animator.SetApplyRootMotion(false);
             _player.SetVanished(false);
+            Bus<OnDodgeSuccessTrigger>.Raise(new OnDodgeSuccessTrigger());
             base.Exit();
         }
 

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Work.Core.Utils.EventBus;
+using Work.Weapons.Imprint.Code;
 
 namespace Work.Weapons.HitBox.Code
 {
@@ -18,6 +20,8 @@ namespace Work.Weapons.HitBox.Code
         {
             if (Owner != null && other.gameObject == Owner) return;
             if ((TargetLayer.value & (1 << other.gameObject.layer)) == 0) return;
+
+            Bus<OnHitSuccessTrigger>.Raise(new OnHitSuccessTrigger());
 
             Vector3 hitPoint = other.ClosestPoint(transform.position);
 
