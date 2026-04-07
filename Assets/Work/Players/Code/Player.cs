@@ -1,11 +1,14 @@
-﻿using GondrLib.Dependencies;
 ﻿using UnityEngine;
 using Code.FSM;
+using GondrLib.Dependencies;
+using UnityEngine;
 using Work.Agents.Code;
+using Work.Core.Utils.EventBus;
 using Work.Input.Code;
 using Work.Players.Code.States;
 using Work.Stages.Code;
 using Work.Weapons.Code;
+using Work.Weapons.Imprint.Code;
 
 namespace Work.Players.Code
 {
@@ -51,7 +54,11 @@ namespace Work.Players.Code
         }
 
         private void OnDead() => _stateMachine.ChangeState(PlayerStateKeys.Death);
-        private void OnHit() => _stateMachine.ChangeState(PlayerStateKeys.Hit);
+        private void OnHit()
+        {
+            Bus<OnTookDamageTrigger>.Raise(new OnTookDamageTrigger());
+            _stateMachine.ChangeState(PlayerStateKeys.Hit);
+        }
 
         public void LockOn()
         {

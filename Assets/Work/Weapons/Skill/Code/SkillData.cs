@@ -18,11 +18,11 @@ namespace Work.Weapons.Skill.Code
         [SerializeReference]
         public List<ISkillEffect> Effects = new List<ISkillEffect>();
 
-        public void Cast(Player caster, Vector3 target, Vector3 direction)
+        public void Cast(SkillContext context)
         {
             foreach (var effect in Effects)
             {
-                effect.ExecuteEffect(caster, target, direction);
+                effect.ExecuteEffect(context);
             }
         }
     }

@@ -15,11 +15,20 @@ MonoBehaviour:
   WeaponName: "\uC5BC\uC74C \uB300\uAC80"
   WeaponDescription: "\uC5BC\uC5B4\uBD99\uC740 \uB300\uAC80\uC774\uB2E4."
   Type: 0
-  TrailPrefab: {fileID: 1771801130041381314, guid: b9a702d8774300046a1f5d18404ef80f, type: 3}
-  HandlerPosition: {x: 0.00201, y: 0.00138, z: -0.00125}
-  HandlerRotation: {x: -50.635, y: 263.659, z: 48.122}
+  TrailPrefab: {fileID: 0}
+  ComboHitBoxes:
+  - HitBoxPrefab: {fileID: 1872147318604286, guid: c8545072fc8291d46a6c0b061e28e7f9, type: 3}
+    LocalPosition: {x: 0, y: 1.6, z: 0.8}
+    LocalRotation: {x: 0, y: 0, z: -198}
+  - HitBoxPrefab: {fileID: 1872147318604286, guid: c8545072fc8291d46a6c0b061e28e7f9, type: 3}
+    LocalPosition: {x: 0, y: 2.3, z: 0.6}
+    LocalRotation: {x: 0, y: 0, z: 30}
+  - HitBoxPrefab: {fileID: 1872147318604286, guid: c8545072fc8291d46a6c0b061e28e7f9, type: 3}
+    LocalPosition: {x: 0, y: 2, z: 0.8}
+    LocalRotation: {x: 0, y: 0, z: -37}
+  HandlerPosition: {x: 0.00111, y: 0.00219, z: -0.00126}
+  HandlerRotation: {x: -20.396, y: 268.913, z: 39.282}
   WeaponIcon: {fileID: 21300000, guid: 719c2201c2f5f6c4aafffaeb5abdf5f9, type: 3}
-  BaseDamage: 20
   AttackSpeed: 10
   PrimarySkill: {fileID: 11400000, guid: 4f34dcc5fc73d9d49a32854085cb4f93, type: 2}
   SecondarySkill: {fileID: 0}
