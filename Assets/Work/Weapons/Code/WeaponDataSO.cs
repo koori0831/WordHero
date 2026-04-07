@@ -11,9 +11,9 @@ namespace Work.Weapons.Code
         public string WeaponName;
         public string WeaponDescription;
         public WeaponType Type;
+        [SerializeReference]
+        public IImprintTriggerEvent ImprintTriggerEvent;
         private bool _isMelee { get { return Type == WeaponType.Melee; } }
-        [ShowIf(nameof(_isMelee))]
-        public GameObject TrailPrefab;
         [ShowIf(nameof(_isMelee))]
         public List<ComboHitBox> ComboHitBoxes;
         public Vector3 HandlerPosition;
@@ -22,7 +22,6 @@ namespace Work.Weapons.Code
         public float AttackSpeed;
         public SkillDataSO PrimarySkill;
         public SkillDataSO SecondarySkill;
-        public SkillDataSO TriggerSkill;
         public AnimatorOverrideController AnimSet;
     }
 }
