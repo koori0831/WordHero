@@ -3,8 +3,10 @@ using LitMotion;
 using System.Collections.Generic;
 using UnityEngine;
 using Work.Chests.Code;
+using Work.Core.Utils.Cameras;
 using Work.Core.Utils.EventBus;
 using Work.Fade;
+using Work.Input.Code;
 using Work.Players.Code;
 
 namespace Work.Stages.Code
@@ -33,7 +35,7 @@ namespace Work.Stages.Code
             {
                 for (int i = 0; i < openingShopCountList.Count; i++)
                 {
-                    if(openingShopCountList[i] == CurrentStageCount)
+                    if (openingShopCountList[i] == CurrentStageCount)
                         return true;
                 }
                 return false;
@@ -104,8 +106,8 @@ namespace Work.Stages.Code
             CurrentStage = stage;
             _currentStageDoorType = doorType;
             _currentStageChest = null;
-            if(interactor != null)
-            interactor.transform.position = CurrentStage.SpawnPoint;
+            if (interactor != null)
+                interactor.transform.position = CurrentStage.SpawnPoint;
             CurrentStage.EnterStage(this);
         }
 
@@ -127,11 +129,37 @@ namespace Work.Stages.Code
                 return;
             }
 
-            Vector3 spawnPosition = _player.transform.position + _player.transform.forward * chestSpawnDistance;
-            spawnPosition.y = _player.transform.position.y;
+            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
 
-            _currentStageChest = Instantiate(chestPrefab, spawnPosition, Quaternion.identity, CurrentStage.transform);
-            _currentStageChest.Initialize(ConvertDoorTypeToChestType(_currentStageDoorType));
+            //카메라 줌인 효과 추가 예정
+            CameraController.Instance.ZoomIn(11f, duration: 0.5f, onComplete: () =>
+            {
+                CameraController.Instance.ZoomIn(1f, duration: 1f, onComplete: () =>
+                {
+                    Vector3 spawnPosition = _player.transform.position + _player.transform.forward * chestSpawnDistance; //여기 땅위 랜덤위치로 조정 
+                    spawnPosition.y = _player.transform.position.y;
+
+                    Quaternion spawnRotation = Quaternion.LookRotation(_player.transform.position - spawnPosition);
+
+                    _currentStageChest = Instantiate(chestPrefab, spawnPosition, spawnRotation, CurrentStage.transform);
+                    _currentStageChest.Initialize(ConvertDoorTypeToChestType(_currentStageDoorType));
+                    
+                    Vector3 sumVec = Vector3.zero;
+
+                    foreach (Door door in CurrentStage.Doors)
+                    {
+                        sumVec += door.transform.position;
+                    }
+
+                    sumVec /= CurrentStage.Doors.Count;
+                    _currentStageChest.cameraMovePosition = sumVec;
+
+                    CameraController.Instance.ZoomOut(12f, duration: 0.5f, onComplete: () =>
+                    {
+                        Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+                    });
+                });
+            });
         }
 
         private static bool IsNormalCombatStage(DoorType doorType)

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
+using Work.Core.Utils.Cameras;
 using Work.Core.Utils.EventBus;
 using Work.Input.Code;
 using Work.Stages.Code;
@@ -20,7 +20,7 @@ public class IronCageEffecter : MonoBehaviour
         else
         {
             Close();
-            
+
         }
     }
 
@@ -72,7 +72,11 @@ public class IronCageEffecter : MonoBehaviour
             await Awaitable.FixedUpdateAsync();
         }
 
-        Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+        CameraController.Instance.ResetPosition(duration: 0.75f);
+        CameraController.Instance.ResetZoom(duration: 0.75f, onComplete: () =>
+        {
+            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+        });
     }
 
     [ContextMenu("Close Test")]

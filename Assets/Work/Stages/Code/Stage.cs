@@ -15,7 +15,7 @@ namespace Work.Stages.Code
         private StageManager _stageManager;
 
         public Vector3 SpawnPoint => spawnPoint.position;
-
+        public List<Door> Doors => doors;
         public GameObject Interator { get; private set; }
 
         private void DoorOpen(StageClearEvent evt)

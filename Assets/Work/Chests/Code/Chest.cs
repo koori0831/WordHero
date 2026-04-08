@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Work.Core.Utils.Cameras;
 using Work.Core.Utils.EventBus;
 using Work.Input.Code;
 using Work.Interaction.Code;
@@ -19,6 +20,8 @@ namespace Work.Chests.Code
     {
         [SerializeField] private Transform chestHeadTransform;
         [SerializeField] private Renderer inBoxRenderer;
+
+        public Vector3 cameraMovePosition { get; set; }
 
         private static readonly int _InBoxColor = Shader.PropertyToID("_Color");
         private ChestType _chestType;
@@ -101,7 +104,15 @@ namespace Work.Chests.Code
             CollectAction.Collect(player);
 
             // TODO: Camera direction hook point after chest open
-            Bus<StageClearEvent>.Raise(new StageClearEvent());
+
+            CameraController.Instance.MoveTo(cameraMovePosition, duration: 0.75f);
+            CameraController.Instance.ZoomOut(5f, duration:1f,onComplete: () =>
+            {
+                Bus<StageClearEvent>.Raise(new StageClearEvent());
+            });
+
+
+            
         }
     }
 }
