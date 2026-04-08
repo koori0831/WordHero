@@ -3,6 +3,7 @@ using Work.Core.Utils.EventBus;
 using Work.Input.Code;
 using Work.Interaction.Code;
 using Work.Players.Code;
+using Work.Stages.Code;
 
 namespace Work.Chests.Code
 {
@@ -21,6 +22,7 @@ namespace Work.Chests.Code
 
         private static readonly int _InBoxColor = Shader.PropertyToID("_Color");
         private ChestType _chestType;
+        private bool _isOpened;
 
         [ColorUsage(true, true)]
         private Color[] colors = new Color[]
@@ -49,16 +51,19 @@ namespace Work.Chests.Code
 
         public void Start()
         {
-            //Debug.Assert(CollectAction != null);
-            //CollectAction.Initialize();
+            Debug.Assert(CollectAction != null);
+            CollectAction.Initialize();
         }
 
         public void Interact(GameObject interactor)
         {
+            if (_isOpened) return;
+
             if (interactor.TryGetComponent(out Player player))
             {
+                _isOpened = true;
                 // 연출 나오고
-                inBoxRenderer.material.SetColor(_InBoxColor, colors[Random.Range(0,4)]);
+                inBoxRenderer.material.SetColor(_InBoxColor, colors[(int)_chestType]);
                 Open(player);
             }
         }
@@ -93,7 +98,10 @@ namespace Work.Chests.Code
             }
 
             Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
-            //CollectAction.Collect(player);
+            CollectAction.Collect(player);
+
+            // TODO: Camera direction hook point after chest open
+            Bus<StageClearEvent>.Raise(new StageClearEvent());
         }
     }
 }
