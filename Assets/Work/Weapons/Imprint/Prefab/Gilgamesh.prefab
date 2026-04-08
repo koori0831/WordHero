@@ -20345,6 +20345,7 @@ GameObject:
   - component: {fileID: 8334428968777039851}
   - component: {fileID: 2586341904955244617}
   - component: {fileID: 5599010731587178914}
+  - component: {fileID: 7966519505258012729}
   m_Layer: 0
   m_Name: Arrows_01
   m_TagString: Untagged
@@ -24348,7 +24349,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 4
     type: 1
     collisionMode: 0
@@ -24366,7 +24367,7 @@ ParticleSystem:
     m_Dampen:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -24524,15 +24525,15 @@ ParticleSystem:
         m_RotationOrder: 4
     minKillSpeed: 0
     maxKillSpeed: 10000
-    radiusScale: 0.33
+    radiusScale: 0.16
     collidesWith:
       serializedVersion: 2
-      m_Bits: 16
+      m_Bits: 768
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
-    collidesWithDynamic: 1
+    collisionMessages: 1
+    collidesWithDynamic: 0
     interiorCollisions: 0
   TriggerModule:
     enabled: 0
@@ -25591,6 +25592,41 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &7966519505258012729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7949009484729142108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97a74cd0b34d9a74e940206f2b65d97e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Weapons.HitBox.Code.SurikenHitbox
+  TargetLayer:
+    serializedVersion: 2
+    m_Bits: 768
+  DestroyOnHit: 0
+  OnHitEffects:
+  - rid: 2148152311462232826
+  - rid: 2148152311462232891
+  references:
+    version: 2
+    RefIds:
+    - rid: 2148152311462232826
+      type: {class: DamageHitEffect, ns: Work.Weapons.HitBox.Effects.Code, asm: Assembly-CSharp}
+      data:
+        Damage: 75
+        UseKnockback: 1
+        KnockbackForce: 5
+        KnockbackDuration: 0.19
+        StiffDuration: 0.38
+    - rid: 2148152311462232891
+      type: {class: DestroyGameObjectWithDelay, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        delay: 3
+        gameObjcet: {fileID: 8041471883892086080}
 --- !u!1 &8041471883892086080
 GameObject:
   m_ObjectHideFlags: 0
@@ -25600,9 +25636,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6788947835336564889}
-  - component: {fileID: 4180853750407929090}
-  - component: {fileID: 1825255050346729988}
-  - component: {fileID: 426586588928306241}
   m_Layer: 0
   m_Name: Gilgamesh
   m_TagString: Untagged
@@ -25627,101 +25660,6 @@ Transform:
   - {fileID: 8079229895338814660}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &4180853750407929090
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8041471883892086080}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 5.9
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1825255050346729988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8041471883892086080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c80ca9506510a224bbc19cb9ff59dbe9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.Weapons.HitBox.Code.GenericHitbox
-  TargetLayer:
-    serializedVersion: 2
-    m_Bits: 768
-  DestroyOnHit: 0
-  OnHitEffects:
-  - rid: 5220572634136445241
-  - rid: 5220572634136445242
-  - rid: 5220572634136445243
-  references:
-    version: 2
-    RefIds:
-    - rid: 5220572634136445241
-      type: {class: DamageHitEffect, ns: Work.Weapons.HitBox.Effects.Code, asm: Assembly-CSharp}
-      data:
-        Damage: 30
-        UseKnockback: 1
-        KnockbackForce: 5
-        KnockbackDuration: 0.2
-        StiffDuration: 0.2
-    - rid: 5220572634136445242
-      type: {class: DamageHitEffect, ns: Work.Weapons.HitBox.Effects.Code, asm: Assembly-CSharp}
-      data:
-        Damage: 30
-        UseKnockback: 1
-        KnockbackForce: 5
-        KnockbackDuration: 0.2
-        StiffDuration: 0.2
-    - rid: 5220572634136445243
-      type: {class: DamageHitEffect, ns: Work.Weapons.HitBox.Effects.Code, asm: Assembly-CSharp}
-      data:
-        Damage: 30
-        UseKnockback: 1
-        KnockbackForce: 5
-        KnockbackDuration: 0.2
-        StiffDuration: 0.2
---- !u!54 &426586588928306241
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8041471883892086080}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &8249365003600000269
 GameObject:
   m_ObjectHideFlags: 0
