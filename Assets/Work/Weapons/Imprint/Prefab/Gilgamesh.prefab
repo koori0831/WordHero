@@ -25608,9 +25608,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 768
   DestroyOnHit: 0
+  DestroyOnStart: 1
+  DestroyDelay: 3
   OnHitEffects:
   - rid: 2148152311462232826
-  - rid: 2148152311462232891
   references:
     version: 2
     RefIds:
@@ -25622,11 +25623,6 @@ MonoBehaviour:
         KnockbackForce: 5
         KnockbackDuration: 0.19
         StiffDuration: 0.38
-    - rid: 2148152311462232891
-      type: {class: DestroyGameObjectWithDelay, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
-      data:
-        delay: 3
-        gameObjcet: {fileID: 8041471883892086080}
 --- !u!1 &8041471883892086080
 GameObject:
   m_ObjectHideFlags: 0
