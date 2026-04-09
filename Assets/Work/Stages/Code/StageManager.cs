@@ -132,8 +132,13 @@ namespace Work.Stages.Code
             Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
 
             //카메라 줌인 효과 추가 예정
-            CameraController.Instance.ZoomIn(11f, duration: 0.5f, onComplete: () =>
+            CameraController.Instance.PlayImpulse(1f, 0.2f);
+
+            Time.timeScale = 0.4f; //카메라 줌인 효과에 맞춰 시간 조정
+
+            CameraController.Instance.ZoomIn(11f, duration: 0.25f, onComplete: () =>
             {
+                Time.timeScale = 1f;
                 CameraController.Instance.ZoomIn(1f, duration: 1f, onComplete: () =>
                 {
                     Vector3 spawnPosition = _player.transform.position + _player.transform.forward * chestSpawnDistance; //여기 땅위 랜덤위치로 조정 
@@ -143,7 +148,7 @@ namespace Work.Stages.Code
 
                     _currentStageChest = Instantiate(chestPrefab, spawnPosition, spawnRotation, CurrentStage.transform);
                     _currentStageChest.Initialize(ConvertDoorTypeToChestType(_currentStageDoorType));
-                    
+
                     Vector3 sumVec = Vector3.zero;
 
                     foreach (Door door in CurrentStage.Doors)
@@ -152,7 +157,7 @@ namespace Work.Stages.Code
                     }
 
                     sumVec /= CurrentStage.Doors.Count;
-                    _currentStageChest.cameraMovePosition = sumVec;
+                    _currentStageChest.cameraMovePosition = GetCameraPlaneBottomCenter(CurrentStage.Doors.ConvertAll(d => d.transform), Camera.main.transform);
 
                     CameraController.Instance.ZoomOut(12f, duration: 0.5f, onComplete: () =>
                     {
@@ -160,6 +165,55 @@ namespace Work.Stages.Code
                     });
                 });
             });
+        }
+
+        public Vector3 GetCameraPlaneBottomCenter(
+    List<Transform> targets,
+    Transform cameraTransform)
+        {
+            if (targets == null || targets.Count == 0)
+                return Vector3.zero;
+
+            Vector3 camRight = cameraTransform.right;
+            Vector3 camForward = cameraTransform.forward;
+
+            camRight.y = 0f;
+            camForward.y = 0f;
+
+            camRight.Normalize();
+            camForward.Normalize();
+
+            float minRight = float.MaxValue;
+            float maxRight = float.MinValue;
+            float minForward = float.MaxValue;
+
+            float avgY = 0f;
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                Vector3 pos = targets[i].position;
+
+                float r = Vector3.Dot(pos, camRight);
+                float f = Vector3.Dot(pos, camForward);
+
+                if (r < minRight) minRight = r;
+                if (r > maxRight) maxRight = r;
+                if (f < minForward) minForward = f;
+
+                avgY += pos.y;
+            }
+
+            avgY /= targets.Count;
+
+            float centerRight = (minRight + maxRight) * 0.5f;
+
+            Vector3 bottomCenter =
+                camRight * centerRight +
+                camForward * minForward;
+
+            bottomCenter.y = avgY;
+
+            return bottomCenter;
         }
 
         private static bool IsNormalCombatStage(DoorType doorType)

@@ -100,13 +100,12 @@ namespace Work.Chests.Code
                 await Awaitable.FixedUpdateAsync();
             }
 
-            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
             CollectAction.Collect(player);
 
             // TODO: Camera direction hook point after chest open
 
             CameraController.Instance.MoveTo(cameraMovePosition, duration: 0.75f);
-            CameraController.Instance.ZoomOut(5f, duration:1f,onComplete: () =>
+            CameraController.Instance.ZoomOut(15f, duration:1f,onComplete: () =>
             {
                 Bus<StageClearEvent>.Raise(new StageClearEvent());
             });

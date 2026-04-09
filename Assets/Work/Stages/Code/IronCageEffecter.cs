@@ -43,6 +43,7 @@ public class IronCageEffecter : MonoBehaviour
         ironCage_2.gameObject.SetActive(false);
 
         Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
+        CameraController.Instance.PlayImpulse(0.45f, 0.2f);
 
         while (duration >= timer)
         {
@@ -72,11 +73,17 @@ public class IronCageEffecter : MonoBehaviour
             await Awaitable.FixedUpdateAsync();
         }
 
+        //CameraController.Instance.PlayImpulse(0.45f, 0.2f, onComplete: () =>
+        //{
+            
+        //});
+
         CameraController.Instance.ResetPosition(duration: 0.75f);
         CameraController.Instance.ResetZoom(duration: 0.75f, onComplete: () =>
         {
             Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
         });
+
     }
 
     [ContextMenu("Close Test")]

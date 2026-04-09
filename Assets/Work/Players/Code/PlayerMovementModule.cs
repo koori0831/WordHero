@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using Work.Agents.Code;
 using Work.Combat.Code;
@@ -54,8 +54,23 @@ namespace Work.Players.Code
 
             if (motion.sqrMagnitude > 0.0001f)
             {
-                _controller.Move(motion);
+                if (IsOnFlatGround())
+                    _controller.Move(motion);
+
             }
+        }
+
+        [SerializeField] private float maxSlopeAngle = 3f;
+
+        bool IsOnFlatGround()
+        {
+            if (Physics.Raycast(transform.position + (transform.forward * _controller.radius), Vector3.down, out RaycastHit hit, 2f))
+            {
+                float angle = Vector3.Angle(hit.normal, Vector3.up);
+                return angle <= maxSlopeAngle;
+            }
+
+            return false;
         }
 
         public void RotateToMousePosition()

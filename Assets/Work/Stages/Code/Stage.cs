@@ -35,7 +35,7 @@ namespace Work.Stages.Code
 
         private void DoorSpawn()
         {
-            int random = Random.Range(1, doorPoints.Count);
+            int random = doorPoints.Count;
 
             for (int i = 0; i < random; i++)
             {

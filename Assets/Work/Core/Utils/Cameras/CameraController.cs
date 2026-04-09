@@ -17,6 +17,7 @@ namespace Work.Core.Utils.Cameras
         private Coroutine _moveRoutine;
         private Coroutine _rotateRoutine;
         private Coroutine _povRoutine;
+        private Coroutine _impulseRoutine;
 
         private CameraTarget _cachedTarget;
         private bool _isUsingMoveProxy;
@@ -25,6 +26,8 @@ namespace Work.Core.Utils.Cameras
         private Vector3 _cachedComposerDamping;
         private bool _hasCachedComposerDamping;
         private bool _isMoveDampingOverrideActive;
+        private Component _impulseSource;
+        private object _activeImpulseEvent;
 
         private float _originalZoom;
         private float _originalRotation;
@@ -55,10 +58,13 @@ namespace Work.Core.Utils.Cameras
                 _originalPan = panTilt.PanAxis.Value;
                 _originalTilt = panTilt.TiltAxis.Value;
             }
+
+            CacheImpulseSource();
         }
 
         private void OnDisable()
         {
+            StopImpulse(true, null);
             StopAllCameraRoutines();
             RestoreTrackingTarget();
             RestoreMoveDampingOverride();
@@ -321,6 +327,73 @@ namespace Work.Core.Utils.Cameras
             onComplete?.Invoke();
         }
 
+        public void PlayImpulse(float force, float duration, Action onComplete = null)
+        {
+            if (!TryGetImpulseSource(onComplete, out var impulseSource)) return;
+
+            StopImpulse(true, null);
+
+            float clampedDuration = Mathf.Max(0f, duration);
+            Vector3 defaultVelocity = GetVector3MemberValue(impulseSource, "DefaultVelocity", Vector3.down);
+            Vector3 velocity = defaultVelocity * force;
+
+            object impulseDefinition = GetMemberValue(impulseSource, "ImpulseDefinition");
+            if (impulseDefinition == null)
+            {
+                onComplete?.Invoke();
+                return;
+            }
+
+            var createMethod = impulseDefinition.GetType().GetMethod("CreateAndReturnEvent", new[] { typeof(Vector3), typeof(Vector3) });
+            if (createMethod == null)
+            {
+                Debug.LogWarning($"{nameof(CameraController)} could not find CreateAndReturnEvent on impulse definition.", this);
+                onComplete?.Invoke();
+                return;
+            }
+
+            _activeImpulseEvent = createMethod.Invoke(impulseDefinition, new object[] { impulseSource.transform.position, velocity });
+
+            if (_activeImpulseEvent == null)
+            {
+                onComplete?.Invoke();
+                return;
+            }
+
+            object envelope = GetMemberValue(_activeImpulseEvent, "Envelope");
+            if (envelope != null)
+            {
+                SetMemberValue(envelope, "AttackTime", 0f);
+                SetMemberValue(envelope, "SustainTime", clampedDuration);
+                SetMemberValue(envelope, "DecayTime", 0f);
+                SetMemberValue(envelope, "HoldForever", false);
+                SetMemberValue(_activeImpulseEvent, "Envelope", envelope);
+            }
+
+            if (clampedDuration <= 0f)
+            {
+                _activeImpulseEvent = null;
+                onComplete?.Invoke();
+                return;
+            }
+
+            _impulseRoutine = StartCoroutine(WaitImpulseComplete(clampedDuration, onComplete));
+        }
+
+        public void StopImpulse(bool forceNoDecay = true, Action onComplete = null)
+        {
+            StopRoutine(ref _impulseRoutine);
+
+            if (_activeImpulseEvent != null)
+            {
+                float currentTime = GetImpulseCurrentTime(_activeImpulseEvent);
+                InvokeMethod(_activeImpulseEvent, "Cancel", new object[] { currentTime, forceNoDecay });
+                _activeImpulseEvent = null;
+            }
+
+            onComplete?.Invoke();
+        }
+
         private bool TryGetCamera(Action onComplete)
         {
             if (Camera != null) return true;
@@ -350,6 +423,100 @@ namespace Work.Core.Utils.Cameras
             Debug.LogWarning($"{nameof(CameraController)} requires CinemachinePanTilt on Aim stage for POV control.", this);
             onComplete?.Invoke();
             return false;
+        }
+
+        private void CacheImpulseSource()
+        {
+            if (_impulseSource != null) return;
+
+            if (Camera != null)
+            {
+                _impulseSource = Camera.GetComponent("CinemachineImpulseSource");
+            }
+
+            if (_impulseSource == null)
+            {
+                _impulseSource = GetComponent("CinemachineImpulseSource");
+            }
+        }
+
+        private bool TryGetImpulseSource(Action onComplete, out Component impulseSource)
+        {
+            CacheImpulseSource();
+            impulseSource = _impulseSource;
+
+            if (impulseSource != null) return true;
+
+            Debug.LogWarning($"{nameof(CameraController)} requires CinemachineImpulseSource on Camera or Controller object.", this);
+            onComplete?.Invoke();
+            return false;
+        }
+
+        private float GetImpulseCurrentTime(object impulseEvent)
+        {
+            if (impulseEvent == null) return Time.time;
+
+            Type eventType = impulseEvent.GetType();
+            Type managerType = eventType.Assembly.GetType("Unity.Cinemachine.CinemachineImpulseManager");
+            if (managerType == null) return Time.time;
+
+            var instanceProperty = managerType.GetProperty("Instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            object manager = instanceProperty?.GetValue(null);
+            if (manager == null) return Time.time;
+
+            var currentTimeProperty = managerType.GetProperty("CurrentTime", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            object value = currentTimeProperty?.GetValue(manager);
+
+            return value is float currentTime ? currentTime : Time.time;
+        }
+
+        private static object GetMemberValue(object target, string memberName)
+        {
+            if (target == null) return null;
+
+            Type type = target.GetType();
+            var field = type.GetField(memberName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (field != null) return field.GetValue(target);
+
+            var property = type.GetProperty(memberName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            return property?.CanRead == true ? property.GetValue(target) : null;
+        }
+
+        private static bool SetMemberValue(object target, string memberName, object value)
+        {
+            if (target == null) return false;
+
+            Type type = target.GetType();
+            var field = type.GetField(memberName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (field != null)
+            {
+                field.SetValue(target, value);
+                return true;
+            }
+
+            var property = type.GetProperty(memberName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (property?.CanWrite == true)
+            {
+                property.SetValue(target, value);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static object InvokeMethod(object target, string methodName, object[] args)
+        {
+            if (target == null) return null;
+
+            Type type = target.GetType();
+            var method = type.GetMethod(methodName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            return method?.Invoke(target, args);
+        }
+
+        private static Vector3 GetVector3MemberValue(object target, string memberName, Vector3 defaultValue)
+        {
+            object value = GetMemberValue(target, memberName);
+            return value is Vector3 vector ? vector : defaultValue;
         }
 
         private float GetCurrentZoom()
@@ -391,6 +558,7 @@ namespace Work.Core.Utils.Cameras
             StopRoutine(ref _moveRoutine);
             StopRoutine(ref _rotateRoutine);
             StopRoutine(ref _povRoutine);
+            StopRoutine(ref _impulseRoutine);
         }
 
         private void UseMoveProxyTarget(Vector3 fallbackPosition)
@@ -561,6 +729,14 @@ namespace Work.Core.Utils.Cameras
 
             apply(target);
             onFinished?.Invoke();
+            onComplete?.Invoke();
+        }
+
+        private IEnumerator WaitImpulseComplete(float duration, Action onComplete)
+        {
+            yield return new WaitForSeconds(duration);
+            _impulseRoutine = null;
+            _activeImpulseEvent = null;
             onComplete?.Invoke();
         }
 
