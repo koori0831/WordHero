@@ -15,4 +15,9 @@ namespace Work.Stages.Code
     {
 
     }
+
+    public struct CombatStageClearEvent : IEvent
+    {
+
+    }
 }
