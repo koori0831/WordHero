@@ -86,7 +86,7 @@ namespace Work.Players.Code
         public void RotateToMousePosition()
         {
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f))
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, groundLayerMask))
             {
                 Vector3 lookDirection = hitInfo.point - transform.position;
                 lookDirection.y = 0f; // 수평 회전만 허용

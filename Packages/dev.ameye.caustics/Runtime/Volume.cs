@@ -27,7 +27,7 @@ namespace Caustics
         [SerializeField] private Texture texture;
         [SerializeField] [Range(0f, 1.0f)] private float intensity;
         [SerializeField] [Range(0f, 0.5f)] private float rgbSplit;
-        [SerializeField] [Range(0.01f, 4.0f)] private float scale;
+        [SerializeField] [Range(0.01f, 12.0f)] private float scale;
         [SerializeField] [Range(0.0f, 0.3f)] private float speed;
         [SerializeField] [Range(0.0f, 1.0f)] private float sceneLuminanceMaskStrength;
         [SerializeField] [Range(0.0f, 1.0f)] private float shadowMaskStrength;
