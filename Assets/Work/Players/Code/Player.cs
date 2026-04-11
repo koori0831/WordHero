@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Code.FSM;
+﻿using Code.FSM;
 using GondrLib.Dependencies;
 using UnityEngine;
 using Work.Agents.Code;
