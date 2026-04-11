@@ -52,10 +52,14 @@ namespace Work.Players.Code
                 motion = Vector3.Project(motion, transform.forward);
             }
 
+            motion.y = 0f;
+
             if (motion.sqrMagnitude > 0.0001f)
             {
                 if (IsOnFlatGround())
                     _controller.Move(motion);
+                else
+                    _controller.Move(motion + Physics.gravity);
 
             }
         }
@@ -64,13 +68,19 @@ namespace Work.Players.Code
 
         bool IsOnFlatGround()
         {
-            if (Physics.Raycast(transform.position + (transform.forward * _controller.radius), Vector3.down, out RaycastHit hit, 2f))
+            if (Physics.Raycast(transform.position , Vector3.down, out RaycastHit hit, 0.5f))
             {
                 float angle = Vector3.Angle(hit.normal, Vector3.up);
+                Debug.Log($"Ground angle: {angle}");
                 return angle <= maxSlopeAngle;
             }
 
             return false;
+        }
+
+        private void Update()
+        {
+            Debug.DrawRay(transform.position , Vector3.down * 0.5f, Color.red);
         }
 
         public void RotateToMousePosition()
