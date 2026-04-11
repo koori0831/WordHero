@@ -1064,10 +1064,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyHP
       objectReference: {fileID: 0}
-    - target: {fileID: 1229780683842544444, guid: 226c17a438385ae4796b5e3b4091c119, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5040134400033871636, guid: 226c17a438385ae4796b5e3b4091c119, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2334,6 +2330,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 531561e0d446aaf41970b59d51491cca, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1692132566}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 531561e0d446aaf41970b59d51491cca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1692132570}
   m_SourcePrefab: {fileID: 100100000, guid: 531561e0d446aaf41970b59d51491cca, type: 3}
 --- !u!1001 &932792009
 PrefabInstance:
@@ -3364,6 +3363,28 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 8fa6141ffb449bf45b17df4f70cdaaea, type: 2}
   m_BuildHeightMesh: 0
+--- !u!64 &1692132570
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1692132562}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7365824183371507689, guid: 531561e0d446aaf41970b59d51491cca, type: 3}
 --- !u!1001 &1762653343
 PrefabInstance:
   m_ObjectHideFlags: 0
