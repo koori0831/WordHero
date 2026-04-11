@@ -5,7 +5,7 @@ namespace Work.Agents.Code
 {
     public class AgentMovementModule : MonoBehaviour, IAgentModule
     {
-        [SerializeField] private LayerMask groundLayerMask;
+        [SerializeField] protected LayerMask groundLayerMask;
         protected Agent _owner;
 
 
