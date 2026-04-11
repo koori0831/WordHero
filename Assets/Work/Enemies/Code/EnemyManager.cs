@@ -62,7 +62,7 @@ namespace Work.Enemies.Code
 
             if(IsCanMoveRoom)
             {
-                Bus<StageClearEvent>.Raise(new StageClearEvent());
+                Bus<CombatStageClearEvent>.Raise(new CombatStageClearEvent());
             }
         }
 

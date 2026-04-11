@@ -18,9 +18,15 @@ MonoBehaviour:
   Description: "\uC601\uC6C5\uC655\uC758 \uCE7C\uB0A0\uC774 \uC2EC\uD310\uD560\uC9C0\uC5B4\uB2C8."
   Effects:
   - rid: 5220572634136445211
+  - rid: 2148152355166617803
   references:
     version: 2
     RefIds:
+    - rid: 2148152355166617803
+      type: {class: CameraImpulseEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        impulseForce: 3
+        impulseDuration: 0.5
     - rid: 5220572634136445211
       type: {class: SpawnGameObjectEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
       data:

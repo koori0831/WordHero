@@ -1,8 +1,10 @@
-﻿using Work.Players.Code;
+﻿using System;
+using Work.Players.Code;
 using Work.Weapons.Imprint.Code;
 
 namespace Work.Interaction.Code
 {
+    [Serializable]
     public class ImprintWordCollectAction : ICollectAction
     {
         public ImprintWordSO ImprintWord;
