@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 302554292398269518}
   - component: {fileID: 7562092879251978711}
   - component: {fileID: 7056800626941692911}
+  - component: {fileID: 6151724435950100345}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -580,6 +581,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Work.Interaction.Code.InteractModule
   interactRange: 3
   trm: {fileID: 1001398863466630394}
+--- !u!114 &6151724435950100345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616963981033984676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d6ed9e0d06e6e4d998bd5179c75535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Combat.Code.SkillEnergyModule
+  maxEnergy: 5
 --- !u!1 &636553777436689614
 GameObject:
   m_ObjectHideFlags: 0
