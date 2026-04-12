@@ -43,6 +43,7 @@ namespace Work.Shops.Code
                     .WithEase(Ease.OutBounce)
                     .WithOnComplete(() =>
                     {
+                        CameraController.Instance.PlayImpulse(3f, 0.3f);
                         AgentHealthModule hpModule = player.GetModule<AgentHealthModule>(true);
                         HpValue hpValue = hpModule.HpValue;
 
@@ -57,6 +58,7 @@ namespace Work.Shops.Code
 
                         hpModule.TakeDamage(damage);
 
+                        CameraController.Instance.ZoomIn(10f, 0.3f);
                         CameraController.Instance.MoveTo(bone.transform.position, 0.4f, onComplete: () =>
                         {
                             float startX = -90;

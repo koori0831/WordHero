@@ -80,7 +80,7 @@ namespace Work.Players.Code
 
         private void Update()
         {
-            Debug.DrawRay(transform.position , Vector3.down * 0.5f, Color.red);
+            Debug.DrawRay(transform.position , Vector3.down * 0.1f, Color.red);
         }
 
         public void RotateToMousePosition()
