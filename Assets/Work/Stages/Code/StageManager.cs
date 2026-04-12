@@ -159,10 +159,19 @@ namespace Work.Stages.Code
                     sumVec /= CurrentStage.Doors.Count;
                     _currentStageChest.cameraMovePosition = GetCameraPlaneBottomCenter(CurrentStage.Doors.ConvertAll(d => d.transform), Camera.main.transform);
 
-                    CameraController.Instance.ZoomOut(12f, duration: 0.5f, onComplete: () =>
+                    CameraController.Instance.MoveTo(_currentStageChest.transform.position, duration: 0.6f);
+                    CameraController.Instance.ZoomIn(15f, duration: 0.7f, onComplete: () =>
                     {
-                        Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+                        CameraController.Instance.ZoomIn(1f, duration: 1f, onComplete: () =>
+                        {
+                            CameraController.Instance.ResetPosition(duration: 0.5f);
+                            CameraController.Instance.ResetZoom(duration: 0.5f, onComplete: () =>
+                            {
+                                Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+                            });
+                        });
                     });
+
                 });
             });
         }

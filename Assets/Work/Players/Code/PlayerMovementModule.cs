@@ -68,7 +68,7 @@ namespace Work.Players.Code
 
         bool IsOnFlatGround()
         {
-            if (Physics.Raycast(transform.position , Vector3.down, out RaycastHit hit, 0.5f))
+            if (Physics.Raycast(transform.position , Vector3.down, out RaycastHit hit, 0.1f))
             {
                 float angle = Vector3.Angle(hit.normal, Vector3.up);
                 Debug.Log($"Ground angle: {angle}");
@@ -80,7 +80,7 @@ namespace Work.Players.Code
 
         private void Update()
         {
-            Debug.DrawRay(transform.position , Vector3.down * 0.5f, Color.red);
+            Debug.DrawRay(transform.position , Vector3.down * 0.1f, Color.red);
         }
 
         public void RotateToMousePosition()

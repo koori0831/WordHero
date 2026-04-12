@@ -13,6 +13,7 @@ namespace Work.Combat.Code
     {
         [SerializeField] private GameObject damageTextPrefab;
         [SerializeField] private Vector2 offset;
+        [SerializeField] private float yOffset = 2f;
 
         public void Awake()
         {
@@ -31,7 +32,9 @@ namespace Work.Combat.Code
         {
             float randomX = Random.Range(-offset.x, offset.x);
             float randomY = Random.Range(-offset.y, offset.y);
-            Vector3 pos = target.transform.position + new Vector3(randomX, randomY + 5, -2);
+            Vector3 pos = target.transform.position + new Vector3(randomX, randomY + yOffset);
+            Vector3 targetToCamera = Camera.main.transform.position - pos;
+            pos += targetToCamera.normalized * 2f; // 카메라 방향으로 약간 이동하여 텍스트가 카메라에 가려지지 않도록 함
 
             GameObject damageTextObj = Instantiate(damageTextPrefab, pos, Camera.main.transform.rotation);
             //damageTextObj.transform.parent = owner.transform;
