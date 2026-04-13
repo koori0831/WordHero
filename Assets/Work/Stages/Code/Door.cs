@@ -28,6 +28,8 @@ namespace Work.Stages.Code
 
     public class Door : MonoBehaviour, IInteractable
     {
+        public bool CanInteract => _isOpen && !_isInteract;
+
         private Stage _stage;
         private DoorType _doorType;
         private bool _isInteract;
@@ -60,8 +62,7 @@ namespace Work.Stages.Code
 
         public void Interact(GameObject interactor)
         {
-            if (_isInteract == true) return;
-            if (!_isOpen) return;
+            if (!CanInteract) return;
 
             Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
             _isInteract = true;

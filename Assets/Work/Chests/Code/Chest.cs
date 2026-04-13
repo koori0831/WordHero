@@ -18,6 +18,8 @@ namespace Work.Chests.Code
 
     public class Chest : MonoBehaviour, IInteractable
     {
+        public bool CanInteract => !_isOpened;
+
         [SerializeField] private Transform chestHeadTransform;
         [SerializeField] private Renderer inBoxRenderer;
 
@@ -60,7 +62,7 @@ namespace Work.Chests.Code
 
         public void Interact(GameObject interactor)
         {
-            if (_isOpened) return;
+            if (!CanInteract) return;
 
             if (interactor.TryGetComponent(out Player player))
             {

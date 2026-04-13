@@ -8,6 +8,8 @@ namespace Work.Shops.Code
 {
     public class ShopTable : MonoBehaviour, IInteractable
     {
+        public bool CanInteract => _isInBoundry && _currentItem != null;
+
         private ItemData _currentItem;
         private GameObject _model;
         [SerializeField] private Transform modelTrm;
@@ -58,8 +60,8 @@ namespace Work.Shops.Code
 
         public void Interact(GameObject interactor)
         {
-            if (!_isInBoundry) return;
-            if (_currentItem == null) return;
+            if (!CanInteract) return;
+
             _currentItem.isSoldItem = true;
             bool value = Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Raise(new TryDecreaseGoldEvent(_currentItem.item.Price)).Value;
             if (value)

@@ -6,6 +6,8 @@ namespace Work.Interaction.Code
 {
     public class DroppedWeaponInteractable : MonoBehaviour, IInteractable
     {
+        public bool CanInteract => _weapon != null;
+
         [SerializeField] private float pickupColliderRadius = 0.8f;
 
         private BaseWeapon _weapon;
@@ -27,7 +29,7 @@ namespace Work.Interaction.Code
 
         public void Interact(GameObject interactor)
         {
-            if (_weapon == null) return;
+            if (!CanInteract) return;
 
             if (interactor.TryGetComponent(out Player player))
             {

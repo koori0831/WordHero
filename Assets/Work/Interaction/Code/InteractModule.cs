@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using Work.Agents.Code;
 using Work.Core.Utils.EventBus;
 using Work.Input.Code;
@@ -9,6 +10,7 @@ namespace Work.Interaction.Code
     {
         public Agent Owner { get; private set; }
 
+        [SerializeField] private Image interactIcon;
         [SerializeField] private float interactRange = 2f;
         [SerializeField] private Transform trm;
 
@@ -21,6 +23,26 @@ namespace Work.Interaction.Code
         private void OnDestroy()
         {
             Bus<InputInteractEvent>.Events -= OnInteract;
+        }
+
+        private void Update()
+        {
+            if (Owner == null) return;
+
+            Vector3 center = trm != null ? trm.position : Owner.transform.position;
+            Collider[] colliders = Physics.OverlapSphere(center, interactRange);
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                IInteractable interactable = colliders[i].GetComponent<IInteractable>();
+                if (interactable == null || !interactable.CanInteract) continue;
+
+                interactIcon.gameObject.SetActive(true);
+                return;
+            }
+
+            if (interactIcon.gameObject.activeSelf)
+                interactIcon.gameObject.SetActive(false);
         }
 
         private void OnInteract(InputInteractEvent evt)
@@ -37,7 +59,7 @@ namespace Work.Interaction.Code
             for (int i = 0; i < colliders.Length; i++)
             {
                 IInteractable interactable = colliders[i].GetComponent<IInteractable>();
-                if (interactable == null) continue;
+                if (interactable == null || !interactable.CanInteract) continue;
 
                 float sqrDistance = (colliders[i].transform.position - center).sqrMagnitude;
                 if (sqrDistance < nearestSqrDistance)

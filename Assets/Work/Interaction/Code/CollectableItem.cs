@@ -5,6 +5,8 @@ namespace Work.Interaction.Code
 {
     public class CollectableItem : MonoBehaviour, IInteractable
     {
+        public bool CanInteract => CollectAction != null;
+
         [SerializeReference]
         public ICollectAction CollectAction;
 
@@ -16,6 +18,8 @@ namespace Work.Interaction.Code
 
         public void Interact(GameObject interactor)
         {
+            if (!CanInteract) return;
+
             if (interactor.TryGetComponent(out Player player))
             {
                 CollectAction.Collect(player);
