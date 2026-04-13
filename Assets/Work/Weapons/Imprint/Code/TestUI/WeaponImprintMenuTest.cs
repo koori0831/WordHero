@@ -43,10 +43,14 @@ public class WeaponImprintMenuTest : MonoBehaviour
         CacheSlotDefaultPositions();
         CacheSlotTexts();
 
-        statButton.onClick.AddListener(() => OnSlotButtonClicked(ImprintType.Stat));
-        effectButton.onClick.AddListener(() => OnSlotButtonClicked(ImprintType.Effect));
-        attackButton.onClick.AddListener(() => OnSlotButtonClicked(ImprintType.Attack));
-        backButton.onClick.AddListener(OnBackButtonClicked);
+        if (statButton != null)
+            statButton.onClick.AddListener(() => OnSlotButtonClicked(ImprintType.Stat));
+        if (effectButton != null)
+            effectButton.onClick.AddListener(() => OnSlotButtonClicked(ImprintType.Effect));
+        if (attackButton != null)
+            attackButton.onClick.AddListener(() => OnSlotButtonClicked(ImprintType.Attack));
+        if (backButton != null)
+            backButton.onClick.AddListener(OnBackButtonClicked);
 
         SetCanvas(mainCanvas, false);
         SetCanvas(inventoryCanvas, false);
@@ -79,6 +83,9 @@ public class WeaponImprintMenuTest : MonoBehaviour
     {
         foreach (var kvp in _slotButtons)
         {
+            if (kvp.Value == null)
+                continue;
+
             RectTransform rect = kvp.Value.GetComponent<RectTransform>();
             if (rect != null)
                 _slotDefaultPositions[kvp.Key] = rect.anchoredPosition;
