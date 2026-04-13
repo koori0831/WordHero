@@ -14,6 +14,7 @@ namespace Work.Weapons.Code
         public WeaponType Type;
         [SerializeReference]
         public IImprintTriggerEvent ImprintTriggerEvent;
+        public string TriggerDescription;
         private bool _isMelee { get { return Type == WeaponType.Melee; } }
         [ShowIf(nameof(_isMelee))]
         public List<ComboHitBox> ComboHitBoxes;
