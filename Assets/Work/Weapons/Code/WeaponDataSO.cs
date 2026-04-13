@@ -9,6 +9,7 @@ namespace Work.Weapons.Code
     public class WeaponDataSO : ScriptableObject
     {
         public string WeaponName;
+        [TextArea]
         public string WeaponDescription;
         public WeaponType Type;
         [SerializeReference]
