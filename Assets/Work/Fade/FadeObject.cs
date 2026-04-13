@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Work.Core.Utils.EventBus;
+using Work.ETC.LocationUI.Code;
 
 namespace Work.Fade
 {
@@ -35,7 +36,10 @@ namespace Work.Fade
             if (evt.isFadeIn)
             {
                 _handle = LMotion.Create(0f, 1f, fadeDuration)
-                    .WithOnComplete(() => Bus<OnFadeCompletedEvent>.Raise(new OnFadeCompletedEvent(evt.isFadeIn)))
+                    .WithOnComplete(() =>
+                    {
+                        Bus<OnFadeCompletedEvent>.Raise(new OnFadeCompletedEvent(evt.isFadeIn));
+                    })
                     .Bind(a =>
                     {
                         Color co = new Color(fadeObject.color.r, fadeObject.color.b, fadeObject.color.g, a);
@@ -46,7 +50,11 @@ namespace Work.Fade
             else
             {
                 _handle = LMotion.Create(1f, 0f, fadeDuration)
-                    .WithOnComplete(() => Bus<OnFadeCompletedEvent>.Raise(new OnFadeCompletedEvent(evt.isFadeIn)))
+                    .WithOnComplete(() =>
+                    {
+                       
+                        Bus<OnFadeCompletedEvent>.Raise(new OnFadeCompletedEvent(evt.isFadeIn));
+                    })
                     .Bind(a =>
                     {
                         Color co = new Color(fadeObject.color.r, fadeObject.color.b, fadeObject.color.g, a);

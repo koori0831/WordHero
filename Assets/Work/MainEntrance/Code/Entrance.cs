@@ -1,25 +1,28 @@
-﻿using System;
+﻿using LitMotion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Work.Core.Utils.EventBus;
+using Work.ETC.LocationUI.Code;
 using Work.Fade;
 
-public class Entrance : MonoBehaviour, IInteractable
+namespace Work.MainEntrance.Code
 {
-
-
-    public void Interact(GameObject interactor)
+    public class Entrance : MonoBehaviour, IInteractable
     {
-        Bus<OnFadeCompletedEvent>.Events += OnFadeCompleted;
-        Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));
-    }
 
-    private void OnFadeCompleted(OnFadeCompletedEvent evt)
-    {
-        if (evt.isFadeIn)
+        public void Interact(GameObject interactor)
         {
-            SceneManager.LoadScene("EnemyTestScene");
+            Bus<OnFadeCompletedEvent>.Events += OnFadeCompleted;
+            Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));
         }
-        Bus<OnFadeCompletedEvent>.Events -= OnFadeCompleted;
+
+        private void OnFadeCompleted(OnFadeCompletedEvent evt)
+        {
+            if (evt.isFadeIn)
+            {
+                SceneManager.LoadScene("InGameScene");
+            }
+            Bus<OnFadeCompletedEvent>.Events -= OnFadeCompleted;
+        }
     }
 }
