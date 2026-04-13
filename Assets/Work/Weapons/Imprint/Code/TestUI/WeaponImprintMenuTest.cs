@@ -16,6 +16,11 @@ public class WeaponImprintMenuTest : MonoBehaviour
     [SerializeField] private Button backButton;
     [SerializeField] private WeaponMenuTest weaponMenu;
     [SerializeField] private Image selectedWeaponIcon;
+    [SerializeField] private TMP_Text primarySkillNameText;
+    [SerializeField] private TMP_Text primarySkillDescriptionText;
+    [SerializeField] private TMP_Text secondarySkillNameText;
+    [SerializeField] private TMP_Text secondarySkillDescriptionText;
+    [SerializeField] private TMP_Text triggerDescriptionText;
 
     private const float SlotLiftY = 10f;
 
@@ -64,6 +69,7 @@ public class WeaponImprintMenuTest : MonoBehaviour
 
         _selectedWeapon = weapon;
         RefreshWeaponIcon();
+        RefreshWeaponInfoTexts();
         SetCanvas(mainCanvas, true);
         CloseInventory();
         RefreshSlotTexts();
@@ -75,6 +81,7 @@ public class WeaponImprintMenuTest : MonoBehaviour
         CloseInventory();
         SetCanvas(mainCanvas, false);
         ClearWeaponIcon();
+        ClearWeaponInfoTexts();
         _selectedWeapon = null;
         IsOpen = false;
     }
@@ -267,6 +274,34 @@ public class WeaponImprintMenuTest : MonoBehaviour
 
         selectedWeaponIcon.sprite = null;
         selectedWeaponIcon.gameObject.SetActive(false);
+    }
+
+    private void RefreshWeaponInfoTexts()
+    {
+        WeaponDataSO weaponData = _selectedWeapon != null ? _selectedWeapon.Data : null;
+
+        SetText(primarySkillNameText, weaponData?.PrimarySkill?.SkillName, "스킬 1: 없음");
+        SetText(primarySkillDescriptionText, weaponData?.PrimarySkill?.SkillDescription, "설명 없음");
+        SetText(secondarySkillNameText, weaponData?.SecondarySkill?.SkillName, "스킬 2: 없음");
+        SetText(secondarySkillDescriptionText, weaponData?.SecondarySkill?.SkillDescription, "설명 없음");
+        SetText(triggerDescriptionText, weaponData?.TriggerDescription, "트리거 설명 없음");
+    }
+
+    private void ClearWeaponInfoTexts()
+    {
+        SetText(primarySkillNameText, string.Empty, string.Empty);
+        SetText(primarySkillDescriptionText, string.Empty, string.Empty);
+        SetText(secondarySkillNameText, string.Empty, string.Empty);
+        SetText(secondarySkillDescriptionText, string.Empty, string.Empty);
+        SetText(triggerDescriptionText, string.Empty, string.Empty);
+    }
+
+    private static void SetText(TMP_Text target, string value, string fallback)
+    {
+        if (target == null)
+            return;
+
+        target.text = string.IsNullOrWhiteSpace(value) ? fallback : value;
     }
 
     private void UpdateSlotText(ImprintType type, ImprintWordSO word, string label)
