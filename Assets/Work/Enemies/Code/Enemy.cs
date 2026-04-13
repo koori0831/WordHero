@@ -41,7 +41,6 @@ namespace Work.Enemies.Code
             AddModule();
             ModuleInit();
 
-
             EnemyInfoData = enemyInfoData.GetInfo(this);
             InitInfo(EnemyInfoData);
             ModuleAfterInit();

@@ -30,9 +30,9 @@ namespace Work.Core.Utils.Cameras
         private object _activeImpulseEvent;
 
         private float _originalZoom;
-        private float _originalRotation;
         private float _originalPan;
         private float _originalTilt;
+        private Quaternion _originalRotate;
 
         private void Awake()
         {
@@ -50,7 +50,7 @@ namespace Work.Core.Utils.Cameras
             }
 
             _originalZoom = Camera != null ? GetCurrentZoom() : 0f;
-            _originalRotation = Camera != null ? Camera.transform.rotation.eulerAngles.y : 0f;
+            _originalRotate = Camera != null ? Camera.transform.rotation : Quaternion.identity;
 
             var panTilt = Camera != null ? Camera.GetComponent<CinemachinePanTilt>() : null;
             if (panTilt != null)
@@ -273,6 +273,12 @@ namespace Work.Core.Utils.Cameras
         public void RotateToEuler(Vector3 targetEuler, float duration = -1f, bool instant = false, Action onComplete = null)
         {
             RotateTo(Quaternion.Euler(targetEuler), duration, instant, onComplete);
+        }
+
+        public void ResetRotate(float duration = -1f, bool instant = false, Action onComplete = null)
+        {
+            if (!TryGetCamera(onComplete)) return;
+            RotateTo(_originalRotate, duration, instant, onComplete);
         }
 
         public void SetPov(float pan, float tilt, float duration = -1f, bool instant = false, Action onComplete = null)

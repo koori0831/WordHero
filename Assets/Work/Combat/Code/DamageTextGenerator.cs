@@ -22,6 +22,12 @@ namespace Work.Combat.Code
 
         }
 
+        private void OnDestroy()
+        {
+            Bus<DamageTextEvent>.Events -= HandleDamageTextEvent; // 나중에 DmageTextType에 맞춰서 텍스트 색상이나 폰트 바꿔주는 기능 추가
+            Bus<CombatHitEvent>.Events -= HandleDamageTextEvent; // 나중에 DmageTextType에 맞춰서 텍스트 색상이나 폰트 바꿔주는 기능 추가
+        }
+
         private void HandleDamageTextEvent(CombatHitEvent evt) =>
             GenerateDamageText(evt.Damage, evt.Target, evt.IsCritical);
 
