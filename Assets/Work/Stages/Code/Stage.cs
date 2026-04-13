@@ -2,6 +2,7 @@
 using UnityEngine;
 using Work.Core.Utils.EventBus;
 using Work.Fade;
+using Work.Input.Code;
 using Random = UnityEngine.Random;
 
 namespace Work.Stages.Code
@@ -44,7 +45,7 @@ namespace Work.Stages.Code
                 door.transform.parent = x;
                 door.transform.localRotation = Quaternion.identity;
                 door.DoorInit(this);
-                DoorType nextDoorType = (DoorType)Random.Range(0, 4);
+                DoorType nextDoorType = (DoorType)Random.Range(0, 5);
 
                 if (_stageManager.IsOpeningShop)
                 {
@@ -85,8 +86,8 @@ namespace Work.Stages.Code
         private void HandleFadeComplete(OnFadeCompletedEvent evt)
         {
             Bus<OnFadeCompletedEvent>.Events -= HandleFadeComplete;
-
             _stageManager.GeneratStage(_nextRoomType);
+            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
         }
     }
 }

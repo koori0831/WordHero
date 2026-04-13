@@ -68,6 +68,8 @@ namespace Work.Shops.Code
 
                 if (_currentItem.item.ModelInfo is ShopWeaponDataSO data)
                     player.GetWeapon(Instantiate(data.BaseWeapon));
+                if(_currentItem.item.ModelInfo is ShopImprintWordDataSO imprintData)
+                    player.GetImprintWord(imprintData.ImprintWord,1);
 
 
                 ResetTable();

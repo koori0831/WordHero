@@ -9824,8 +9824,9 @@ GameObject:
   - component: {fileID: 198741542255655676}
   - component: {fileID: 199720500564923422}
   - component: {fileID: 2485751485892251046}
-  - component: {fileID: 5058349890068763067}
   - component: {fileID: 1789095298157139387}
+  - component: {fileID: 5058349890068763067}
+  - component: {fileID: 4246392899843913657}
   m_Layer: 0
   m_Name: DefaultKatanaSlash
   m_TagString: Untagged
@@ -14754,6 +14755,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &1789095298157139387
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872147318604286}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.9480312, y: 2.404182, z: 4.373483}
+  m_Center: {x: 0.2899044, y: -0.015549149, z: 0.32629508}
 --- !u!114 &5058349890068763067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14783,27 +14805,19 @@ MonoBehaviour:
         KnockbackForce: 3
         KnockbackDuration: 0.25
         StiffDuration: 0.6
---- !u!65 &1789095298157139387
-BoxCollider:
+--- !u!114 &4246392899843913657
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1872147318604286}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4.238971, y: 2.404182, z: 4.534403}
-  m_Center: {x: 0.43537402, y: -0.015549183, z: 0.40675634}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7015bee67a4e65c4c87dbc3db9cb56c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.ColliderUtills.LifeTimeCollider
+  lifeTime: 0.25
 --- !u!1 &1985817477992794
 GameObject:
   m_ObjectHideFlags: 0

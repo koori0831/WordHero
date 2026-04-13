@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Work.Core.Utils.EventBus;
+using Work.Input.Code;
 
 namespace Work.Stages.Code
 {
@@ -61,6 +63,7 @@ namespace Work.Stages.Code
             if (_isInteract == true) return;
             if (!_isOpen) return;
 
+            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
             _isInteract = true;
             _stage.HandleGoNextRoom(interactor, _doorType);
         }
