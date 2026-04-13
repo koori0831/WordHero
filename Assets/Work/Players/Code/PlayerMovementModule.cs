@@ -71,7 +71,6 @@ namespace Work.Players.Code
             if (Physics.Raycast(transform.position , Vector3.down, out RaycastHit hit, 0.1f))
             {
                 float angle = Vector3.Angle(hit.normal, Vector3.up);
-                Debug.Log($"Ground angle: {angle}");
                 return angle <= maxSlopeAngle;
             }
 

@@ -17,6 +17,7 @@ namespace Work.Stages.Code
         [SerializeField] private List<Stage> stoneStageList = new List<Stage>();
         [SerializeField] private List<Stage> ironStageList = new List<Stage>();
         [SerializeField] private List<Stage> goldStageList = new List<Stage>();
+        [SerializeField] private List<Stage> questionStageList = new List<Stage>();
         [SerializeField] private Stage shopStage;
         [SerializeField] private Stage bossStage;
         [SerializeField] private List<int> openingShopCountList;
@@ -62,6 +63,7 @@ namespace Work.Stages.Code
                 { DoorType.Stone, stoneStageList },
                 { DoorType.Iron, ironStageList },
                 { DoorType.Gold, goldStageList },
+                { DoorType.Question, questionStageList },
                 { DoorType.Shop, new List<Stage> { shopStage } },
                 { DoorType.Boss, new List<Stage> { bossStage } }
             };
