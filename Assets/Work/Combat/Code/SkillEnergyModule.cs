@@ -50,6 +50,11 @@ namespace Work.Combat.Code
         private Agent _agent;
         [SerializeField] private int maxEnergy;
         public SkillEnergyValue EnergyContainer { get; private set; }
+        public void AddSkillPoint (float amount)
+        {
+            EnergyContainer += amount;
+            EnergyContainer.OnChangedEvent?.Invoke();
+        }
 
         public void Initialize(Agent agent)
         {
