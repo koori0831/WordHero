@@ -154,6 +154,11 @@ namespace Work.Players.Code
                 return;
 
             _standbyRuntime.TriggerRuntime.Open(DefaultImprintTriggerDuration);
+
+            if (!_standbyRuntime.Weapon.Imprints.HasAnyImprint())
+                return;
+
+            Bus<WeaponTriggerOpenedEvent>.Raise(new WeaponTriggerOpenedEvent(DefaultImprintTriggerDuration));
         }
 
         private void TryActivateCurrentWeaponImprint()
@@ -177,6 +182,7 @@ namespace Work.Players.Code
             );
 
             _imprintActivationRunner.Activate(_currentRuntime, context);
+            Bus<WeaponTriggerActivatedEvent>.Raise(new WeaponTriggerActivatedEvent());
             _currentRuntime.TriggerRuntime.Consume();
         }
 

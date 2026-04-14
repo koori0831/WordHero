@@ -39556,13 +39556,19 @@ MonoBehaviour:
   OnHitEffects:
   - rid: 7069608408986681705
   - rid: 7069608408986681714
+  - rid: 5220572792870404208
   references:
     version: 2
     RefIds:
+    - rid: 5220572792870404208
+      type: {class: CameraImpulseHitEffect, ns: Work.Weapons.HitBox.Effects.Code, asm: Assembly-CSharp}
+      data:
+        impulseForce: 1.5
+        impulseDuration: 0.3
     - rid: 7069608408986681705
       type: {class: DamageHitEffect, ns: Work.Weapons.HitBox.Effects.Code, asm: Assembly-CSharp}
       data:
-        Damage: 25
+        Damage: 50
         UseKnockback: 1
         KnockbackForce: 15
         KnockbackDuration: 0.25

@@ -19,6 +19,7 @@ MonoBehaviour:
   Cost: 2
   AnimParam: {fileID: 11400000, guid: 550e20d6bc770674e9f541d5b8a376d8, type: 2}
   Effects:
+  - rid: 5220572792870404215
   - rid: 7069608252854501492
   - rid: 2148152267635163833
   - rid: 7069608376354996514
@@ -41,6 +42,11 @@ MonoBehaviour:
         TargetLayer:
           serializedVersion: 2
           m_Bits: 256
+    - rid: 5220572792870404215
+      type: {class: CameraImpulseEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        impulseForce: 1
+        impulseDuration: 3
     - rid: 7069608252854501492
       type: {class: AoEStatusEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
       data:
