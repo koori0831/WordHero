@@ -190,6 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5849720686193241134}
   - component: {fileID: 7083256743943942930}
+  - component: {fileID: 2621037669449991119}
   m_Layer: 0
   m_Name: WoodDoorObject
   m_TagString: Untagged
@@ -337,6 +338,20 @@ MonoBehaviour:
   ironCage_1: {fileID: 411203338438871161}
   ironCage_2: {fileID: 2022380211683988523}
   nextDoor: 1
+--- !u!114 &2621037669449991119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8224692173259864344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 126a764d58e5413418eb0a683237e341, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Stages.Code.DoorObject
+  doorEffects:
+  - {fileID: 7083256743943942930}
 --- !u!1 &8766441659419330361
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ namespace Work.Shops.Code
             {
                 isPressed = true;
                 Player player = other.GetComponent<Player>();
+                player.GetModule<PlayerMovementModule>().MoveStop();
                 transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - 0.05f, transform.localPosition.z);
                 OnPressed?.Invoke(player);
             }

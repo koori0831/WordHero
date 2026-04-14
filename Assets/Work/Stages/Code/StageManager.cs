@@ -3,6 +3,7 @@ using LitMotion;
 using System.Collections.Generic;
 using UnityEngine;
 using Work.Chests.Code;
+using Work.Combat.Code;
 using Work.Core.Utils.Cameras;
 using Work.Core.Utils.EventBus;
 using Work.Fade;
@@ -131,11 +132,13 @@ namespace Work.Stages.Code
                 return;
             }
 
+            if (!(CurrentStage is BattleStage battleStage)) return;
+
             Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
 
             //카메라 줌인 효과 추가 예정
             CameraController.Instance.PlayImpulse(1f, 0.2f);
-
+            Bus<GetSkillEnergyEvent>.Raise(new GetSkillEnergyEvent(1f));
             Time.timeScale = 0.4f; //카메라 줌인 효과에 맞춰 시간 조정
 
             CameraController.Instance.ZoomIn(11f, duration: 0.25f, onComplete: () =>
@@ -153,13 +156,13 @@ namespace Work.Stages.Code
 
                     Vector3 sumVec = Vector3.zero;
 
-                    foreach (Door door in CurrentStage.Doors)
+                    foreach (Door door in battleStage.Doors)
                     {
                         sumVec += door.transform.position;
                     }
 
-                    sumVec /= CurrentStage.Doors.Count;
-                    _currentStageChest.cameraMovePosition = GetCameraPlaneBottomCenter(CurrentStage.Doors.ConvertAll(d => d.transform), Camera.main.transform);
+                    sumVec /= battleStage.Doors.Count;
+                    _currentStageChest.cameraMovePosition = GetCameraPlaneBottomCenter(battleStage.Doors.ConvertAll(d => d.transform), Camera.main.transform);
 
                     CameraController.Instance.MoveTo(_currentStageChest.transform.position, duration: 0.6f);
                     CameraController.Instance.ZoomIn(15f, duration: 0.7f, onComplete: () =>
@@ -241,6 +244,40 @@ namespace Work.Stages.Code
                 DoorType.Gold => ChestType.Gold,
                 _ => ChestType.Wood
             };
+        }
+
+        public void DoorSpawn(List<Transform> doorPoints, ref List<Door> doors, bool isRandom = false)
+        {
+            int random = isRandom ? Random.Range(1, doorPoints.Count + 1) : doorPoints.Count;
+
+            for (int i = 0; i < random; i++)
+            {
+                Transform x = doorPoints[i];
+                Door door = Instantiate(DoorPrefab, x.position, Quaternion.identity);
+                door.transform.parent = x;
+                door.transform.localRotation = Quaternion.identity;
+                door.DoorInit(CurrentStage);
+                DoorType nextDoorType = (DoorType)Random.Range(0, 5);
+
+                if (IsOpeningShop)
+                {
+                    nextDoorType = DoorType.Shop;
+                    door.SetDoorType(nextDoorType);
+                    doors.Add(door);
+                    return;
+                }
+
+                if (IsNextStageInBossStage)
+                {
+                    nextDoorType = DoorType.Boss;
+                    door.SetDoorType(nextDoorType);
+                    doors.Add(door);
+                    return;
+                }
+
+                door.SetDoorType(nextDoorType);
+                doors.Add(door);
+            }
         }
     }
 }

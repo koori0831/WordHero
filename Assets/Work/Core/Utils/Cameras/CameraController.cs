@@ -7,6 +7,12 @@ namespace Work.Core.Utils.Cameras
 {
     public class CameraController : MonoBehaviour
     {
+        public enum ImpulseStyle
+        {
+            Impact,
+            Rumble
+        }
+
         public static CameraController Instance { get; private set; }
 
         [field: SerializeField] public CinemachineCamera Camera { get; private set; }
@@ -28,6 +34,11 @@ namespace Work.Core.Utils.Cameras
         private bool _isMoveDampingOverrideActive;
         private Component _impulseSource;
         private object _activeImpulseEvent;
+        private object _activeImpulseDefinition;
+        private float _cachedImpulseDuration;
+        private object _cachedImpulseShape;
+        private bool _hasCachedImpulseDuration;
+        private bool _hasCachedImpulseShape;
 
         private float _originalZoom;
         private float _originalPan;
@@ -335,6 +346,16 @@ namespace Work.Core.Utils.Cameras
 
         public void PlayImpulse(float force, float duration, Action onComplete = null)
         {
+            PlayImpulse(force, duration, ImpulseStyle.Impact, onComplete);
+        }
+
+        public void PlayRumbleImpulse(float force, float duration, Action onComplete = null)
+        {
+            PlayImpulse(force, duration, ImpulseStyle.Rumble, onComplete);
+        }
+
+        public void PlayImpulse(float force, float duration, ImpulseStyle style, Action onComplete = null)
+        {
             if (!TryGetImpulseSource(onComplete, out var impulseSource)) return;
 
             StopImpulse(true, null);
@@ -350,10 +371,13 @@ namespace Work.Core.Utils.Cameras
                 return;
             }
 
+            ApplyImpulseDefinitionOverrides(impulseDefinition, clampedDuration, style == ImpulseStyle.Rumble);
+
             var createMethod = impulseDefinition.GetType().GetMethod("CreateAndReturnEvent", new[] { typeof(Vector3), typeof(Vector3) });
             if (createMethod == null)
             {
                 Debug.LogWarning($"{nameof(CameraController)} could not find CreateAndReturnEvent on impulse definition.", this);
+                RestoreImpulseDefinitionOverrides();
                 onComplete?.Invoke();
                 return;
             }
@@ -362,6 +386,7 @@ namespace Work.Core.Utils.Cameras
 
             if (_activeImpulseEvent == null)
             {
+                RestoreImpulseDefinitionOverrides();
                 onComplete?.Invoke();
                 return;
             }
@@ -379,6 +404,7 @@ namespace Work.Core.Utils.Cameras
             if (clampedDuration <= 0f)
             {
                 _activeImpulseEvent = null;
+                RestoreImpulseDefinitionOverrides();
                 onComplete?.Invoke();
                 return;
             }
@@ -396,6 +422,8 @@ namespace Work.Core.Utils.Cameras
                 InvokeMethod(_activeImpulseEvent, "Cancel", new object[] { currentTime, forceNoDecay });
                 _activeImpulseEvent = null;
             }
+
+            RestoreImpulseDefinitionOverrides();
 
             onComplete?.Invoke();
         }
@@ -474,6 +502,72 @@ namespace Work.Core.Utils.Cameras
             object value = currentTimeProperty?.GetValue(manager);
 
             return value is float currentTime ? currentTime : Time.time;
+        }
+
+        private void ApplyImpulseDefinitionOverrides(object impulseDefinition, float duration, bool useRumbleShape)
+        {
+            RestoreImpulseDefinitionOverrides();
+
+            _activeImpulseDefinition = impulseDefinition;
+
+            object currentDuration = GetMemberValue(impulseDefinition, "ImpulseDuration");
+            if (currentDuration is float originalDuration)
+            {
+                _cachedImpulseDuration = originalDuration;
+                _hasCachedImpulseDuration = true;
+            }
+
+            SetMemberValue(impulseDefinition, "ImpulseDuration", duration);
+
+            if (!useRumbleShape) return;
+
+            object currentShape = GetMemberValue(impulseDefinition, "ImpulseShape");
+            if (currentShape != null)
+            {
+                _cachedImpulseShape = currentShape;
+                _hasCachedImpulseShape = true;
+
+                object rumbleShape = ParseEnumValue(currentShape.GetType(), "Rumble");
+                if (rumbleShape != null)
+                {
+                    SetMemberValue(impulseDefinition, "ImpulseShape", rumbleShape);
+                }
+            }
+        }
+
+        private void RestoreImpulseDefinitionOverrides()
+        {
+            if (_activeImpulseDefinition != null)
+            {
+                if (_hasCachedImpulseDuration)
+                {
+                    SetMemberValue(_activeImpulseDefinition, "ImpulseDuration", _cachedImpulseDuration);
+                }
+
+                if (_hasCachedImpulseShape)
+                {
+                    SetMemberValue(_activeImpulseDefinition, "ImpulseShape", _cachedImpulseShape);
+                }
+            }
+
+            _activeImpulseDefinition = null;
+            _cachedImpulseShape = null;
+            _hasCachedImpulseDuration = false;
+            _hasCachedImpulseShape = false;
+        }
+
+        private static object ParseEnumValue(Type enumType, string enumName)
+        {
+            if (enumType == null || !enumType.IsEnum || string.IsNullOrEmpty(enumName)) return null;
+
+            try
+            {
+                return Enum.Parse(enumType, enumName);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static object GetMemberValue(object target, string memberName)
@@ -743,6 +837,7 @@ namespace Work.Core.Utils.Cameras
             yield return new WaitForSeconds(duration);
             _impulseRoutine = null;
             _activeImpulseEvent = null;
+            RestoreImpulseDefinitionOverrides();
             onComplete?.Invoke();
         }
 

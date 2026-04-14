@@ -19,6 +19,12 @@ namespace Work.Information.Code
             ImprintWord = imprintWord;
         }
 
+        private void OnValidate()
+        {
+            Name = ImprintWord.DisplayName;
+            Description = ImprintWord.Description;
+        }
+
         public new ShopImprintWordDataSO GetInfo()
         {
             ShopImprintWordDataSO data = new ShopImprintWordDataSO(ImprintWord);

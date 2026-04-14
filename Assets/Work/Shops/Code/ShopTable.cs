@@ -58,8 +58,6 @@ namespace Work.Shops.Code
 
         public void Interact(GameObject interactor)
         {
-            if (!_isInBoundry) return;
-            if (_currentItem == null) return;
             _currentItem.isSoldItem = true;
             bool value = Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Raise(new TryDecreaseGoldEvent(_currentItem.item.Price)).Value;
             if (value)
