@@ -10,8 +10,12 @@ namespace Work.MainEntrance.Code
     public class Entrance : MonoBehaviour, IInteractable
     {
 
+        private bool _isInteracting;
+
         public void Interact(GameObject interactor)
         {
+            if(_isInteracting) return;
+            _isInteracting = true;
             Bus<OnFadeCompletedEvent>.Events += OnFadeCompleted;
             Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));
         }

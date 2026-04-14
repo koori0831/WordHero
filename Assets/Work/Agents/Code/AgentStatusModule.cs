@@ -62,7 +62,6 @@ namespace Work.Agents.Code
                 if (_activeEffects.ContainsKey(_removeEffects[i]))
                 {
                     // 효과 제거 로직 (예: 스턴 해제, 화상 해제 등)
-                    Debug.Log($"Removed status effect: {_removeEffects[i]}");
                     if (_removeEffects[i] == StatusType.SuperArmor)
                         StatusValue.isSuperArmor = false;
                     if (_removeEffects[i] == StatusType.Invincible)
@@ -136,7 +135,6 @@ namespace Work.Agents.Code
 
                 StatusValue.OnstateusChangeEvent?.Invoke(effect.type, true); // 효과 적용 이벤트 호출
                 // 효과 적용 로직 (예: 스턴, 화상 등)
-                Debug.Log($"Applied status effect: {effect.type}");
             }
         }
 

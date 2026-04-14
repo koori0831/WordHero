@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Work.Players.Code;
 using Work.Weapons.Code;
 
@@ -53,7 +53,6 @@ namespace Work.Interaction.Code
 
         public void Interact(GameObject interactor)
         {
-            if (_weapon == null) return;
 
             if (interactor.TryGetComponent(out Player player))
             {

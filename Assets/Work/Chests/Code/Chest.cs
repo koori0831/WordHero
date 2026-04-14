@@ -18,6 +18,7 @@ namespace Work.Chests.Code
 
     public class Chest : MonoBehaviour, IInteractable
     {
+
         [SerializeField] private Transform chestHeadTransform;
         [SerializeField] private Renderer inBoxRenderer;
 

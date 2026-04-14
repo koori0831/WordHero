@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8341408017969900907}
   - component: {fileID: 5755552723666153047}
-  - component: {fileID: 6525841462351959984}
+  - component: {fileID: 5305200461665546781}
   m_Layer: 0
   m_Name: Stage1
   m_TagString: Untagged
@@ -72,7 +72,7 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: e9a256501433fa3479470646c9190b78, type: 2}
   m_BuildHeightMesh: 0
---- !u!114 &6525841462351959984
+--- !u!114 &5305200461665546781
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -81,11 +81,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 414583663356309601}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66f9ca5099364c94688e744a0d08964e, type: 3}
+  m_Script: {fileID: 11500000, guid: c6c42717b2e84d44f8f5774dc40d4d4e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.Stages.Code.Stage
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Stages.Code.BattleStage
   spawnPoint: {fileID: 7853238836786003160}
-  doorPoints:
+  <doorPoints>k__BackingField:
   - {fileID: 9025851079646406451}
   - {fileID: 700979511590867165}
 --- !u!1 &1461102716385919464
