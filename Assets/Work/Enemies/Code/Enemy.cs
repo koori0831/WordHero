@@ -7,6 +7,7 @@ using UnityEngine.AI;
 using Work.Agents.Code;
 using Work.Core.RequestInjectors;
 using Work.Core.Utils.EventBus;
+using Work.Goods.Code;
 using Work.Information.Code;
 using Work.Players.Code;
 
@@ -122,6 +123,7 @@ namespace Work.Enemies.Code
 
         public override void Die()
         {
+            Bus<OnAddGoldEvent>.Raise(new OnAddGoldEvent(5));
             base.Die();
             _stateChangeChannel.SendEventMessage(EnemyState.Death);
         }
