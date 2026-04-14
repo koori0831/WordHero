@@ -17,8 +17,10 @@ public class WeaponImprintMenuTest : MonoBehaviour
     [SerializeField] private WeaponMenuTest weaponMenu;
     [SerializeField] private Image selectedWeaponIcon;
     [SerializeField] private TMP_Text primarySkillNameText;
+    [SerializeField] private TMP_Text primarySkillSpText;
     [SerializeField] private TMP_Text primarySkillDescriptionText;
     [SerializeField] private TMP_Text secondarySkillNameText;
+    [SerializeField] private TMP_Text secondarySkillSpText;
     [SerializeField] private TMP_Text secondarySkillDescriptionText;
     [SerializeField] private TMP_Text triggerDescriptionText;
 
@@ -281,17 +283,21 @@ public class WeaponImprintMenuTest : MonoBehaviour
         WeaponDataSO weaponData = _selectedWeapon != null ? _selectedWeapon.Data : null;
 
         SetText(primarySkillNameText, weaponData?.PrimarySkill?.SkillName, "스킬 1: 없음");
-        SetText(primarySkillDescriptionText, weaponData?.PrimarySkill?.SkillDescription, "설명 없음");
+        SetSkillSpText(primarySkillSpText, weaponData?.PrimarySkill != null ? weaponData.PrimarySkill.Cost : (int?)null);
+        SetText(primarySkillDescriptionText, weaponData?.PrimarySkill?.SkillDescription, string.Empty);
         SetText(secondarySkillNameText, weaponData?.SecondarySkill?.SkillName, "스킬 2: 없음");
-        SetText(secondarySkillDescriptionText, weaponData?.SecondarySkill?.SkillDescription, "설명 없음");
+        SetSkillSpText(secondarySkillSpText, weaponData?.SecondarySkill != null ? weaponData.SecondarySkill.Cost : (int?)null);
+        SetText(secondarySkillDescriptionText, weaponData?.SecondarySkill?.SkillDescription, string.Empty);
         SetText(triggerDescriptionText, weaponData?.TriggerDescription, "트리거 설명 없음");
     }
 
     private void ClearWeaponInfoTexts()
     {
         SetText(primarySkillNameText, string.Empty, string.Empty);
+        SetSkillSpText(primarySkillSpText, null);
         SetText(primarySkillDescriptionText, string.Empty, string.Empty);
         SetText(secondarySkillNameText, string.Empty, string.Empty);
+        SetSkillSpText(secondarySkillSpText, null);
         SetText(secondarySkillDescriptionText, string.Empty, string.Empty);
         SetText(triggerDescriptionText, string.Empty, string.Empty);
     }
@@ -302,6 +308,14 @@ public class WeaponImprintMenuTest : MonoBehaviour
             return;
 
         target.text = string.IsNullOrWhiteSpace(value) ? fallback : value;
+    }
+
+    private static void SetSkillSpText(TMP_Text target, int? spCost)
+    {
+        if (target == null)
+            return;
+
+        target.text = spCost.HasValue ? $"{spCost.Value} SP" : string.Empty;
     }
 
     private void UpdateSlotText(ImprintType type, ImprintWordSO word, string label)
