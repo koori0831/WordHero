@@ -70,6 +70,16 @@ namespace Work.Agents.Code
             }
         }
 
+        public void Heal(int healAmount)
+        {
+            int previousHealth = CurrentHealth;
+            CurrentHealth += healAmount;
+            if (CurrentHealth > MaxHealth)
+                CurrentHealth = MaxHealth;
+            OnHealthChanged?.Invoke(previousHealth, CurrentHealth);
+            HpValue.OnHpChanged?.Invoke(CurrentHealth, MaxHealth);
+        }
+
         protected void Die()
         {
             OnDeath?.Invoke();
