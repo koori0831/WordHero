@@ -1,6 +1,8 @@
 ﻿using Code.FSM;
 using GondrLib.Dependencies;
+using NUnit.Framework.Constraints;
 using UnityEngine;
+using Work.AcquireItem.Code;
 using Work.Agents.Code;
 using Work.Core.Utils.EventBus;
 using Work.Input.Code;
@@ -74,11 +76,30 @@ namespace Work.Players.Code
         public void GetWeapon(BaseWeapon weapon)
         {
             _weaponModule.EquipWeapon(weapon);
+            Bus<OnGetItemEvent>.Raise(new OnGetItemEvent(weapon.Data.WeaponName, "무기", Color.red));
         }
 
         public void GetImprintWord(ImprintWordSO imprintWord, int amount)
         {
             _imprintWordInventory.AddImprintWord(imprintWord, amount);
+            string type = "각인";
+            Color color = Color.white;
+            switch (imprintWord.Type)
+            {
+                case ImprintType.Attack:
+                    type = "공격";
+                    color = Color.blue;
+                    break;
+                case ImprintType.Stat:
+                    type = "능력";
+                    color = Color.purple;
+                    break;
+                case ImprintType.Effect:
+                    type = "효과";
+                    color = ColorUtility.TryParseHtmlString("#009A19", out Color effectColor) ? effectColor : Color.white;
+                    break;
+            }
+            Bus<OnGetItemEvent>.Raise(new OnGetItemEvent(imprintWord.DisplayName, type, color));
         }
 
         public void ChangeState(string stateKey)
