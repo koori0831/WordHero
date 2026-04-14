@@ -15,10 +15,11 @@ MonoBehaviour:
   SkillName: "\uB0C9\uAE30 \uBC1C\uC0B0"
   SkillDescription: "\uC8FC\uC704\uB85C \uB0C9\uAE30\uB97C \uBFDC\uC5B4\uB0B4, \uC801\uB4E4\uC744
     \uC77C\uC2DC\uC801\uC73C\uB85C \uC5BC\uB9BD\uB2C8\uB2E4."
-  SkillIcon: {fileID: 21300000, guid: 803a8e6db01b73e44a63f88acf438cc0, type: 3}
-  Cost: 0
+  SkillIcon: {fileID: 21300000, guid: 0e91b459f04d89c43a4b047f117d9436, type: 3}
+  Cost: 2
   AnimParam: {fileID: 11400000, guid: 550e20d6bc770674e9f541d5b8a376d8, type: 2}
   Effects:
+  - rid: 5220572792870404215
   - rid: 7069608252854501492
   - rid: 2148152267635163833
   - rid: 7069608376354996514
@@ -41,6 +42,11 @@ MonoBehaviour:
         TargetLayer:
           serializedVersion: 2
           m_Bits: 256
+    - rid: 5220572792870404215
+      type: {class: CameraImpulseEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        impulseForce: 1
+        impulseDuration: 3
     - rid: 7069608252854501492
       type: {class: AoEStatusEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
       data:

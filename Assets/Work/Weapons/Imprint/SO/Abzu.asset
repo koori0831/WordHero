@@ -13,26 +13,25 @@ MonoBehaviour:
   m_Name: Abzu
   m_EditorClassIdentifier: Assembly-CSharp::Work.Weapons.Imprint.Code.ImprintWordSO
   DisplayName: "\uC544\uD504\uC218"
-  Type: 2
+  Type: 1
   Icon: {fileID: 21300000, guid: 2c04f4986ebc72e48a8b0c3eb2e42db2, type: 3}
   Description: "\uC544\uD504\uC218\uC758 \uB118\uCE58\uB294 \uC0DD\uBA85\uB825."
   Effects:
-  - rid: 5220572634136445262
+  - rid: 5220572791793254627
   references:
     version: 2
     RefIds:
-    - rid: 5220572634136445262
-      type: {class: AoEStatusEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+    - rid: 5220572791793254627
+      type: {class: RandomExcuteSkillEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
       data:
-        Radius: 2
-        StatusEffect:
-          type: 503
-          isInfinite: 0
-          Duration: 4
-          TickInterval: 0
-          Value: 1.5
-          timer: 0
-          tickTimer: 0
-        TargetLayer:
-          serializedVersion: 2
-          m_Bits: 128
+        PossibleEffects:
+        - rid: 5220572791793254628
+        - rid: 5220572791793254629
+    - rid: 5220572791793254628
+      type: {class: PlayerHPAddEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        HPAddAmount: 30
+    - rid: 5220572791793254629
+      type: {class: SkillPointAddEffect, ns: Work.Weapons.Skill.SkillEffects.Code, asm: Assembly-CSharp}
+      data:
+        EnergyAddAmount: 0.3

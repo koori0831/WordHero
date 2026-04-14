@@ -37,7 +37,7 @@ namespace Work.Interaction.Code
 
             for (int i = 0; i < colliders.Length; i++)
             {
-                IInteractable interactable = colliders[i].GetComponent<IInteractable>();
+                IInteractable interactable = colliders[i].GetComponentInParent<IInteractable>();
                 if (interactable == null) continue;
 
                 float sqrDistance = (colliders[i].transform.position - center).sqrMagnitude;
