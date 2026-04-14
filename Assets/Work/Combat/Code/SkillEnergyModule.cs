@@ -69,7 +69,6 @@ namespace Work.Combat.Code
         {
             cost+= evt.amount;
             EnergyContainer += evt.amount;
-            Debug.Log($"{EnergyContainer.Energy} : Energy / {cost} : TestCost");
             EnergyContainer.OnChangedEvent?.Invoke();
         }
 

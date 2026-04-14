@@ -9,14 +9,12 @@ namespace Work.MainEntrance.Code
 {
     public class Entrance : MonoBehaviour, IInteractable
     {
-        public bool CanInteract => !_isInteracting;
 
         private bool _isInteracting;
 
         public void Interact(GameObject interactor)
         {
-            if (!CanInteract) return;
-
+            if(_isInteracting) return;
             _isInteracting = true;
             Bus<OnFadeCompletedEvent>.Events += OnFadeCompleted;
             Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));

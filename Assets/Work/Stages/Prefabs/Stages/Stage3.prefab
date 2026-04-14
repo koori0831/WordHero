@@ -164,8 +164,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 472492089012588035}
-  - component: {fileID: 5536858123798844787}
   - component: {fileID: 4265264744074245596}
+  - component: {fileID: 7358319269391117409}
   m_Layer: 0
   m_Name: Stage3
   m_TagString: Untagged
@@ -196,23 +196,6 @@ Transform:
   - {fileID: 2704166851616038854}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5536858123798844787
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3808239909500269980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66f9ca5099364c94688e744a0d08964e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.Stages.Code.Stage
-  spawnPoint: {fileID: 7346972596061920644}
-  doorPoints:
-  - {fileID: 2222693136183613699}
-  - {fileID: 1406388099705473460}
-  - {fileID: 2043127934641928537}
 --- !u!114 &4265264744074245596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,6 +228,23 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 9f203fc0828f3254ebf00ad0591005a1, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &7358319269391117409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808239909500269980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6c42717b2e84d44f8f5774dc40d4d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Stages.Code.BattleStage
+  spawnPoint: {fileID: 7346972596061920644}
+  <doorPoints>k__BackingField:
+  - {fileID: 2222693136183613699}
+  - {fileID: 1406388099705473460}
+  - {fileID: 2043127934641928537}
 --- !u!1 &3817137113121362163
 GameObject:
   m_ObjectHideFlags: 0

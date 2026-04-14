@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Work.Players.Code;
 using Work.Weapons.Code;
 
@@ -6,7 +6,6 @@ namespace Work.Interaction.Code
 {
     public class DroppedWeaponInteractable : MonoBehaviour, IInteractable
     {
-        public bool CanInteract => _weapon != null;
 
         [SerializeField] private float pickupColliderRadius = 0.8f;
 
@@ -29,7 +28,6 @@ namespace Work.Interaction.Code
 
         public void Interact(GameObject interactor)
         {
-            if (!CanInteract) return;
 
             if (interactor.TryGetComponent(out Player player))
             {
