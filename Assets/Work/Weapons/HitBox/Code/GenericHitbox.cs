@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Alchemy.Inspector;
+using System.Collections.Generic;
 using UnityEngine;
 using Work.Core.Utils.EventBus;
 using Work.Weapons.Imprint.Code;
@@ -12,9 +13,20 @@ namespace Work.Weapons.HitBox.Code
 
         public LayerMask TargetLayer;
         public bool DestroyOnHit = true;
+        public bool DestroyOnStart = true;
+        [ShowIf(nameof(DestroyOnStart))]
+        public float DestroyDelay = 5f;
 
         [SerializeReference]
         public List<IHitEffect> OnHitEffects = new List<IHitEffect>();
+
+        private void Start()
+        {
+            if (DestroyOnStart)
+            {
+                Destroy(gameObject.transform.root.gameObject, DestroyDelay);
+            }
+        }
 
         private void OnTriggerEnter(Collider other)
         {
