@@ -23,7 +23,7 @@ namespace Work.AcquireItem.Code
             colorImage.color = new Color(colorImage.color.r, colorImage.color.g, colorImage.color.b, 0);
             backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0);
             _timer = lifeTime;
-            SetAlpha(true,0.5f);
+            SetAlpha(true,0.3f);
         }
 
         public void SetAlpha(bool inActiveTrue, float duration)

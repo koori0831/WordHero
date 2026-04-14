@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Work.Core.Utils.EventBus;
 
 namespace Work.Goods.Code
 {
     public record struct OnGetGoldEvent : IEvent;
     public record struct FloatReturnValue(float Value) : IReturnValue;
+    public record struct OnAddGoldEvent(int Amount) : IEvent;
 
     public class GoodsManager : MonoBehaviour
     {
@@ -18,6 +20,19 @@ namespace Work.Goods.Code
         {
             Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Events += HandleTryDecreaseGoldEvent;
             Bus<OnGetGoldEvent, FloatReturnValue>.Events += HandleOnGetGoldEvent;
+            Bus<OnAddGoldEvent>.Events += HandleOnAddGoldEvent;
+        }
+
+        private void OnDestroy()
+        {
+            Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Events -= HandleTryDecreaseGoldEvent;
+            Bus<OnGetGoldEvent, FloatReturnValue>.Events -= HandleOnGetGoldEvent;
+            Bus<OnAddGoldEvent>.Events -= HandleOnAddGoldEvent;
+        }
+
+        private void HandleOnAddGoldEvent(OnAddGoldEvent evt)
+        {
+            AddCoin(evt.Amount);
         }
 
         private BooleanReturnValue HandleTryDecreaseGoldEvent(TryDecreaseGoldEvent evt)
