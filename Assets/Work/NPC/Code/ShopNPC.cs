@@ -14,7 +14,7 @@ namespace Work.NPC.Code
         {
             bool isTrue = Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Raise(new TryDecreaseGoldEvent(_resetCoin)).Value;
             if (isTrue)
-                shop.ResetTables();
+                shop.SetTables();
         }
     }
 }

@@ -28,12 +28,6 @@ namespace Work.Shops.Code
             SetTables();
         }
 
-        private void Update()
-        {
-            if(Keyboard.current.kKey.wasPressedThisFrame)
-                SetTables();
-        }
-
         public void SetTables()
         {
             ResetTables();
