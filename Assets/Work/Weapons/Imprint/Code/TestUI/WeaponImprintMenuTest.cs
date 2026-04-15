@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -324,7 +324,7 @@ public class WeaponImprintMenuTest : MonoBehaviour
             return;
 
         text.text = word != null
-            ? $"{label}: {word.DisplayName}"
+            ? $"{label}: {word.Name}"
             : $"{label}: 비어있음";
     }
 }

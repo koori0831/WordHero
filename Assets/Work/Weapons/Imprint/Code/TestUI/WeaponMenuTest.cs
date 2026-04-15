@@ -1,4 +1,4 @@
-using LitMotion;
+﻿using LitMotion;
 using LitMotion.Extensions;
 using TMPro;
 using UnityEngine;
@@ -76,7 +76,7 @@ public class WeaponMenuTest : MonoBehaviour
         if (_primaryWeapon != null)
         {
             primaryWeaponButton.onClick.Invoke();
-            primaryWeaponName.text = _primaryWeapon.WeaponName;
+            primaryWeaponName.text = _primaryWeapon.Name;
             primaryWeaponButton.interactable = true;
         }
         else
@@ -89,7 +89,7 @@ public class WeaponMenuTest : MonoBehaviour
         // Secondary Weapon Setup
         if (_secondaryWeapon != null)
         {
-            secondaryWeaponName.text = _secondaryWeapon.WeaponName;
+            secondaryWeaponName.text = _secondaryWeapon.Name;
             secondaryWeaponButton.interactable = true;
         }
         else
@@ -142,8 +142,8 @@ public class WeaponMenuTest : MonoBehaviour
         _selectedWeapon = _primaryWeaponInstance;
         ImprintButton.interactable = _selectedWeapon != null;
         ImprintButton.gameObject.SetActive(_selectedWeapon != null);
-        selectedWeaponName.text = _primaryWeapon.WeaponName;
-        selectedWeaponDesc.text = _primaryWeapon.WeaponDescription;
+        selectedWeaponName.text = _primaryWeapon.Name;
+        selectedWeaponDesc.text = _primaryWeapon.Description;
         if (weaponIcon != null)
         {
             weaponIcon.gameObject.SetActive(true);
@@ -157,8 +157,8 @@ public class WeaponMenuTest : MonoBehaviour
         _selectedWeapon = _secondaryWeaponInstance;
         ImprintButton.interactable = _selectedWeapon != null;
         ImprintButton.gameObject.SetActive(_selectedWeapon != null);
-        selectedWeaponName.text = _secondaryWeapon.WeaponName;
-        selectedWeaponDesc.text = _secondaryWeapon.WeaponDescription;
+        selectedWeaponName.text = _secondaryWeapon.Name;
+        selectedWeaponDesc.text = _secondaryWeapon.Description;
         if (weaponIcon != null)
         {
             weaponIcon.gameObject.SetActive(true);

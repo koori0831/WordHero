@@ -34,7 +34,7 @@ namespace Work.Enemies.Code
         {
             Enemy.StateChangeChannel.SendEventMessage(EnemyState.Hit);
             Bus<EnemyHitEvent>.Raise(new EnemyHitEvent(_owner.gameObject, _owner.InfoData));
-            Bus<GetSkillEnergyEvent>.Raise(new GetSkillEnergyEvent(damageAmount / 300f));
+            Bus<GetSkillEnergyEvent>.Raise(new GetSkillEnergyEvent(0.02f));
             base.TakeDamage(damageAmount);
         }
 
