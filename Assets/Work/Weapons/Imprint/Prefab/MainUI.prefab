@@ -277,7 +277,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00018310547}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &513707900124166760
@@ -307,15 +307,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
   m_Padding:
-    m_Left: 20
-    m_Right: 0
+    m_Left: -20
+    m_Right: 35
     m_Top: 30
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 30
-  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -330,7 +330,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5153576880141051378}
   - component: {fileID: 6231196031801528958}
-  - component: {fileID: 4559794936148869626}
   m_Layer: 5
   m_Name: ImprintInventory
   m_TagString: Untagged
@@ -370,38 +369,6 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!114 &4559794936148869626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272837296451746796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4db894b267bc380469e35a0211a87a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponImprintMenuTest
-  mainCanvas: {fileID: 0}
-  inventoryCanvas: {fileID: 0}
-  playerWeaponModule: {fileID: 0}
-  statButton: {fileID: 0}
-  effectButton: {fileID: 0}
-  attackButton: {fileID: 0}
-  inventoryContainer: {fileID: 0}
-  statWordPrefab: {fileID: 0}
-  effectWordPrefab: {fileID: 0}
-  attackWordPrefab: {fileID: 0}
-  backButton: {fileID: 0}
-  weaponMenu: {fileID: 0}
-  selectedWeaponIcon: {fileID: 0}
-  primarySkillNameText: {fileID: 0}
-  primarySkillSpText: {fileID: 0}
-  primarySkillDescriptionText: {fileID: 0}
-  secondarySkillNameText: {fileID: 0}
-  secondarySkillSpText: {fileID: 0}
-  secondarySkillDescriptionText: {fileID: 0}
-  triggerDescriptionText: {fileID: 0}
 --- !u!1 &384941294929333231
 GameObject:
   m_ObjectHideFlags: 0
@@ -1962,9 +1929,9 @@ MonoBehaviour:
   effectButton: {fileID: 8093786047862033945}
   attackButton: {fileID: 595846609510852740}
   inventoryContainer: {fileID: 3019324796691021999}
-  statWordPrefab: {fileID: 4117063467646315164, guid: f1a6593b334a7114fbac202a52c46be9, type: 3}
-  effectWordPrefab: {fileID: 4117063467646315164, guid: 6c2273f6506d05546a5d3d3385482cf3, type: 3}
-  attackWordPrefab: {fileID: 4117063467646315164, guid: 0350bdd42ee284842ba1e67e19428f72, type: 3}
+  statWordPrefab: {fileID: 4117063467646315164, guid: 180dce9b1d28e2f4290ffd9eb9a6131c, type: 3}
+  effectWordPrefab: {fileID: 4117063467646315164, guid: 9557bf5da335e4143849cfe2a6b191e0, type: 3}
+  attackWordPrefab: {fileID: 4117063467646315164, guid: f1a6593b334a7114fbac202a52c46be9, type: 3}
   backButton: {fileID: 2439115585904488970}
   weaponMenu: {fileID: 2896275845229428829}
   selectedWeaponIcon: {fileID: 2199409015462394978}
@@ -6022,7 +5989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
   m_RenderShadows: 0
-  m_RequiresDepthTextureOption: 2
+  m_RequiresDepthTextureOption: 1
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 1
   m_Cameras: []

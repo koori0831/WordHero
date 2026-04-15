@@ -21,7 +21,6 @@ namespace Work.Weapons.Code
         public Vector3 HandlerPosition;
         public Vector3 HandlerRotation;
         public Sprite WeaponIcon;
-        public float AttackSpeed;
         public SkillDataSO PrimarySkill;
         public SkillDataSO SecondarySkill;
         public AnimatorOverrideController AnimSet;
