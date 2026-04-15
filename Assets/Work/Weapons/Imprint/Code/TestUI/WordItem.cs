@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Work.Weapons.Imprint.Code;
@@ -26,6 +26,6 @@ public class WordItem : MonoBehaviour
     public void SetWord(ImprintWordSO word, int amount)
     {
         Word = word;
-        SetWord(word.DisplayName, $"{word.Description}\n보유: x{amount}");
+        SetWord(word.Name, $"{word.Description}\n보유: x{amount}");
     }
 }
