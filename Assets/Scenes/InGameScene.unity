@@ -1028,6 +1028,69 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &872972845
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 872972847}
+  - component: {fileID: 872972846}
+  m_Layer: 0
+  m_Name: StageManager (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &872972846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872972845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 794e69d3bc384784ea6d6b43340c0b78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Stages.Code.StageManager
+  woodStageList:
+  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
+  stoneStageList:
+  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
+  - {fileID: 2905176065629170627, guid: 7029e6c706f61cb47b211fc3adb25839, type: 3}
+  ironStageList:
+  - {fileID: 7358319269391117409, guid: 30ca2cfdd8230194e97061de68107e4c, type: 3}
+  goldStageList:
+  - {fileID: 2643103229925175713, guid: bfed9e39178b95d40a6d171892deffe3, type: 3}
+  - {fileID: 6382264295906920825, guid: aa2fe5c4a684d2d48bc167f5346105b9, type: 3}
+  questionStageList:
+  - {fileID: 5146958597725209091, guid: fda7911c295f68845bebafbf7fa2c817, type: 3}
+  shopStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
+  bossStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
+  openingShopCountList: 0200000008000000
+  bossStageCount: 12
+  doorPrefab: {fileID: 1900758950306850552, guid: 007076170283b694aad3c2eadc27e326, type: 3}
+  chestPrefab: {fileID: 9201234575408641520, guid: 876da7fd808d4aa44ac9b543b6ed25af, type: 3}
+  chestSpawnDistance: 2.39
+--- !u!4 &872972847
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 872972845}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &974976566 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4652058468683246344, guid: f3389dc56f67c9740805d6cbe7a76697, type: 3}
@@ -2720,83 +2783,6 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 3031926473864358528, guid: 24fdd75d90819054bbd503d57a11e822, type: 3}
   m_PrefabInstance: {fileID: 1962424027}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2105448220
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2105448222}
-  - component: {fileID: 2105448221}
-  m_Layer: 0
-  m_Name: StageManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2105448221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2105448220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 794e69d3bc384784ea6d6b43340c0b78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.Stages.Code.StageManager
-  woodStageList:
-  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  stoneStageList:
-  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  - {fileID: 2905176065629170627, guid: 7029e6c706f61cb47b211fc3adb25839, type: 3}
-  - {fileID: 7358319269391117409, guid: 30ca2cfdd8230194e97061de68107e4c, type: 3}
-  - {fileID: 2643103229925175713, guid: bfed9e39178b95d40a6d171892deffe3, type: 3}
-  - {fileID: 6382264295906920825, guid: aa2fe5c4a684d2d48bc167f5346105b9, type: 3}
-  ironStageList:
-  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  - {fileID: 2905176065629170627, guid: 7029e6c706f61cb47b211fc3adb25839, type: 3}
-  - {fileID: 7358319269391117409, guid: 30ca2cfdd8230194e97061de68107e4c, type: 3}
-  - {fileID: 2643103229925175713, guid: bfed9e39178b95d40a6d171892deffe3, type: 3}
-  - {fileID: 6382264295906920825, guid: aa2fe5c4a684d2d48bc167f5346105b9, type: 3}
-  goldStageList:
-  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  - {fileID: 2905176065629170627, guid: 7029e6c706f61cb47b211fc3adb25839, type: 3}
-  - {fileID: 7358319269391117409, guid: 30ca2cfdd8230194e97061de68107e4c, type: 3}
-  - {fileID: 2643103229925175713, guid: bfed9e39178b95d40a6d171892deffe3, type: 3}
-  - {fileID: 6382264295906920825, guid: aa2fe5c4a684d2d48bc167f5346105b9, type: 3}
-  questionStageList:
-  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  - {fileID: 2905176065629170627, guid: 7029e6c706f61cb47b211fc3adb25839, type: 3}
-  - {fileID: 7358319269391117409, guid: 30ca2cfdd8230194e97061de68107e4c, type: 3}
-  - {fileID: 2643103229925175713, guid: bfed9e39178b95d40a6d171892deffe3, type: 3}
-  - {fileID: 6382264295906920825, guid: aa2fe5c4a684d2d48bc167f5346105b9, type: 3}
-  shopStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
-  bossStage: {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  openingShopCountList: 0100000014000000
-  bossStageCount: 12
-  doorPrefab: {fileID: 1900758950306850552, guid: 007076170283b694aad3c2eadc27e326, type: 3}
-  chestPrefab: {fileID: 9201234575408641520, guid: 876da7fd808d4aa44ac9b543b6ed25af, type: 3}
-  chestSpawnDistance: 2.39
---- !u!4 &2105448222
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2105448220}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &389568611267044686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3234,7 +3220,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 7314624840109374875}
   - {fileID: 1124120032}
-  - {fileID: 2105448222}
   - {fileID: 786360881}
   - {fileID: 1540623735}
   - {fileID: 140690625}
@@ -3244,3 +3229,4 @@ SceneRoots:
   - {fileID: 1073750215}
   - {fileID: 832176118}
   - {fileID: 449963814}
+  - {fileID: 872972847}
