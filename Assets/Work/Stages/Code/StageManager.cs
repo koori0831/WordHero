@@ -69,13 +69,13 @@ namespace Work.Stages.Code
                 { DoorType.Boss, new List<Stage> { bossStage } }
             };
 
-            Bus<CombatStageClearEvent>.Events += HandleCombatStageClearEvent;
+            Bus<OnChestCreatEvent>.Events += HandleChestCreatEventEvent;
             GeneratStage(DoorType.Wood);
         }
 
         private void OnDestroy()
         {
-            Bus<CombatStageClearEvent>.Events -= HandleCombatStageClearEvent;
+            Bus<OnChestCreatEvent>.Events -= HandleChestCreatEventEvent;
         }
 
         public Stage GetStage(DoorType doorType) // 특정 상황에서 상점이나 보스 스테이지를 반환하도록 수정해야함
@@ -114,31 +114,15 @@ namespace Work.Stages.Code
             CurrentStage.EnterStage(this);
         }
 
-        private void HandleCombatStageClearEvent(CombatStageClearEvent evt)
+        private void HandleChestCreatEventEvent(OnChestCreatEvent evt)
         {
-            if (!IsNormalCombatStage(_currentStageDoorType))
-            {
-                Bus<StageClearEvent>.Raise(new StageClearEvent());
-                return;
-            }
-
             if (_currentStageChest != null || CurrentStage == null)
                 return;
 
-            if (chestPrefab == null || _player == null)
-            {
-                Debug.LogWarning("Chest spawn skipped: chestPrefab or Player injection is missing. Opening door directly.");
-                Bus<StageClearEvent>.Raise(new StageClearEvent());
-                return;
-            }
-
-            if (!(CurrentStage is BattleStage battleStage)) return;
-
-            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
-
-            //카메라 줌인 효과 추가 예정
-            CameraController.Instance.PlayImpulse(1f, 0.2f);
             Bus<GetSkillEnergyEvent>.Raise(new GetSkillEnergyEvent(1f));
+
+
+            CameraController.Instance.PlayImpulse(1f, 0.2f);
             Time.timeScale = 0.4f; //카메라 줌인 효과에 맞춰 시간 조정
 
             CameraController.Instance.ZoomIn(11f, duration: 0.25f, onComplete: () =>
@@ -146,40 +130,50 @@ namespace Work.Stages.Code
                 Time.timeScale = 1f;
                 CameraController.Instance.ZoomIn(1f, duration: 1f, onComplete: () =>
                 {
-                    Vector3 spawnPosition = _player.transform.position + _player.transform.forward * chestSpawnDistance; //여기 땅위 랜덤위치로 조정 
-                    spawnPosition.y = _player.transform.position.y;
-
-                    Quaternion spawnRotation = Quaternion.LookRotation(_player.transform.position - spawnPosition);
-
-                    _currentStageChest = Instantiate(chestPrefab, spawnPosition, spawnRotation, CurrentStage.transform);
-                    _currentStageChest.Initialize(ConvertDoorTypeToChestType(_currentStageDoorType));
-
-                    Vector3 sumVec = Vector3.zero;
-
-                    foreach (Door door in battleStage.Doors)
-                    {
-                        sumVec += door.transform.position;
-                    }
-
-                    sumVec /= battleStage.Doors.Count;
-                    _currentStageChest.cameraMovePosition = GetCameraPlaneBottomCenter(battleStage.Doors.ConvertAll(d => d.transform), Camera.main.transform);
-
-                    CameraController.Instance.MoveTo(_currentStageChest.transform.position, duration: 0.6f);
-                    CameraController.Instance.ZoomIn(15f, duration: 0.7f, onComplete: () =>
-                    {
-                        CameraController.Instance.ZoomIn(1f, duration: 1f, onComplete: () =>
-                        {
-                            CameraController.Instance.ResetPosition(duration: 0.5f);
-                            CameraController.Instance.ResetZoom(duration: 0.5f, onComplete: () =>
-                            {
-                                Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
-                            });
-                        });
-                    });
-
+                    if (CurrentStage is BattleStage battleStage)
+                        CreatChest(battleStage.Doors, _player.transform);
                 });
             });
         }
+
+        public void DestroyChest()
+        {
+            if (_currentStageChest != null)
+            {
+                Destroy(_currentStageChest.gameObject);
+                _currentStageChest = null;
+            }
+        }
+
+        public void CreatChest(List<Door> doors, Transform targetTrm)
+        {
+            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
+
+            //카메라 줌인 효과 추가 예정
+            Vector3 spawnPosition = targetTrm.position + targetTrm.forward * chestSpawnDistance; //여기 땅위 랜덤위치로 조정 
+            spawnPosition.y = targetTrm.position.y;
+
+            Quaternion spawnRotation = Quaternion.LookRotation(targetTrm.position - spawnPosition);
+
+            _currentStageChest = Instantiate(chestPrefab, spawnPosition, spawnRotation, CurrentStage.transform);
+            _currentStageChest.Initialize(ConvertDoorTypeToChestType(_currentStageDoorType));
+
+            _currentStageChest.cameraMovePosition = GetCameraPlaneBottomCenter(doors.ConvertAll(d => d.transform), Camera.main.transform);
+
+            CameraController.Instance.MoveTo(_currentStageChest.transform.position, duration: 0.6f);
+            CameraController.Instance.ZoomIn(15f, duration: 0.7f, onComplete: () =>
+            {
+                CameraController.Instance.ZoomIn(1f, duration: 1f, onComplete: () =>
+                {
+                    CameraController.Instance.ResetPosition(duration: 0.5f);
+                    CameraController.Instance.ResetZoom(duration: 0.5f, onComplete: () =>
+                    {
+                        Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+                    });
+                });
+            });
+        }
+
 
         public Vector3 GetCameraPlaneBottomCenter(
     List<Transform> targets,

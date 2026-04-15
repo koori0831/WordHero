@@ -16,7 +16,7 @@ namespace Work.Stages.Code
 
     }
 
-    public struct CombatStageClearEvent : IEvent
+    public struct OnChestCreatEvent : IEvent
     {
 
     }

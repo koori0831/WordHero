@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Work.Core.Utils.EventBus;
@@ -29,8 +29,8 @@ namespace Work.Stages.Code
     {
         private Stage _stage;
         private DoorType _doorType;
-        private bool _isInteract;
-        private bool _isOpen;
+        public bool IsInteract { get; private set; } = false;
+        public bool IsOpen { get; private set; } = false;
 
         [SerializeField]
         private List<DoorModel> doorModels;
@@ -74,14 +74,14 @@ namespace Work.Stages.Code
         public void Interact(GameObject interactor)
         {
             Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
-            _isInteract = true;
+            IsInteract = true;
             _stage.HandleGoNextRoom(interactor, _doorType);
         }
 
 
         public void Open()
         {
-            _isOpen = true;
+            IsOpen = true;
             if (_currentDoorObject == null)
             {
                 Debug.LogWarning($"[Door] Open called but current door object is null on '{name}'.", this);
