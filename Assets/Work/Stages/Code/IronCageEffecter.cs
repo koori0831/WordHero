@@ -13,6 +13,7 @@ namespace Work.Stages.Code
         [SerializeField] private AnimationCurve cageMoveAnimationCurve;
         [SerializeField] private float duration;
         [SerializeField] private float maxYPos;
+        [SerializeField] private float changeValue = 4f;
         [SerializeField] private Transform ironCage_1, ironCage_2;
 
         [SerializeField] private bool nextDoor;
@@ -43,7 +44,7 @@ namespace Work.Stages.Code
 
                 Transform target = ironCage_1;
 
-                if (currentYPos >= 4f)
+                if (currentYPos >= changeValue)
                 {
                     ironCage_1.gameObject.SetActive(false);
                     ironCage_2.gameObject.SetActive(true);
@@ -94,7 +95,7 @@ namespace Work.Stages.Code
 
                 Transform target = ironCage_1;
 
-                if (currentYPos >= 4f)
+                if (currentYPos >= changeValue)
                 {
                     ironCage_1.gameObject.SetActive(false);
                     ironCage_2.gameObject.SetActive(true);

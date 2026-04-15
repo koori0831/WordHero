@@ -609,6 +609,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door
       objectReference: {fileID: 0}
+    - target: {fileID: 5124738656834202892, guid: 007076170283b694aad3c2eadc27e326, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1135,30 +1139,16 @@ MonoBehaviour:
   stoneStageList:
   - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
   - {fileID: 2905176065629170627, guid: 7029e6c706f61cb47b211fc3adb25839, type: 3}
-  - {fileID: 7358319269391117409, guid: 30ca2cfdd8230194e97061de68107e4c, type: 3}
-  - {fileID: 2643103229925175713, guid: bfed9e39178b95d40a6d171892deffe3, type: 3}
-  - {fileID: 6382264295906920825, guid: aa2fe5c4a684d2d48bc167f5346105b9, type: 3}
   ironStageList:
-  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  - {fileID: 2905176065629170627, guid: 7029e6c706f61cb47b211fc3adb25839, type: 3}
   - {fileID: 7358319269391117409, guid: 30ca2cfdd8230194e97061de68107e4c, type: 3}
-  - {fileID: 2643103229925175713, guid: bfed9e39178b95d40a6d171892deffe3, type: 3}
-  - {fileID: 6382264295906920825, guid: aa2fe5c4a684d2d48bc167f5346105b9, type: 3}
   goldStageList:
-  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  - {fileID: 2905176065629170627, guid: 7029e6c706f61cb47b211fc3adb25839, type: 3}
-  - {fileID: 7358319269391117409, guid: 30ca2cfdd8230194e97061de68107e4c, type: 3}
   - {fileID: 2643103229925175713, guid: bfed9e39178b95d40a6d171892deffe3, type: 3}
   - {fileID: 6382264295906920825, guid: aa2fe5c4a684d2d48bc167f5346105b9, type: 3}
   questionStageList:
-  - {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  - {fileID: 2905176065629170627, guid: 7029e6c706f61cb47b211fc3adb25839, type: 3}
-  - {fileID: 7358319269391117409, guid: 30ca2cfdd8230194e97061de68107e4c, type: 3}
-  - {fileID: 2643103229925175713, guid: bfed9e39178b95d40a6d171892deffe3, type: 3}
-  - {fileID: 6382264295906920825, guid: aa2fe5c4a684d2d48bc167f5346105b9, type: 3}
+  - {fileID: 5146958597725209091, guid: fda7911c295f68845bebafbf7fa2c817, type: 3}
   shopStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
-  bossStage: {fileID: 5305200461665546781, guid: 5f2445fbe97b95e41945935048c20520, type: 3}
-  openingShopCountList: 0100000014000000
+  bossStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
+  openingShopCountList: 0200000008000000
   bossStageCount: 12
   doorPrefab: {fileID: 1900758950306850552, guid: 007076170283b694aad3c2eadc27e326, type: 3}
   chestPrefab: {fileID: 9201234575408641520, guid: 876da7fd808d4aa44ac9b543b6ed25af, type: 3}
