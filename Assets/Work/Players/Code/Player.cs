@@ -76,7 +76,7 @@ namespace Work.Players.Code
         public void GetWeapon(BaseWeapon weapon)
         {
             _weaponModule.EquipWeapon(weapon);
-            Bus<OnGetItemEvent>.Raise(new OnGetItemEvent(weapon.Data.WeaponName, "무기", Color.red));
+            Bus<OnGetItemEvent>.Raise(new OnGetItemEvent(weapon.Data.Name, "무기", Color.red));
         }
 
         public void GetImprintWord(ImprintWordSO imprintWord, int amount)
@@ -99,7 +99,7 @@ namespace Work.Players.Code
                     color = ColorUtility.TryParseHtmlString("#009A19", out Color effectColor) ? effectColor : Color.white;
                     break;
             }
-            Bus<OnGetItemEvent>.Raise(new OnGetItemEvent(imprintWord.DisplayName, type, color));
+            Bus<OnGetItemEvent>.Raise(new OnGetItemEvent(imprintWord.Name, type, color));
         }
 
         public void ChangeState(string stateKey)

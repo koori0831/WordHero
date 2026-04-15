@@ -3,12 +3,14 @@ using Work.Core.Utils.EventBus;
 using Work.Goods.Code;
 using Work.Information.Code;
 using Work.Players.Code;
+using Work.Weapons.Code;
+using Work.Weapons.Imprint.Code;
 
 namespace Work.Shops.Code
 {
     public class ShopTable : MonoBehaviour, IInteractable
     {
-        private ItemData _currentItem;
+        private ShopItemData _currentItem;
         private GameObject _model;
         [SerializeField] private Transform modelTrm;
         [SerializeField] private Vector3 size;
@@ -16,12 +18,14 @@ namespace Work.Shops.Code
 
         private bool _isInBoundry;
 
+        public bool IsTableBuy { get; private set; } = false;
+
         private void OnTriggerEnter(Collider other)
         {
             if (_currentItem == null) return;
             if (other.gameObject.tag == "Player")
             {
-                shopItemDescUI.HandleShowItemInfo(_currentItem.item.ModelInfo.Name, _currentItem.item.Price);
+                shopItemDescUI.HandleShowItemInfo(_currentItem.item.Name, _currentItem.Price);
                 _isInBoundry = true;
             }
         }
@@ -35,13 +39,14 @@ namespace Work.Shops.Code
             }
         }
 
-        public void SetItemData(ItemData data)
+        public void SetItemData(ShopItemData data)
         {
+            if (IsTableBuy) return;
             _currentItem = data;
 
             if (_model != null)
                 Destroy(_model);
-            _model = Instantiate(_currentItem.item.ModelInfo.Model, modelTrm);
+            _model = Instantiate(_currentItem.model, modelTrm);
         }
 
         public void ResetTable() // 아이템을 구매하였을떄 
@@ -51,25 +56,23 @@ namespace Work.Shops.Code
                 Destroy(_model);
             if (_currentItem != null)
             {
-                _currentItem.isShowItem = true;
                 _currentItem = null;
             }
         }
 
         public void Interact(GameObject interactor)
         {
-            _currentItem.isSoldItem = true;
-            bool value = Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Raise(new TryDecreaseGoldEvent(_currentItem.item.Price)).Value;
+            bool value = Bus<TryDecreaseGoldEvent, BooleanReturnValue>.Raise(new TryDecreaseGoldEvent(_currentItem.Price)).Value;
             if (value)
             {
                 Player player = interactor.GetComponent<Player>();
 
-                if (_currentItem.item.ModelInfo is ShopWeaponDataSO data)
-                    player.GetWeapon(Instantiate(data.BaseWeapon));
-                if(_currentItem.item.ModelInfo is ShopImprintWordDataSO imprintData)
-                    player.GetImprintWord(imprintData.ImprintWord,1);
+                if (_currentItem is ShopWeaponItemData weaponItemData)
+                    player.GetWeapon(Instantiate(weaponItemData.Weapon));
+                if(_currentItem is ShopWordItemData wordItemData)
+                    player.GetImprintWord(wordItemData.item as ImprintWordSO,1);
 
-
+                IsTableBuy = true;
                 ResetTable();
             }
         }

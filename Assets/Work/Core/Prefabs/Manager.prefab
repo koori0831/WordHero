@@ -81,7 +81,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2527d068ad16fe74698e34ee01b1c528, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Goods.Code.GoodsManager
-  <Gold>k__BackingField: 10000
+  <Gold>k__BackingField: 0
 --- !u!1 &2571728175169172004
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageTextGenerator
   damageTextPrefab: {fileID: 6823600838129405638, guid: 16771169edb272842a5ee5f8148c1f31, type: 3}
   offset: {x: 0.5, y: 0.3}
+  yOffset: 2
 --- !u!1 &3966936792428817135
 GameObject:
   m_ObjectHideFlags: 0

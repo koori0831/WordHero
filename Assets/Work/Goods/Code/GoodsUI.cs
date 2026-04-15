@@ -11,6 +11,7 @@ namespace Work.Goods.Code
 
     public class GoodsUI : MonoBehaviour
     {
+        [SerializeField] private RectTransform root;
         [SerializeField] private Image barImage;
         [SerializeField] private TextMeshProUGUI coinText;
 
@@ -36,12 +37,12 @@ namespace Work.Goods.Code
                 else
                     coinText.text = evt.coinAmount.ToString();
 
-                gameObject.SetActive(true);
+                root.gameObject.SetActive(true);
                 barImage.rectTransform.sizeDelta.Set(coinText.rectTransform.sizeDelta.x + 100f, 1);
             }
             else
             {
-                gameObject.SetActive(false);
+                root.gameObject.SetActive(false);
             }
         }
     }
