@@ -73,6 +73,7 @@ namespace Work.Stages.Code
 
         public void Interact(GameObject interactor)
         {
+            if (IsOpen == false || IsInteract == true) return;
             Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
             IsInteract = true;
             _stage.HandleGoNextRoom(interactor, _doorType);

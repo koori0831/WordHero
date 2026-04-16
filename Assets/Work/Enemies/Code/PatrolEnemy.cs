@@ -13,12 +13,5 @@ namespace Work.Enemies.Code
             SetBlackboardVariable<float>(BTVariables.PatrolRange, patrolRange);
             SetBlackboardVariable<int>(BTVariables.PatrolPointCount, patrolPointCount);
         }
-
-        protected override void OnDrawGizmos()
-        {
-            base.OnDrawGizmos();
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(transform.position, patrolRange);
-        }
     }
 }
