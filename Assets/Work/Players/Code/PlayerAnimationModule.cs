@@ -1,4 +1,5 @@
 using Code.FSM;
+using Unity.InferenceEngine;
 using UnityEngine;
 using Work.Agents.Code;
 
@@ -94,6 +95,11 @@ namespace Work.Players.Code
         public void AnimationEvent(AnimationEventType eventType)
         {
             _stateModule?.TriggerEvent(eventType);
+        }
+
+        public void SetAgentLayer(int layer)
+        {
+            _owner.gameObject.layer = layer;
         }
     }
 }
