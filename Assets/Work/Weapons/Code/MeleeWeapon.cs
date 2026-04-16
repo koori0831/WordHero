@@ -15,7 +15,10 @@ namespace Work.Weapons.Code
             Vector3 spawnPosition = Owner.transform.TransformPoint(hitBox.LocalPosition);
             Quaternion prefabRotation = Quaternion.Euler(hitBox.LocalRotation);
             Quaternion spawnRotation = Owner.transform.rotation * prefabRotation;
-            Instantiate(hitBox.HitBoxPrefab, spawnPosition, spawnRotation);
+
+            GameObject hitBoxInstance = Instantiate(hitBox.HitBoxPrefab, spawnPosition, spawnRotation);
+            if (hitBox.SetParentToCaster)
+                hitBoxInstance.transform.SetParent(Owner.transform);
         }
     }
 }

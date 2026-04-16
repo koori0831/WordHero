@@ -28,6 +28,7 @@ namespace Work.Weapons.Code
         public GameObject HitBoxPrefab;
         public Vector3 LocalPosition;
         public Vector3 LocalRotation;
+        public bool SetParentToCaster;
     }
 
     public enum ImprintType
