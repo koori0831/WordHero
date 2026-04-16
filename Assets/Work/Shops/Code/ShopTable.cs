@@ -16,7 +16,6 @@ namespace Work.Shops.Code
         [SerializeField] private Vector3 size;
         [SerializeField] private ShopItemDescUI shopItemDescUI;
 
-        private bool _isInBoundry;
 
         public bool IsTableBuy { get; private set; } = false;
 
@@ -26,7 +25,6 @@ namespace Work.Shops.Code
             if (other.gameObject.tag == "Player")
             {
                 shopItemDescUI.HandleShowItemInfo(_currentItem.item.Name, _currentItem.Price);
-                _isInBoundry = true;
             }
         }
 
@@ -35,7 +33,6 @@ namespace Work.Shops.Code
             if (other.gameObject.tag == "Player")
             {
                 shopItemDescUI.HandleHideItemInfo();
-                _isInBoundry = false;
             }
         }
 

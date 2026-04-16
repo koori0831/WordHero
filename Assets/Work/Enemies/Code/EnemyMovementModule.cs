@@ -142,6 +142,8 @@ namespace Work.Enemies.Code
         {
             Vector3 direction = target - _enemy.transform.position;
             direction.y = 0;
+
+            if (direction == Vector3.zero) return Quaternion.identity;
             Quaternion lookRotation = Quaternion.LookRotation(direction.normalized);
 
             if (isSmooth)
