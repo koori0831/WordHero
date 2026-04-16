@@ -841,8 +841,8 @@ Camera:
   m_GameObject: {fileID: 786360878}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1155,7 +1155,7 @@ MonoBehaviour:
     - rid: 7069608348635889812
       type: {class: WeaponCollectAction, ns: Work.Interaction.Code, asm: Assembly-CSharp}
       data:
-        WeaponPrefab: {fileID: 3400902430725211925, guid: 95d3f65f2b783a54ab6126af532d09fb, type: 3}
+        WeaponPrefab: {fileID: 3400902430725211925, guid: f424b940a00309443bb8443deace66fe, type: 3}
 --- !u!4 &1044007722
 Transform:
   m_ObjectHideFlags: 0
@@ -1379,6 +1379,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6092646236493593909, guid: 76cead50f4ad58c419cb342b34833d30, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 14138bc59d3c11d4bb4de2d822bff4d8, type: 2}
     - target: {fileID: 7010587486262687911, guid: 76cead50f4ad58c419cb342b34833d30, type: 3}
       propertyPath: m_LocalPosition.x
       value: 29.13
@@ -2471,6 +2475,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 418914358856860886, guid: 850899446e42028408e5ab58646f0787, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 617933028144892755, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2574,6 +2582,10 @@ PrefabInstance:
     - target: {fileID: 3019324796691021999, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3019324796691021999, guid: 850899446e42028408e5ab58646f0787, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00015258789
       objectReference: {fileID: 0}
     - target: {fileID: 3032636185048218527, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: m_SizeDelta.x
