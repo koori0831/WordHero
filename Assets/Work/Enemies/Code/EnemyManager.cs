@@ -21,7 +21,6 @@ namespace Work.Enemies.Code
             for (int i = 0; i < enemyCount; i++)
             {
                 Enemy enemy = currentEnemies[i];
-                currentEnemies.Add(enemy);
                 enemy.Init();
                 enemy.EnemyInfoData.HpValue.OnDead += HandleDeadEvent;
             }
