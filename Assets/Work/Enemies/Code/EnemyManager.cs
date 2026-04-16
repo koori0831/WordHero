@@ -29,6 +29,7 @@ namespace Work.Enemies.Code
 
         private void HandleDeadEvent()
         {
+            Debug.Log("Enemy Dead");
             for (int i = currentEnemies.Count - 1; i >= 0; i--)
             {
                 if (currentEnemies[i] == null)
@@ -43,6 +44,7 @@ namespace Work.Enemies.Code
                     break;
                 }
             }
+            Debug.Log("Current Enemies Count: " + currentEnemies.Count);
 
             if (IsCanMoveRoom)
             {
