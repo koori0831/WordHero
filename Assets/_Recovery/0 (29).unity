@@ -841,8 +841,8 @@ Camera:
   m_GameObject: {fileID: 786360878}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -865,7 +865,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 50
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -892,7 +892,7 @@ Transform:
   m_GameObject: {fileID: 786360878}
   serializedVersion: 2
   m_LocalRotation: {x: 0.17367509, y: 0.82325596, z: -0.41928878, w: 0.34100378}
-  m_LocalPosition: {x: 16.655201, y: 26.102348, z: 11.8248005}
+  m_LocalPosition: {x: 16.073044, y: 27.234684, z: 12.406957}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1379,10 +1379,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 6092646236493593909, guid: 76cead50f4ad58c419cb342b34833d30, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 22100000, guid: 14138bc59d3c11d4bb4de2d822bff4d8, type: 2}
     - target: {fileID: 7010587486262687911, guid: 76cead50f4ad58c419cb342b34833d30, type: 3}
       propertyPath: m_LocalPosition.x
       value: 29.13
@@ -1911,7 +1907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 886251e9a18ece04ea8e61686c173e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachinePositionComposer
-  CameraDistance: 30
+  CameraDistance: 31.4
   DeadZoneDepth: 0
   Composition:
     ScreenPosition: {x: 0, y: 0}
@@ -1954,7 +1950,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 50
+    FieldOfView: 60
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -1982,7 +1978,7 @@ Transform:
   m_GameObject: {fileID: 1540623732}
   serializedVersion: 2
   m_LocalRotation: {x: 0.17367509, y: 0.82325596, z: -0.41928878, w: 0.34100378}
-  m_LocalPosition: {x: 16.655201, y: 26.102348, z: 11.8248005}
+  m_LocalPosition: {x: 16.073044, y: 27.234684, z: 12.406957}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2475,10 +2471,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 418914358856860886, guid: 850899446e42028408e5ab58646f0787, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 617933028144892755, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2582,10 +2574,6 @@ PrefabInstance:
     - target: {fileID: 3019324796691021999, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3019324796691021999, guid: 850899446e42028408e5ab58646f0787, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.00015258789
       objectReference: {fileID: 0}
     - target: {fileID: 3032636185048218527, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: m_SizeDelta.x

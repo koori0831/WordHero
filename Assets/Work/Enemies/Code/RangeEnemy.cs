@@ -13,12 +13,5 @@ namespace Work.Enemies.Code
             SetBlackboardVariable<float>(BTVariables.MoveDistance, moveDistance);
             SetBlackboardVariable<float>(BTVariables.DistanceToKeepRange, distanceToKeepRange);
         }
-
-        protected override void OnDrawGizmos()
-        {
-            base.OnDrawGizmos();
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position, moveDistance);
-        }
     }
 }
