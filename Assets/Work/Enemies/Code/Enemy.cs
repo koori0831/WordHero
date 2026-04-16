@@ -82,6 +82,9 @@ namespace Work.Enemies.Code
             SetBlackboardVariable<float>(BTVariables.DetectRange, detectRange);
             SetBlackboardVariable<float>(BTVariables.AttackRange, GetModule<EnemyAttackModule>(true).AttackRange);
             SetBlackboardVariable<float>(BTVariables.ChaseRange, chaseRange);
+
+            //여기서 발동
+            _stateChangeChannel.SendEventMessage(EnemyState.NotFindTarget);
         }
 
         public BlackboardVariable<T> GetBlackboardVariable<T>(BTVariables variableName)
@@ -108,18 +111,6 @@ namespace Work.Enemies.Code
 
             Debug.LogError($"Variable {variableName} not found in BehaviorAgent.");
         }
-
-
-
-        protected virtual void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, detectRange);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, chaseRange);
-        }
-
-
 
         public override void Die()
         {
