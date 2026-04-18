@@ -16,6 +16,8 @@ namespace Work.Weapons.HitBox.Code
         public bool DestroyOnStart = true;
         [ShowIf(nameof(DestroyOnStart))]
         public float DestroyDelay = 5f;
+        [ShowIf(nameof(DestroyOnStart))]
+        public bool DestroyParent = true;
 
         [SerializeReference]
         public List<IHitEffect> OnHitEffects = new List<IHitEffect>();
@@ -24,7 +26,14 @@ namespace Work.Weapons.HitBox.Code
         {
             if (DestroyOnStart)
             {
-                Destroy(gameObject.transform.root.gameObject, DestroyDelay);
+                if (DestroyParent)
+                {
+                    Destroy(gameObject.transform.parent.gameObject, DestroyDelay);
+                }
+                else
+                {
+                    Destroy(gameObject, DestroyDelay);
+                }
             }
         }
 

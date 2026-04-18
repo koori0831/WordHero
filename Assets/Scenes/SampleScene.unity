@@ -334,12 +334,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83adc114953db6d4189b5596e04f5d2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Enemies.Code.EnemyManager
-  enemies:
-  - {fileID: 9164105385634030702, guid: f9032862950149a4ba120a39614a4ee3, type: 3}
-  enemySpawnPoints:
-  - {fileID: 1679346907}
-  onePointInMaxEnemyCount: 20
-  spawnRadius: 8
 --- !u!4 &157059985
 Transform:
   m_ObjectHideFlags: 0
@@ -12795,6 +12789,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 717331326996313731, guid: 850899446e42028408e5ab58646f0787, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1508017224733671386, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -12875,6 +12873,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.000061035156
       objectReference: {fileID: 0}
+    - target: {fileID: 3032636185048218527, guid: 850899446e42028408e5ab58646f0787, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3200771598207227898, guid: 850899446e42028408e5ab58646f0787, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3452038602697272369, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -12903,6 +12909,10 @@ PrefabInstance:
       propertyPath: playerWeaponModule
       value: 
       objectReference: {fileID: 1548946375}
+    - target: {fileID: 5758296602119583665, guid: 850899446e42028408e5ab58646f0787, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6956819363832284537, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: playerWeaponModule
       value: 
@@ -12944,6 +12954,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7960137397246535378, guid: 850899446e42028408e5ab58646f0787, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9157153333631840455, guid: 850899446e42028408e5ab58646f0787, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
