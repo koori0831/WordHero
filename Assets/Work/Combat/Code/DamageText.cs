@@ -10,7 +10,6 @@ namespace Work.Combat.Code
         private float _damage;
 
         [SerializeField] private TMPro.TextMeshPro _textMeshPro;
-        [SerializeField] private Ease ease = Ease.InOutBack;
         [SerializeField] private TMP_FontAsset criticalFontAsset, playerFontAsset;
 
 
