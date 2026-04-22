@@ -1,16 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Work.Core.Utils.EventBus;
 using Work.Stages.Code;
 
 namespace Work.Enemies.Code
 {
+
+    public record struct OnEnemySpawnedEvent(List<Enemy> enemyList) : IEvent;
+
     public class EnemyManager : MonoBehaviour
     {
         private List<Enemy> currentEnemies = new List<Enemy>();
 
         public bool IsCanMoveRoom => currentEnemies.Count <= 0;
+
+        // 적 위치 잡는거
+        // 적 스폰하는거
+        // 처음에는 방에 어느정도 문 앞쪽에만 존재하고
+        // 걔네들 죽이다보면 뒤에 
 
         public void Start()
         {
