@@ -8,7 +8,7 @@ using Work.Enemies.Code;
 namespace Work.Indicator.Code
 {
     /// <summary>
-    /// 모든 적 인디케이터를 중앙에서 생성, 제거 및 업데이트 관리하는 시스템
+    /// EnemyManager의 리스트를 참조하여 모든 적 인디케이터를 동기화 관리하는 시스템
     /// </summary>
     public class IndicatorManager : MonoBehaviour
     {
@@ -18,55 +18,61 @@ namespace Work.Indicator.Code
 
         [Inject] private PoolManagerSO _poolManager;
 
+        private List<Enemy> _monitoredEnemyList;
         private readonly Dictionary<Enemy, EnemyIndicator> _indicatorMap = new Dictionary<Enemy, EnemyIndicator>();
         private readonly List<EnemyIndicator> _activeIndicators = new List<EnemyIndicator>();
 
         private void Start()
         {
-            Bus<OnEnemySpawnEvent>.Events += HandleEnemySpawn;
-            Bus<OnEnemyDestroyEvent>.Events += HandleEnemyDestroy;
-
-            // 이미 씬에 존재하는 적들이 있을 경우를 대비한 초기화
-            Enemy[] existingEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-            foreach (Enemy enemy in existingEnemies)
-            {
-                AddIndicator(enemy);
-            }
+            // EnemyManager에서 리스트를 전달해주는 이벤트를 구독
+            Bus<OnEnemySpawnedEvent>.Events += HandleEnemyListReceived;
         }
 
         private void OnDestroy()
         {
-            Bus<OnEnemySpawnEvent>.Events -= HandleEnemySpawn;
-            Bus<OnEnemyDestroyEvent>.Events -= HandleEnemyDestroy;
+            Bus<OnEnemySpawnedEvent>.Events -= HandleEnemyListReceived;
+        }
+
+        private void HandleEnemyListReceived(OnEnemySpawnedEvent evt)
+        {
+            _monitoredEnemyList = evt.enemyList;
         }
 
         private void Update()
         {
-            // 모든 활성 인디케이터를 중앙에서 일괄 업데이트 (성능 최적화)
-            int count = _activeIndicators.Count;
-            for (int i = 0; i < count; i++)
+            if (_monitoredEnemyList == null) return;
+
+            // 1. 리스트 기반으로 신규 적 인디케이터 추가
+            int enemyCount = _monitoredEnemyList.Count;
+            for (int i = 0; i < enemyCount; i++)
             {
-                _activeIndicators[i].UpdateIndicator();
+                Enemy enemy = _monitoredEnemyList[i];
+                if (enemy != null && !_indicatorMap.ContainsKey(enemy))
+                {
+                    AddIndicator(enemy);
+                }
             }
-        }
 
-        private void HandleEnemySpawn(OnEnemySpawnEvent evt)
-        {
-            AddIndicator(evt.Enemy);
-        }
+            // 2. 동기화 및 업데이트 (리스트에 없는 적의 인디케이터 제거)
+            for (int i = _activeIndicators.Count - 1; i >= 0; i--)
+            {
+                EnemyIndicator indicator = _activeIndicators[i];
+                Enemy target = indicator.TargetEnemy;
 
-        private void HandleEnemyDestroy(OnEnemyDestroyEvent evt)
-        {
-            RemoveIndicator(evt.Enemy);
+                // 적이 죽었거나 리스트에서 사라졌다면 제거
+                if (target == null || target.IsDead || !_monitoredEnemyList.Contains(target))
+                {
+                    RemoveIndicatorAtIndex(i);
+                }
+                else
+                {
+                    indicator.UpdateIndicator();
+                }
+            }
         }
 
         private void AddIndicator(Enemy enemy)
         {
-            if (enemy == null || _indicatorMap.ContainsKey(enemy))
-            {
-                return;
-            }
-
             IPoolable poolable = _poolManager.Pop(_indicatorPoolItem);
             EnemyIndicator indicator = poolable as EnemyIndicator;
 
@@ -80,14 +86,15 @@ namespace Work.Indicator.Code
             }
         }
 
-        private void RemoveIndicator(Enemy enemy)
+        private void RemoveIndicatorAtIndex(int index)
         {
-            if (_indicatorMap.TryGetValue(enemy, out EnemyIndicator indicator))
+            EnemyIndicator indicator = _activeIndicators[index];
+            if (indicator.TargetEnemy != null)
             {
-                _activeIndicators.Remove(indicator);
-                _indicatorMap.Remove(enemy);
-                _poolManager.Push(indicator);
+                _indicatorMap.Remove(indicator.TargetEnemy);
             }
+            _activeIndicators.RemoveAt(index);
+            _poolManager.Push(indicator);
         }
     }
 }

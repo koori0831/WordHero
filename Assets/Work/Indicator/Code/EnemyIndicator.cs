@@ -14,6 +14,8 @@ namespace Work.Indicator.Code
         public GameObject GameObject => gameObject;
 
         private Enemy _targetEnemy;
+        public Enemy TargetEnemy => _targetEnemy;
+
         private RectTransform _rectTransform;
         private Camera _mainCamera;
         private float _margin = 50f;
@@ -32,12 +34,12 @@ namespace Work.Indicator.Code
 
         /// <summary>
         /// 적의 위치에 따라 인디케이터의 위치와 회전값을 업데이트.
-        /// Manager에서 일괄 호출하여 성능을 관리.
         /// </summary>
         public void UpdateIndicator()
         {
             if (_targetEnemy == null || _targetEnemy.IsDead)
             {
+                if (gameObject.activeSelf) gameObject.SetActive(false);
                 return;
             }
 
@@ -50,18 +52,12 @@ namespace Work.Indicator.Code
 
             if (isOffScreen)
             {
-                if (gameObject.activeSelf == false)
-                {
-                    gameObject.SetActive(true);
-                }
+                if (gameObject.activeSelf == false) gameObject.SetActive(true);
                 UpdatePosition(screenPos);
             }
             else
             {
-                if (gameObject.activeSelf == true)
-                {
-                    gameObject.SetActive(false);
-                }
+                if (gameObject.activeSelf == true) gameObject.SetActive(false);
             }
         }
 
@@ -79,7 +75,6 @@ namespace Work.Indicator.Code
             float cos = dir.x / dir.magnitude;
             float sin = dir.y / dir.magnitude;
             
-            // cos이 0에 매우 가까운 경우 처리
             float m = Mathf.Approximately(cos, 0) ? sin * 1000000f : sin / cos;
             float screenRatio = screenCenter.y / screenCenter.x;
 
