@@ -116,6 +116,7 @@ namespace Work.Enemies.Code
         {
             Bus<OnAddGoldEvent>.Raise(new OnAddGoldEvent(5));
             base.Die();
+            IsDead = true;
             _stateChangeChannel.SendEventMessage(EnemyState.Death);
         }
     }
