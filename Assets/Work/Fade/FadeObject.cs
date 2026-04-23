@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Work.Core.Utils.EventBus;
 using Work.ETC.LocationUI.Code;
+using Work.Input.Code;
 
 namespace Work.Fade
 {
@@ -32,7 +33,7 @@ namespace Work.Fade
         private void HandleFadeEvent(OnFadeEvent evt)
         {
             _handle.TryCancel();
-
+            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
             if (evt.isFadeIn)
             {
                 _handle = LMotion.Create(0f, 1f, fadeDuration)
@@ -54,6 +55,7 @@ namespace Work.Fade
                     {
                        
                         Bus<OnFadeCompletedEvent>.Raise(new OnFadeCompletedEvent(evt.isFadeIn));
+                        Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
                     })
                     .Bind(a =>
                     {
