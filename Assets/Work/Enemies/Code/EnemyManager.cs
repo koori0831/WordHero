@@ -14,7 +14,7 @@ namespace Work.Enemies.Code
     public class EnemyManager : MonoBehaviour
     {
         [SerializeField] private EnemyWaveDataSO waveData;
-        [SerializeField] private BoxCollider spawnArea;
+        [SerializeField] private List<BoxCollider> spawnAreas = new List<BoxCollider>();
         [SerializeField] private float minEnemyDistance = 2f;
         [SerializeField] private float entranceAvoidRadius = 5f;
         [SerializeField] private float navMeshSampleRadius = 3f;
@@ -54,9 +54,9 @@ namespace Work.Enemies.Code
                 return;
             }
 
-            if (spawnArea == null)
+            if (HasValidSpawnArea() == false)
             {
-                Debug.LogError($"[EnemyManager] Spawn area is missing on '{name}'.", this);
+                Debug.LogError($"[EnemyManager] Spawn areas are missing on '{name}'.", this);
                 return;
             }
 
@@ -158,10 +158,13 @@ namespace Work.Enemies.Code
 
         private bool TryGetSpawnPosition(out Vector3 spawnPosition)
         {
-            Bounds bounds = spawnArea.bounds;
-
             for (int i = 0; i < spawnTryCount; i++)
             {
+                BoxCollider spawnArea = GetRandomSpawnArea();
+                if (spawnArea == null)
+                    break;
+
+                Bounds bounds = spawnArea.bounds;
                 Vector3 randomPoint = new Vector3(
                     UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
                     UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
@@ -184,6 +187,44 @@ namespace Work.Enemies.Code
 
             spawnPosition = default;
             return false;
+        }
+
+        private bool HasValidSpawnArea()
+        {
+            for (int i = 0; i < spawnAreas.Count; i++)
+            {
+                if (spawnAreas[i] != null)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private BoxCollider GetRandomSpawnArea()
+        {
+            int validAreaCount = 0;
+            for (int i = 0; i < spawnAreas.Count; i++)
+            {
+                if (spawnAreas[i] != null)
+                    validAreaCount++;
+            }
+
+            if (validAreaCount <= 0)
+                return null;
+
+            int randomIndex = UnityEngine.Random.Range(0, validAreaCount);
+            for (int i = 0; i < spawnAreas.Count; i++)
+            {
+                if (spawnAreas[i] == null)
+                    continue;
+
+                if (randomIndex == 0)
+                    return spawnAreas[i];
+
+                randomIndex--;
+            }
+
+            return null;
         }
 
         private bool IsTooCloseToOtherEnemy(Vector3 position)
