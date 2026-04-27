@@ -58,6 +58,8 @@ namespace Work.Stages.Code
 
         private void Awake()
         {
+            
+
             stages = new Dictionary<DoorType, List<Stage>>
             {
                 { DoorType.Wood, woodStageList },
