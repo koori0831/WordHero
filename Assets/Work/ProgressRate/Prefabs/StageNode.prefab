@@ -185,8 +185,8 @@ RectTransform:
   - {fileID: 8012656797956512125}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -205,7 +205,20 @@ MonoBehaviour:
   nodeImage: {fileID: 8531107917337094653}
   highlightImage: {fileID: 7263363276311737438}
   iconImage: {fileID: 6107717067039148379}
-  normalSprite: {fileID: 6645427384175290001, guid: 4dffe6eab57ca4e4ba2f967307bd1c29, type: 3}
+  lockedSprite: {fileID: 3351748369286481944, guid: 4dffe6eab57ca4e4ba2f967307bd1c29, type: 3}
+  iconConfigs:
+  - type: 0
+    icon: {fileID: 567328745045655870, guid: 4dffe6eab57ca4e4ba2f967307bd1c29, type: 3}
+  - type: 1
+    icon: {fileID: 2750705142841656183, guid: 4dffe6eab57ca4e4ba2f967307bd1c29, type: 3}
+  - type: 2
+    icon: {fileID: -7053939661997144990, guid: 4dffe6eab57ca4e4ba2f967307bd1c29, type: 3}
+  - type: 3
+    icon: {fileID: 1892523670701107293, guid: 4dffe6eab57ca4e4ba2f967307bd1c29, type: 3}
+  - type: 4
+    icon: {fileID: 405182146505222058, guid: 4dffe6eab57ca4e4ba2f967307bd1c29, type: 3}
+  - type: 6
+    icon: {fileID: 2785564300681498144, guid: 4dffe6eab57ca4e4ba2f967307bd1c29, type: 3}
   bossSprite: {fileID: 21300000, guid: 3563c26f39220f4409514929be083788, type: 3}
   bossScale: {x: 1.3, y: 1.3, z: 1}
   completedColor: {r: 0, g: 1, b: 0, a: 1}

@@ -155,7 +155,7 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &60948498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,7 +174,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 30
+  m_Spacing: 15
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -283,12 +283,16 @@ MonoBehaviour:
   contentRect: {fileID: 60948497}
   viewportRect: {fileID: 1634998529}
   nodePrefab: {fileID: 1391739639715678303, guid: 1fff6feb02dea7e4992566bd60f460aa, type: 3}
-  linePrefab: {fileID: 810260892976073467, guid: 1350070fe5998d1439186937a7a2045a, type: 3}
+  dotPrefab: {fileID: 810260892976073467, guid: 1350070fe5998d1439186937a7a2045a, type: 3}
   totalStageCount: 10
+  dotsPerLink: 3
   animationDuration: 0.5
   focusDuration: 0.6
+  dotAnimationDuration: 0.2
   delayBetweenAnimations: 0.3
   autoCloseDelay: 1.2
+  bossPreviewWaitTime: 1
+  returnToStartDuration: 1.5
 --- !u!20 &192263267 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 2337624499006809085, guid: f3389dc56f67c9740805d6cbe7a76697, type: 3}
@@ -1639,6 +1643,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1311534296}
   - component: {fileID: 1311534297}
+  - component: {fileID: 1311534298}
   m_Layer: 0
   m_Name: Test
   m_TagString: Untagged
@@ -1675,6 +1680,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Work.ProgressRate.Code.StageProgressTester
   testNextRoomType: 0
   fadeWaitTime: 1
+--- !u!114 &1311534298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1311534295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38cdc931f30525c4fb08a7cd0dea9bd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Indicator.Code.IndicatorTestManager
+  _spawnCount: 15
+  _spawnRange: 40
+  _moveSpeed: 10
 --- !u!1 &1383287809
 GameObject:
   m_ObjectHideFlags: 0
