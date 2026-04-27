@@ -9,6 +9,7 @@ using Work.Core.Utils.EventBus;
 using Work.Fade;
 using Work.Input.Code;
 using Work.Players.Code;
+using Work.ProgressRate.Code;
 
 namespace Work.Stages.Code
 {
@@ -58,7 +59,7 @@ namespace Work.Stages.Code
 
         private void Awake()
         {
-            
+            Bus<PlayInitialProgressMapEvent>.Raise(new PlayInitialProgressMapEvent());
 
             stages = new Dictionary<DoorType, List<Stage>>
             {
