@@ -23,7 +23,7 @@ namespace Work.Fade
             _handle = LMotion.Create(1f, 0f, fadeDuration)
                     .Bind(a =>
                     {
-                        Color co = new Color(fadeObject.color.r, fadeObject.color.b, fadeObject.color.g, a);
+                        Color co = new Color(fadeObject.color.r, fadeObject.color.g, fadeObject.color.b, a);
                         fadeObject.color = co;
                     })
                     .AddTo(gameObject);
