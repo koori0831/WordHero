@@ -112,6 +112,7 @@ namespace Work.ProgressRate.Code
             // 먹통 방지: 범위를 벗어나면 즉시 페이드 해제
             if (_currentStageIndex >= totalStageCount) 
             {
+                Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
                 Bus<OnFadeEvent>.Raise(new OnFadeEvent(false));
                 return;
             }

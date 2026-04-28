@@ -59,8 +59,6 @@ namespace Work.Stages.Code
 
         private void Awake()
         {
-            Bus<PlayInitialProgressMapEvent>.Raise(new PlayInitialProgressMapEvent());
-
             stages = new Dictionary<DoorType, List<Stage>>
             {
                 { DoorType.Wood, woodStageList },
@@ -73,12 +71,30 @@ namespace Work.Stages.Code
             };
 
             Bus<OnChestCreatEvent>.Events += HandleChestCreatEventEvent;
-            GenerateStage(DoorType.Wood);
+            Bus<StageProgressMapClosedEvent>.Events += HandleInitialProgressMapClosed;
+        }
+
+        /// <summary>
+        /// 진행도 맵에 시작 연출 요청
+        /// </summary>
+        private void Start()
+        {
+            Bus<PlayInitialProgressMapEvent>.Raise(new PlayInitialProgressMapEvent());
         }
 
         private void OnDestroy()
         {
             Bus<OnChestCreatEvent>.Events -= HandleChestCreatEventEvent;
+            Bus<StageProgressMapClosedEvent>.Events -= HandleInitialProgressMapClosed;
+        }
+
+        /// <summary>
+        /// 스테이지 진행도 맵 닫기
+        /// </summary>
+        private void HandleInitialProgressMapClosed(StageProgressMapClosedEvent evt)
+        {
+            Bus<StageProgressMapClosedEvent>.Events -= HandleInitialProgressMapClosed;
+            GenerateStage(DoorType.Wood);
         }
 
         public Stage GetStage(DoorType doorType) // 특정 상황에서 상점이나 보스 스테이지를 반환하도록 수정해야함
