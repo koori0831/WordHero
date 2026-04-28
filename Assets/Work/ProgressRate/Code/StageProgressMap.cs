@@ -36,11 +36,12 @@ namespace Work.ProgressRate.Code
         [SerializeField] private float bossPreviewWaitTime = 1.2f;
         [SerializeField] private float returnToStartDuration = 2.2f;
 
-        private int _currentStageIndex = -1; // -1: 시작 전, 0: 0번방 진입 중...
+        private int _currentStageIndex = -1; 
         private DoorType _initialRoomType = DoorType.Wood;
         private readonly List<DoorType> _roomHistory = new List<DoorType>();
         private readonly List<StageProgressNode> _nodes = new List<StageProgressNode>();
         private readonly List<List<Image>> _dotGroups = new List<List<Image>>(); 
+        private List<MotionHandle> _dotMotionHandles = new List<MotionHandle>();
         
         private CancellationTokenSource _cts;
 
@@ -77,10 +78,9 @@ namespace Work.ProgressRate.Code
             }
         }
 
-        // --- 시퀀스 1: 게임 최초 시작 연출 (보스 프리뷰) ---
         private void HandleInitialEvent(PlayInitialProgressMapEvent evt)
         {
-            _currentStageIndex = 0; // 이제 0번 방에 막 도착함
+            _currentStageIndex = 0; 
             CancelProcess();
             _cts = new CancellationTokenSource();
             PlayInitialSequenceAsync(_cts.Token).Forget();
@@ -92,26 +92,31 @@ namespace Work.ProgressRate.Code
             mapContainer.SetActive(true);
 
             await WaitLayoutStabilization(ct);
-            SetFocusImmediate(totalStageCount - 1); // 보스부터 시작
+            SetFocusImmediate(totalStageCount - 1); 
 
             await UniTask.Delay(TimeSpan.FromSeconds(bossPreviewWaitTime), cancellationToken: ct);
             await FocusNodeAsync(0, returnToStartDuration, ct);
             await UniTask.Delay(TimeSpan.FromSeconds(0.4f), cancellationToken: ct);
 
             _nodes[0].PlayActivateAnimation(animationDuration);
-            await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + autoCloseDelay), cancellationToken: ct);
             
-            CloseMap();
+            // 인지 시간 대기 후 종료 시퀀스 실행
+            await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + autoCloseDelay), cancellationToken: ct);
+            await CloseMapAsync(ct);
         }
 
-        // --- 시퀀스 2: 스테이지 전환 연출 (OnNextRoomEvent) ---
         private void HandleNextRoomEvent(OnNextRoomEvent evt)
         {
-            // 인덱스 증가 및 역사 기록 (이전 연출이 0이었다면 이제 1로 증가)
-            _currentStageIndex++;
             _roomHistory.Add(evt.nextRoomType);
+            _currentStageIndex++;
             
-            if (_currentStageIndex >= totalStageCount) return;
+            // 먹통 방지: 범위를 벗어나면 즉시 페이드 해제
+            if (_currentStageIndex >= totalStageCount) 
+            {
+                Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
+                Bus<OnFadeEvent>.Raise(new OnFadeEvent(false));
+                return;
+            }
 
             CancelProcess();
             _cts = new CancellationTokenSource();
@@ -124,37 +129,50 @@ namespace Work.ProgressRate.Code
             mapContainer.SetActive(true);
 
             await WaitLayoutStabilization(ct);
-            
-            // 방금 클리어한 노드(nextIndex - 1)에 포커스
             SetFocusImmediate(nextIndex - 1);
 
             await UniTask.Delay(TimeSpan.FromSeconds(delayBetweenAnimations), cancellationToken: ct);
 
-            // 1. 클리어 노드 연출
             _nodes[nextIndex - 1].PlayCompleteAnimation(animationDuration);
             await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + 0.3f), cancellationToken: ct);
 
-            // 2. 점선 이동 및 다음 노드 도착
-            var moveTask = FocusNodeAsync(nextIndex, focusDuration, ct);
-            if (nextIndex - 1 < _dotGroups.Count)
+            if (nextIndex < totalStageCount)
             {
-                List<Image> dots = _dotGroups[nextIndex - 1];
-                float delayPerDot = focusDuration / (dots.Count + 1);
-                for (int i = 0; i < dots.Count; i++)
+                UniTask moveTask = FocusNodeAsync(nextIndex, focusDuration, ct);
+                if (nextIndex - 1 < _dotGroups.Count)
                 {
-                    int dotIndex = i;
-                    LMotion.Create(new Color(1, 1, 1, 0.2f), Color.white, dotAnimationDuration).Bind(c => dots[dotIndex].color = c).AddTo(gameObject);
-                    LMotion.Create(Vector3.one * 0.8f, Vector3.one * 1.3f, dotAnimationDuration * 0.5f).WithLoops(2, LoopType.Yoyo).Bind(s => dots[dotIndex].transform.localScale = s).AddTo(gameObject);
-                    await UniTask.Delay(TimeSpan.FromSeconds(delayPerDot), cancellationToken: ct);
+                    List<Image> dots = _dotGroups[nextIndex - 1];
+                    float delayPerDot = focusDuration / (dots.Count + 1);
+                    for (int i = 0; i < dots.Count; i++)
+                    {
+                        int dotIndex = i;
+                        PlayDotAnimation(dots[dotIndex]);
+                        await UniTask.Delay(TimeSpan.FromSeconds(delayPerDot), cancellationToken: ct);
+                    }
                 }
-            }
-            await moveTask;
+                await moveTask;
 
-            // 3. 진입 노드 점등
-            _nodes[nextIndex].PlayActivateAnimation(animationDuration);
-            await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + autoCloseDelay), cancellationToken: ct);
+                _nodes[nextIndex].PlayActivateAnimation(animationDuration);
+                
+                // 인지 시간 대기 후 종료 시퀀스 실행
+                await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + autoCloseDelay), cancellationToken: ct);
+                await CloseMapAsync(ct);
+            }
+        }
+
+        private async UniTask CloseMapAsync(CancellationToken ct)
+        {
+            // 1. 맵 UI 먼저 비활성화
+            mapContainer.SetActive(false);
             
-            CloseMap();
+            // 2. 스테이지 매니저 등에 맵이 끝났음을 알림 (스테이지 입장 연출 준비 신호)
+            Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
+            
+            // 3. 아주 짧은 대기 시간을 주어 스테이지 로직이 연출을 준비할 틈을 줌
+            await UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: ct);
+            
+            // 4. 그 다음 페이드 아웃(화면 밝아짐) 실행
+            Bus<OnFadeEvent>.Raise(new OnFadeEvent(false));
         }
 
         private void HandleResetEvent(ResetStageProgressEvent evt)
@@ -178,18 +196,11 @@ namespace Work.ProgressRate.Code
                 bool isBoss = (i == totalStageCount - 1);
                 DoorType roomType = i < _roomHistory.Count ? _roomHistory[i] : DoorType.None;
                 
-                // [상태 결정]
                 bool isCompleted;
                 bool isCurrent;
-
-                if (isInitial)
-                {
-                    isCompleted = false;
-                    isCurrent = false;
-                }
+                if (isInitial) { isCompleted = false; isCurrent = false; }
                 else
                 {
-                    // 전환 연출 시작 시점에는 nextIndex - 1 노드가 '현재' 상태로 보여야 함
                     isCompleted = i < _currentStageIndex - 1;
                     isCurrent = i == _currentStageIndex - 1;
                 }
@@ -208,9 +219,26 @@ namespace Work.ProgressRate.Code
                         currentDots[j].transform.SetAsLastSibling();
                         currentDots[j].gameObject.SetActive(true);
                         currentDots[j].color = isDotActive ? Color.white : new Color(1, 1, 1, 0.2f);
+                        currentDots[j].transform.localScale = Vector3.one;
                     }
                 }
             }
+        }
+
+        private void PlayDotAnimation(Image dot)
+        {
+            MotionHandle colorHandle = LMotion.Create(new Color(1, 1, 1, 0.2f), Color.white, dotAnimationDuration)
+                .Bind(color => dot.color = color)
+                .AddTo(gameObject);
+
+            MotionHandle scaleHandle = LMotion.Create(Vector3.one * 0.8f, Vector3.one * 1.3f, dotAnimationDuration * 0.5f)
+                .WithLoops(2, LoopType.Yoyo)
+                .WithOnComplete(() => dot.transform.localScale = Vector3.one)
+                .Bind(scale => dot.transform.localScale = scale)
+                .AddTo(gameObject);
+
+            _dotMotionHandles.Add(colorHandle);
+            _dotMotionHandles.Add(scaleHandle);
         }
 
         private async UniTask WaitLayoutStabilization(CancellationToken ct)
@@ -245,21 +273,25 @@ namespace Work.ProgressRate.Code
             return new Vector2(contentRect.anchoredPosition.x + localDelta.x, contentRect.anchoredPosition.y);
         }
 
-        private void CloseMap()
-        {
-            mapContainer.SetActive(false);
-            Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
-            Bus<OnFadeEvent>.Raise(new OnFadeEvent(false));
-        }
-
         private void CancelProcess()
         {
+            CancelDotMotions();
             if (_cts != null)
             {
                 _cts.Cancel();
                 _cts.Dispose();
                 _cts = null;
             }
+        }
+
+        private void CancelDotMotions()
+        {
+            for (int i = 0; i < _dotMotionHandles.Count; i++)
+            {
+                _dotMotionHandles[i].TryCancel();
+            }
+
+            _dotMotionHandles.Clear();
         }
     }
 }

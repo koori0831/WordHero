@@ -6,6 +6,7 @@ using Work.Chests.Code;
 using Work.Combat.Code;
 using Work.Core.Utils.Cameras;
 using Work.Core.Utils.EventBus;
+using Work.ETC.LocationUI.Code;
 using Work.Fade;
 using Work.Input.Code;
 using Work.Players.Code;
@@ -59,8 +60,6 @@ namespace Work.Stages.Code
 
         private void Awake()
         {
-            Bus<PlayInitialProgressMapEvent>.Raise(new PlayInitialProgressMapEvent());
-
             stages = new Dictionary<DoorType, List<Stage>>
             {
                 { DoorType.Wood, woodStageList },
@@ -73,12 +72,30 @@ namespace Work.Stages.Code
             };
 
             Bus<OnChestCreatEvent>.Events += HandleChestCreatEventEvent;
-            GeneratStage(DoorType.Wood);
+            Bus<StageProgressMapClosedEvent>.Events += HandleInitialProgressMapClosed;
+        }
+
+        /// <summary>
+        /// 진행도 맵에 시작 연출 요청
+        /// </summary>
+        private void Start()
+        {
+            Bus<PlayInitialProgressMapEvent>.Raise(new PlayInitialProgressMapEvent());
         }
 
         private void OnDestroy()
         {
             Bus<OnChestCreatEvent>.Events -= HandleChestCreatEventEvent;
+            Bus<StageProgressMapClosedEvent>.Events -= HandleInitialProgressMapClosed;
+        }
+
+        /// <summary>
+        /// 스테이지 진행도 맵 닫기
+        /// </summary>
+        private void HandleInitialProgressMapClosed(StageProgressMapClosedEvent evt)
+        {
+            Bus<StageProgressMapClosedEvent>.Events -= HandleInitialProgressMapClosed;
+            GenerateStage(DoorType.Wood);
         }
 
         public Stage GetStage(DoorType doorType) // 특정 상황에서 상점이나 보스 스테이지를 반환하도록 수정해야함
@@ -95,17 +112,12 @@ namespace Work.Stages.Code
             return stages[doorType][randomIndex];
         }
 
-        public void GeneratStage(DoorType doorType)
+        public void GenerateStage(DoorType doorType)
         {
             GameObject interactor = CurrentStage?.Interator;
 
             Stage selectedStage = GetStage(doorType);
             if (selectedStage == null) return;
-
-            LMotion.Create(0f, 1f, 0.5f)
-               .WithOnComplete(() => Bus<OnFadeEvent>.Raise(new OnFadeEvent(false)))
-               .Bind(a => { })
-               .AddTo(gameObject);
 
             Stage stage = Instantiate(selectedStage, transform);
             CurrentStage?.ExitStage();
@@ -115,6 +127,7 @@ namespace Work.Stages.Code
             if (interactor != null)
                 interactor.transform.position = CurrentStage.SpawnPoint;
             CurrentStage.EnterStage(this);
+            Bus<PlayLocationUIEvent>.Raise(new PlayLocationUIEvent());
         }
 
         private void HandleChestCreatEventEvent(OnChestCreatEvent evt)
