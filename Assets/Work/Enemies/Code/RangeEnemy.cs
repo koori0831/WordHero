@@ -7,14 +7,11 @@ namespace Work.Enemies.Code
         [SerializeField] private float moveDistance;
         [SerializeField] private float distanceToKeepRange;
 
-        public override bool VariableSetting()
+        public override void VariableSetting()
         {
-            if (base.VariableSetting() == false)
-                return false;
-
+            base.VariableSetting();
             SetBlackboardVariable<float>(BTVariables.MoveDistance, moveDistance);
             SetBlackboardVariable<float>(BTVariables.DistanceToKeepRange, distanceToKeepRange);
-            return true;
         }
     }
 }

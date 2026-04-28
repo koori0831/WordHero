@@ -7,14 +7,11 @@ namespace Work.Enemies.Code
         [SerializeField] protected float patrolRange = 5f;
         [SerializeField] protected int patrolPointCount = 3;
 
-        public override bool VariableSetting()
+        public override void VariableSetting()
         {
-            if (base.VariableSetting() == false)
-                return false;
-
+            base.VariableSetting();
             SetBlackboardVariable<float>(BTVariables.PatrolRange, patrolRange);
             SetBlackboardVariable<int>(BTVariables.PatrolPointCount, patrolPointCount);
-            return true;
         }
     }
 }

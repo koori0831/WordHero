@@ -31,15 +31,9 @@ namespace Work.Enemies.Code
         [SerializeField] protected float chaseRange = 25.0f;
 
         protected Dictionary<BTVariables, SerializableGUID> guids = new Dictionary<BTVariables, SerializableGUID>();
-        private bool _isInitialized;
-        private bool _isVariableSettingCompleted;
 
         public override void Init()
         {
-            if (_isInitialized)
-                return;
-
-            _isInitialized = true;
             BehaviorAgent = GetComponent<BehaviorGraphAgent>();
             NavAgent = GetComponent<NavMeshAgent>();
             Debug.Assert(BehaviorAgent != null, "BehaviorAgent component is missing.");
@@ -51,70 +45,27 @@ namespace Work.Enemies.Code
             EnemyInfoData = enemyInfoData.GetInfo(this);
             InitInfo(EnemyInfoData);
             ModuleAfterInit();
-            TryVariableSetting();
         }
 
         protected void Start()
         {
-            TryVariableSetting(true);
-        }
-
-        private bool TryVariableSetting(bool logError = false)
-        {
-            if (_isVariableSettingCompleted)
-                return true;
-
-            if (BehaviorAgent == null)
-                return false;
-
-            if (TryCacheBlackboardVariables(logError) == false)
-                return false;
-
-            if (TryGetBlackboardVariable(BTVariables.ChangeStateEvent, out BlackboardVariable<ChangeStateEvent> stateEvent) == false || stateEvent.Value == null)
-            {
-                if (logError)
-                    Debug.LogError($"Variable {BTVariables.ChangeStateEvent} not ready in BehaviorAgent.");
-
-                return false;
-            }
-
-            if (VariableSetting() == false)
-                return false;
-
-            _isVariableSettingCompleted = true;
-            _stateChangeChannel.SendEventMessage(EnemyState.NotFindTarget);
-            return true;
-        }
-
-        private bool TryCacheBlackboardVariables(bool logError)
-        {
             foreach (VariableSO item in variableSOs)
             {
-                if (guids.ContainsKey(item.VariableName))
-                    continue;
-
                 if (BehaviorAgent.GetVariableID(item.VariableName.ToString(), out SerializableGUID id))
                 {
                     guids.Add(item.VariableName, id);
                 }
-                else if (logError)
-                {
-                    Debug.LogError($"Variable {item.VariableName} not found in BehaviorAgent.");
-                    return false;
-                }
                 else
-                {
-                    return false;
-                }
+                    Debug.LogError($"Variable {item.VariableName} not found in BehaviorAgent.");
             }
 
-            return true;
+            VariableSetting();
         }
 
-        public virtual bool VariableSetting()
+        public virtual void VariableSetting()
         {
             Player player = Bus<RequestInjectEvent, DependencyReturnValue>.Raise(new RequestInjectEvent(typeof(Player))).dependencyProvider as Player;
-            if (player == null) return false;
+            if (player == null) return;
             _target = player;
             SetBlackboardVariable<Transform>(BTVariables.Target, _target.transform);
 
@@ -126,25 +77,14 @@ namespace Work.Enemies.Code
                 }
             });
 
-            if (TryGetBlackboardVariable(BTVariables.ChangeStateEvent, out BlackboardVariable<ChangeStateEvent> stateEvent) == false || stateEvent.Value == null)
-                return false;
-
-            _stateChangeChannel = stateEvent.Value;
+            _stateChangeChannel = GetBlackboardVariable<ChangeStateEvent>(BTVariables.ChangeStateEvent).Value;
             SetBlackboardVariable<int>(BTVariables.TargetLayerNumber, targetLayerMask);
             SetBlackboardVariable<float>(BTVariables.DetectRange, detectRange);
             SetBlackboardVariable<float>(BTVariables.AttackRange, GetModule<EnemyAttackModule>(true).AttackRange);
             SetBlackboardVariable<float>(BTVariables.ChaseRange, chaseRange);
-            return true;
-        }
 
-        public bool TryGetBlackboardVariable<T>(BTVariables variableName, out BlackboardVariable<T> variable)
-        {
-            variable = default;
-
-            if (guids.TryGetValue(variableName, out SerializableGUID id) == false)
-                return false;
-
-            return BehaviorAgent.GetVariable(id, out variable);
+            //여기서 발동
+            _stateChangeChannel.SendEventMessage(EnemyState.NotFindTarget);
         }
 
         public BlackboardVariable<T> GetBlackboardVariable<T>(BTVariables variableName)
@@ -177,7 +117,7 @@ namespace Work.Enemies.Code
             Bus<OnAddGoldEvent>.Raise(new OnAddGoldEvent(5));
             base.Die();
             IsDead = true;
-            _stateChangeChannel?.SendEventMessage(EnemyState.Death);
+            _stateChangeChannel.SendEventMessage(EnemyState.Death);
         }
     }
 }
