@@ -32,7 +32,7 @@ namespace Work.Enemies.Code
 
         public override void TakeDamage(int damageAmount)
         {
-            Enemy.StateChangeChannel.SendEventMessage(EnemyState.Hit);
+            Enemy.StateChangeChannel?.SendEventMessage(EnemyState.Hit);
             Bus<EnemyHitEvent>.Raise(new EnemyHitEvent(_owner.gameObject, _owner.InfoData));
             Bus<GetSkillEnergyEvent>.Raise(new GetSkillEnergyEvent(0.02f));
             base.TakeDamage(damageAmount);
