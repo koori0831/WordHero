@@ -6,17 +6,29 @@ namespace Work.ETC.LocationUI.Code
     public class LocationUIPlayer : MonoBehaviour
     {
         [SerializeField] private string locationName;
-        [SerializeField] private float delayTime = 1.0f;
 
-        public void Start()
+        private bool _isPlayed;
+
+        private void Awake()
         {
-            Destroy(gameObject, delayTime);
+            Bus<PlayLocationUIEvent>.Events += HandlePlayLocationUIEvent;
         }
 
         private void OnDestroy()
         {
-            Debug.Log("LocationUIPlayer OnDestroy");
+            Bus<PlayLocationUIEvent>.Events -= HandlePlayLocationUIEvent;
+        }
+
+        private void HandlePlayLocationUIEvent(PlayLocationUIEvent evt)
+        {
+            if (_isPlayed)
+            {
+                return;
+            }
+
+            _isPlayed = true;
             Bus<OnShowLocationNameEvent>.Raise(new OnShowLocationNameEvent(locationName));
+            Destroy(gameObject);
         }
     }
 }

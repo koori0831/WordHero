@@ -6,6 +6,7 @@ using Work.Chests.Code;
 using Work.Combat.Code;
 using Work.Core.Utils.Cameras;
 using Work.Core.Utils.EventBus;
+using Work.ETC.LocationUI.Code;
 using Work.Fade;
 using Work.Input.Code;
 using Work.Players.Code;
@@ -126,6 +127,7 @@ namespace Work.Stages.Code
             if (interactor != null)
                 interactor.transform.position = CurrentStage.SpawnPoint;
             CurrentStage.EnterStage(this);
+            Bus<PlayLocationUIEvent>.Raise(new PlayLocationUIEvent());
         }
 
         private void HandleChestCreatEventEvent(OnChestCreatEvent evt)

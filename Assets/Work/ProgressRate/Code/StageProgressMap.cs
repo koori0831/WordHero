@@ -41,6 +41,7 @@ namespace Work.ProgressRate.Code
         private readonly List<DoorType> _roomHistory = new List<DoorType>();
         private readonly List<StageProgressNode> _nodes = new List<StageProgressNode>();
         private readonly List<List<Image>> _dotGroups = new List<List<Image>>(); 
+        private List<MotionHandle> _dotMotionHandles = new List<MotionHandle>();
         
         private CancellationTokenSource _cts;
 
@@ -137,7 +138,7 @@ namespace Work.ProgressRate.Code
 
             if (nextIndex < totalStageCount)
             {
-                var moveTask = FocusNodeAsync(nextIndex, focusDuration, ct);
+                UniTask moveTask = FocusNodeAsync(nextIndex, focusDuration, ct);
                 if (nextIndex - 1 < _dotGroups.Count)
                 {
                     List<Image> dots = _dotGroups[nextIndex - 1];
@@ -145,8 +146,7 @@ namespace Work.ProgressRate.Code
                     for (int i = 0; i < dots.Count; i++)
                     {
                         int dotIndex = i;
-                        LMotion.Create(new Color(1, 1, 1, 0.2f), Color.white, dotAnimationDuration).Bind(c => dots[dotIndex].color = c).AddTo(gameObject);
-                        LMotion.Create(Vector3.one * 0.8f, Vector3.one * 1.3f, dotAnimationDuration * 0.5f).WithLoops(2, LoopType.Yoyo).Bind(s => dots[dotIndex].transform.localScale = s).AddTo(gameObject);
+                        PlayDotAnimation(dots[dotIndex]);
                         await UniTask.Delay(TimeSpan.FromSeconds(delayPerDot), cancellationToken: ct);
                     }
                 }
@@ -219,9 +219,26 @@ namespace Work.ProgressRate.Code
                         currentDots[j].transform.SetAsLastSibling();
                         currentDots[j].gameObject.SetActive(true);
                         currentDots[j].color = isDotActive ? Color.white : new Color(1, 1, 1, 0.2f);
+                        currentDots[j].transform.localScale = Vector3.one;
                     }
                 }
             }
+        }
+
+        private void PlayDotAnimation(Image dot)
+        {
+            MotionHandle colorHandle = LMotion.Create(new Color(1, 1, 1, 0.2f), Color.white, dotAnimationDuration)
+                .Bind(color => dot.color = color)
+                .AddTo(gameObject);
+
+            MotionHandle scaleHandle = LMotion.Create(Vector3.one * 0.8f, Vector3.one * 1.3f, dotAnimationDuration * 0.5f)
+                .WithLoops(2, LoopType.Yoyo)
+                .WithOnComplete(() => dot.transform.localScale = Vector3.one)
+                .Bind(scale => dot.transform.localScale = scale)
+                .AddTo(gameObject);
+
+            _dotMotionHandles.Add(colorHandle);
+            _dotMotionHandles.Add(scaleHandle);
         }
 
         private async UniTask WaitLayoutStabilization(CancellationToken ct)
@@ -258,12 +275,23 @@ namespace Work.ProgressRate.Code
 
         private void CancelProcess()
         {
+            CancelDotMotions();
             if (_cts != null)
             {
                 _cts.Cancel();
                 _cts.Dispose();
                 _cts = null;
             }
+        }
+
+        private void CancelDotMotions()
+        {
+            for (int i = 0; i < _dotMotionHandles.Count; i++)
+            {
+                _dotMotionHandles[i].TryCancel();
+            }
+
+            _dotMotionHandles.Clear();
         }
     }
 }
