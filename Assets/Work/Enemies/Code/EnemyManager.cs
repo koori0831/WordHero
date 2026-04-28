@@ -19,6 +19,9 @@ namespace Work.Enemies.Code
         [SerializeField] private float entranceAvoidRadius = 5f;
         [SerializeField] private float navMeshSampleRadius = 3f;
         [SerializeField, Min(1)] private int spawnTryCount = 30;
+        [SerializeField] private GameObject spawnEffectPrefab;
+        [SerializeField, Min(0f)] private float spawnEffectDuration = 1.5f;
+        [SerializeField, Min(0f)] private float enemySpawnDelay = 0.5f;
 
         private readonly List<Enemy> currentEnemies = new List<Enemy>();
         private readonly Dictionary<Enemy, Action> deathHandlers = new Dictionary<Enemy, Action>();
@@ -27,6 +30,7 @@ namespace Work.Enemies.Code
         private BattleStage currentStage;
         private Coroutine waveCoroutine;
         private int currentWaveIndex;
+        private int pendingSpawnCount;
         private bool isInitialized;
         private bool allWavesSpawned;
         private bool isWaitingNextWave;
@@ -42,6 +46,7 @@ namespace Work.Enemies.Code
             isInitialized = true;
             currentStage = stage;
             currentWaveIndex = 0;
+            pendingSpawnCount = 0;
             allWavesSpawned = false;
             isWaitingNextWave = false;
             isStageCleared = false;
@@ -103,10 +108,14 @@ namespace Work.Enemies.Code
             currentWaveIndex++;
             allWavesSpawned = currentWaveIndex >= waveData.Waves.Count;
 
-            SpawnWaveEnemies(wave);
-            RaiseEnemySpawnedEvent();
+            int immediateSpawnCount = SpawnWaveEnemies(wave);
 
-            if (currentEnemies.Count <= 0)
+            if (immediateSpawnCount > 0)
+            {
+                RaiseEnemySpawnedEvent();
+            }
+
+            if (HasRemainingEnemiesOrPendingSpawns() == false)
             {
                 if (allWavesSpawned)
                 {
@@ -126,9 +135,10 @@ namespace Work.Enemies.Code
             }
         }
 
-        private void SpawnWaveEnemies(EnemyWave wave)
+        private int SpawnWaveEnemies(EnemyWave wave)
         {
             waveSpawnPositions.Clear();
+            int immediateSpawnCount = 0;
 
             for (int i = 0; i < wave.Enemies.Count; i++)
             {
@@ -148,12 +158,59 @@ namespace Work.Enemies.Code
                     }
 
                     Quaternion rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
-                    Enemy enemy = Instantiate(entry.Prefab, spawnPosition, rotation, transform);
-                    enemy.Init();
-                    RegisterEnemy(enemy);
+                    if (SpawnEnemy(entry.Prefab, spawnPosition, rotation))
+                    {
+                        immediateSpawnCount++;
+                    }
+
                     waveSpawnPositions.Add(spawnPosition);
                 }
             }
+
+            return immediateSpawnCount;
+        }
+
+        private bool SpawnEnemy(Enemy prefab, Vector3 spawnPosition, Quaternion rotation)
+        {
+            if (spawnEffectPrefab == null && enemySpawnDelay <= 0f)
+            {
+                CreateEnemy(prefab, spawnPosition, rotation);
+                return true;
+            }
+
+            pendingSpawnCount++;
+            StartCoroutine(SpawnEnemyWithEffect(prefab, spawnPosition, rotation));
+            return false;
+        }
+
+        private IEnumerator SpawnEnemyWithEffect(Enemy prefab, Vector3 spawnPosition, Quaternion rotation)
+        {
+            GameObject effect = null;
+            if (spawnEffectPrefab != null)
+            {
+                effect = Instantiate(spawnEffectPrefab, spawnPosition, rotation);
+                if (spawnEffectDuration > 0f)
+                {
+                    Destroy(effect, spawnEffectDuration);
+                }
+            }
+
+            if (enemySpawnDelay > 0f)
+            {
+                yield return new WaitForSeconds(enemySpawnDelay);
+            }
+
+            pendingSpawnCount--;
+            CreateEnemy(prefab, spawnPosition, rotation);
+            RaiseEnemySpawnedEvent();
+            EvaluateWaveProgress();
+        }
+
+        private void CreateEnemy(Enemy prefab, Vector3 spawnPosition, Quaternion rotation)
+        {
+            Enemy enemy = Instantiate(prefab, spawnPosition, rotation, transform);
+            enemy.Init();
+            RegisterEnemy(enemy);
         }
 
         private bool TryGetSpawnPosition(out Vector3 spawnPosition)
@@ -276,7 +333,7 @@ namespace Work.Enemies.Code
             yield return new WaitForSeconds(seconds);
             waveCoroutine = null;
 
-            if (currentEnemies.Count <= 0)
+            if (HasRemainingEnemiesOrPendingSpawns() == false)
             {
                 SpawnNextWave();
             }
@@ -293,34 +350,42 @@ namespace Work.Enemies.Code
             currentEnemies.Remove(deadEnemy);
             RaiseEnemySpawnedEvent();
 
+            EvaluateWaveProgress();
+        }
+
+        private void EvaluateWaveProgress()
+        {
+            if (HasRemainingEnemiesOrPendingSpawns())
+                return;
+
             if (allWavesSpawned)
             {
                 TryClearStage();
                 return;
             }
 
-            if (currentEnemies.Count <= 0 && isWaitingNextWave == false)
+            if (isWaitingNextWave)
+                return;
+
+            if (waveCoroutine != null)
             {
-                if (waveCoroutine != null)
-                {
-                    StopCoroutine(waveCoroutine);
-                    waveCoroutine = null;
-                }
-
-                float delay = 0f;
-                int previousWaveIndex = currentWaveIndex - 1;
-                if (previousWaveIndex >= 0 && previousWaveIndex < waveData.Waves.Count)
-                {
-                    delay = waveData.Waves[previousWaveIndex].NextWaveDelay;
-                }
-
-                waveCoroutine = StartCoroutine(SpawnNextWaveAfter(delay));
+                StopCoroutine(waveCoroutine);
+                waveCoroutine = null;
             }
+
+            float delay = 0f;
+            int previousWaveIndex = currentWaveIndex - 1;
+            if (previousWaveIndex >= 0 && previousWaveIndex < waveData.Waves.Count)
+            {
+                delay = waveData.Waves[previousWaveIndex].NextWaveDelay;
+            }
+
+            waveCoroutine = StartCoroutine(SpawnNextWaveAfter(delay));
         }
 
         private void TryClearStage()
         {
-            if (allWavesSpawned && currentEnemies.Count <= 0)
+            if (allWavesSpawned && HasRemainingEnemiesOrPendingSpawns() == false)
             {
                 if (isStageCleared)
                     return;
@@ -333,6 +398,11 @@ namespace Work.Enemies.Code
         private void RaiseEnemySpawnedEvent()
         {
             Bus<OnEnemySpawnedEvent>.Raise(new OnEnemySpawnedEvent(currentEnemies));
+        }
+
+        private bool HasRemainingEnemiesOrPendingSpawns()
+        {
+            return currentEnemies.Count > 0 || pendingSpawnCount > 0;
         }
 
     }
