@@ -73,7 +73,7 @@ namespace Work.Stages.Code
             };
 
             Bus<OnChestCreatEvent>.Events += HandleChestCreatEventEvent;
-            GeneratStage(DoorType.Wood);
+            GenerateStage(DoorType.Wood);
         }
 
         private void OnDestroy()
@@ -95,17 +95,12 @@ namespace Work.Stages.Code
             return stages[doorType][randomIndex];
         }
 
-        public void GeneratStage(DoorType doorType)
+        public void GenerateStage(DoorType doorType)
         {
             GameObject interactor = CurrentStage?.Interator;
 
             Stage selectedStage = GetStage(doorType);
             if (selectedStage == null) return;
-
-            LMotion.Create(0f, 1f, 0.5f)
-               .WithOnComplete(() => Bus<OnFadeEvent>.Raise(new OnFadeEvent(false)))
-               .Bind(a => { })
-               .AddTo(gameObject);
 
             Stage stage = Instantiate(selectedStage, transform);
             CurrentStage?.ExitStage();

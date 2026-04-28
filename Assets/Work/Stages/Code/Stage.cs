@@ -47,7 +47,7 @@ namespace Work.Stages.Code
             {
                 Bus<OnFadeCompletedEvent>.Events -= HandleFadeComplete;
                 Bus<OnNextRoomEvent>.Raise(new OnNextRoomEvent(_nextRoomType));
-                _stageManager.GeneratStage(_nextRoomType);
+                _stageManager.GenerateStage(_nextRoomType);
             }
         }
     }
