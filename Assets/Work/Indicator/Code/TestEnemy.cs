@@ -15,7 +15,7 @@ namespace Work.Indicator.Code
             IsDead = false;
         }
 
-        public override void VariableSetting() { } // 에러 방지를 위해 비워둠
+        public override bool VariableSetting() { return true; } // 에러 방지를 위해 비워둠
 
         public void Kill()
         {

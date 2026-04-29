@@ -22,6 +22,8 @@ namespace Work.Stages.Code
         {
         }
 
+        
+
         public virtual void EnterStage(StageManager stageManager)
         {
             _stageManager = stageManager;
