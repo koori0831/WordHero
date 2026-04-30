@@ -14,11 +14,14 @@ namespace Work.Enemies.Code
     public class EnemyManager : MonoBehaviour
     {
         [SerializeField] private EnemyWaveDataSO waveData;
-        [SerializeField] private BoxCollider spawnArea;
+        [SerializeField] private List<BoxCollider> spawnAreas = new List<BoxCollider>();
         [SerializeField] private float minEnemyDistance = 2f;
         [SerializeField] private float entranceAvoidRadius = 5f;
         [SerializeField] private float navMeshSampleRadius = 3f;
         [SerializeField, Min(1)] private int spawnTryCount = 30;
+        [SerializeField] private GameObject spawnEffectPrefab;
+        [SerializeField, Min(0f)] private float spawnEffectDuration = 1.5f;
+        [SerializeField, Min(0f)] private float enemySpawnDelay = 0.5f;
 
         private readonly List<Enemy> currentEnemies = new List<Enemy>();
         private readonly Dictionary<Enemy, Action> deathHandlers = new Dictionary<Enemy, Action>();
@@ -27,6 +30,7 @@ namespace Work.Enemies.Code
         private BattleStage currentStage;
         private Coroutine waveCoroutine;
         private int currentWaveIndex;
+        private int pendingSpawnCount;
         private bool isInitialized;
         private bool allWavesSpawned;
         private bool isWaitingNextWave;
@@ -39,38 +43,61 @@ namespace Work.Enemies.Code
             if (isInitialized)
                 return;
 
-            isInitialized = true;
-            currentStage = stage;
-            currentWaveIndex = 0;
-            allWavesSpawned = false;
-            isWaitingNextWave = false;
-            isStageCleared = false;
+            ResetState(stage);
 
-            if (waveData == null || waveData.Waves.Count <= 0)
-            {
-                Debug.LogWarning($"[EnemyManager] Wave data is empty on '{name}'. Stage will be cleared immediately.", this);
-                allWavesSpawned = true;
-                TryClearStage();
+            if (ValidateSettings() == false)
                 return;
-            }
-
-            if (spawnArea == null)
-            {
-                Debug.LogError($"[EnemyManager] Spawn area is missing on '{name}'.", this);
-                return;
-            }
 
             SpawnNextWave();
         }
 
         private void OnDestroy()
         {
-            if (waveCoroutine != null)
+            StopWaveCoroutine();
+            UnregisterAllEnemies();
+        }
+
+        private void ResetState(BattleStage stage)
+        {
+            isInitialized = true;
+            currentStage = stage;
+            currentWaveIndex = 0;
+            pendingSpawnCount = 0;
+            allWavesSpawned = false;
+            isWaitingNextWave = false;
+            isStageCleared = false;
+        }
+
+        private bool ValidateSettings()
+        {
+            if (waveData == null || waveData.Waves.Count <= 0)
             {
-                StopCoroutine(waveCoroutine);
-                waveCoroutine = null;
+                Debug.LogWarning($"[EnemyManager] Wave data is empty on '{name}'. Stage will be cleared immediately.", this);
+                allWavesSpawned = true;
+                TryClearStage();
+                return false;
             }
 
+            if (HasValidSpawnArea() == false)
+            {
+                Debug.LogError($"[EnemyManager] Spawn areas are missing on '{name}'.", this);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void StopWaveCoroutine()
+        {
+            if (waveCoroutine == null)
+                return;
+
+            StopCoroutine(waveCoroutine);
+            waveCoroutine = null;
+        }
+
+        private void UnregisterAllEnemies()
+        {
             foreach (KeyValuePair<Enemy, Action> pair in deathHandlers)
             {
                 if (pair.Key != null && pair.Key.EnemyInfoData != null)
@@ -86,11 +113,7 @@ namespace Work.Enemies.Code
         {
             isWaitingNextWave = false;
 
-            if (waveCoroutine != null)
-            {
-                StopCoroutine(waveCoroutine);
-                waveCoroutine = null;
-            }
+            StopWaveCoroutine();
 
             if (currentWaveIndex >= waveData.Waves.Count)
             {
@@ -103,10 +126,14 @@ namespace Work.Enemies.Code
             currentWaveIndex++;
             allWavesSpawned = currentWaveIndex >= waveData.Waves.Count;
 
-            SpawnWaveEnemies(wave);
-            RaiseEnemySpawnedEvent();
+            int immediateSpawnCount = SpawnWaveEnemies(wave);
 
-            if (currentEnemies.Count <= 0)
+            if (immediateSpawnCount > 0)
+            {
+                RaiseEnemySpawnedEvent();
+            }
+
+            if (HasActiveEnemiesOrPendingSpawns() == false)
             {
                 if (allWavesSpawned)
                 {
@@ -126,9 +153,10 @@ namespace Work.Enemies.Code
             }
         }
 
-        private void SpawnWaveEnemies(EnemyWave wave)
+        private int SpawnWaveEnemies(EnemyWave wave)
         {
             waveSpawnPositions.Clear();
+            int immediateSpawnCount = 0;
 
             for (int i = 0; i < wave.Enemies.Count; i++)
             {
@@ -148,20 +176,69 @@ namespace Work.Enemies.Code
                     }
 
                     Quaternion rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
-                    Enemy enemy = Instantiate(entry.Prefab, spawnPosition, rotation, transform);
-                    enemy.Init();
-                    RegisterEnemy(enemy);
+                    if (SpawnEnemyOrSchedule(entry.Prefab, spawnPosition, rotation))
+                    {
+                        immediateSpawnCount++;
+                    }
+
                     waveSpawnPositions.Add(spawnPosition);
                 }
             }
+
+            return immediateSpawnCount;
+        }
+
+        private bool SpawnEnemyOrSchedule(Enemy prefab, Vector3 spawnPosition, Quaternion rotation)
+        {
+            if (spawnEffectPrefab == null && enemySpawnDelay <= 0f)
+            {
+                CreateEnemyInstance(prefab, spawnPosition, rotation);
+                return true;
+            }
+
+            pendingSpawnCount++;
+            StartCoroutine(SpawnEnemyWithEffect(prefab, spawnPosition, rotation));
+            return false;
+        }
+
+        private IEnumerator SpawnEnemyWithEffect(Enemy prefab, Vector3 spawnPosition, Quaternion rotation)
+        {
+            if (spawnEffectPrefab != null)
+            {
+                GameObject effect = Instantiate(spawnEffectPrefab, spawnPosition, rotation);
+                if (spawnEffectDuration > 0f)
+                {
+                    Destroy(effect, spawnEffectDuration);
+                }
+            }
+
+            if (enemySpawnDelay > 0f)
+            {
+                yield return new WaitForSeconds(enemySpawnDelay);
+            }
+
+            pendingSpawnCount--;
+            CreateEnemyInstance(prefab, spawnPosition, rotation);
+            RaiseEnemySpawnedEvent();
+            EvaluateWaveProgress();
+        }
+
+        private void CreateEnemyInstance(Enemy prefab, Vector3 spawnPosition, Quaternion rotation)
+        {
+            Enemy enemy = Instantiate(prefab, spawnPosition, rotation, transform);
+            enemy.Init();
+            RegisterEnemy(enemy);
         }
 
         private bool TryGetSpawnPosition(out Vector3 spawnPosition)
         {
-            Bounds bounds = spawnArea.bounds;
-
             for (int i = 0; i < spawnTryCount; i++)
             {
+                BoxCollider spawnArea = GetRandomSpawnArea();
+                if (spawnArea == null)
+                    break;
+
+                Bounds bounds = spawnArea.bounds;
                 Vector3 randomPoint = new Vector3(
                     UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
                     UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
@@ -184,6 +261,44 @@ namespace Work.Enemies.Code
 
             spawnPosition = default;
             return false;
+        }
+
+        private bool HasValidSpawnArea()
+        {
+            for (int i = 0; i < spawnAreas.Count; i++)
+            {
+                if (spawnAreas[i] != null)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private BoxCollider GetRandomSpawnArea()
+        {
+            int validAreaCount = 0;
+            for (int i = 0; i < spawnAreas.Count; i++)
+            {
+                if (spawnAreas[i] != null)
+                    validAreaCount++;
+            }
+
+            if (validAreaCount <= 0)
+                return null;
+
+            int randomIndex = UnityEngine.Random.Range(0, validAreaCount);
+            for (int i = 0; i < spawnAreas.Count; i++)
+            {
+                if (spawnAreas[i] == null)
+                    continue;
+
+                if (randomIndex == 0)
+                    return spawnAreas[i];
+
+                randomIndex--;
+            }
+
+            return null;
         }
 
         private bool IsTooCloseToOtherEnemy(Vector3 position)
@@ -235,7 +350,7 @@ namespace Work.Enemies.Code
             yield return new WaitForSeconds(seconds);
             waveCoroutine = null;
 
-            if (currentEnemies.Count <= 0)
+            if (HasActiveEnemiesOrPendingSpawns() == false)
             {
                 SpawnNextWave();
             }
@@ -252,34 +367,38 @@ namespace Work.Enemies.Code
             currentEnemies.Remove(deadEnemy);
             RaiseEnemySpawnedEvent();
 
+            EvaluateWaveProgress();
+        }
+
+        private void EvaluateWaveProgress()
+        {
+            if (HasActiveEnemiesOrPendingSpawns())
+                return;
+
             if (allWavesSpawned)
             {
                 TryClearStage();
                 return;
             }
 
-            if (currentEnemies.Count <= 0 && isWaitingNextWave == false)
+            if (isWaitingNextWave)
+                return;
+
+            StopWaveCoroutine();
+
+            float delay = 0f;
+            int previousWaveIndex = currentWaveIndex - 1;
+            if (previousWaveIndex >= 0 && previousWaveIndex < waveData.Waves.Count)
             {
-                if (waveCoroutine != null)
-                {
-                    StopCoroutine(waveCoroutine);
-                    waveCoroutine = null;
-                }
-
-                float delay = 0f;
-                int previousWaveIndex = currentWaveIndex - 1;
-                if (previousWaveIndex >= 0 && previousWaveIndex < waveData.Waves.Count)
-                {
-                    delay = waveData.Waves[previousWaveIndex].NextWaveDelay;
-                }
-
-                waveCoroutine = StartCoroutine(SpawnNextWaveAfter(delay));
+                delay = waveData.Waves[previousWaveIndex].NextWaveDelay;
             }
+
+            waveCoroutine = StartCoroutine(SpawnNextWaveAfter(delay));
         }
 
         private void TryClearStage()
         {
-            if (allWavesSpawned && currentEnemies.Count <= 0)
+            if (allWavesSpawned && HasActiveEnemiesOrPendingSpawns() == false)
             {
                 if (isStageCleared)
                     return;
@@ -292,6 +411,11 @@ namespace Work.Enemies.Code
         private void RaiseEnemySpawnedEvent()
         {
             Bus<OnEnemySpawnedEvent>.Raise(new OnEnemySpawnedEvent(currentEnemies));
+        }
+
+        private bool HasActiveEnemiesOrPendingSpawns()
+        {
+            return currentEnemies.Count > 0 || pendingSpawnCount > 0;
         }
 
     }
