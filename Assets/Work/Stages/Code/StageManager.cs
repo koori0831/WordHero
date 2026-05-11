@@ -29,6 +29,7 @@ namespace Work.Stages.Code
         [SerializeField] private Door doorPrefab;
         [SerializeField] private Chest chestPrefab;
         [SerializeField] private float chestSpawnDistance = 1.8f;
+        [SerializeField] private float stageProgressMapFallbackDelay = 6f;
         public Door DoorPrefab => doorPrefab;
 
         [Inject] private Player _player;
@@ -55,6 +56,7 @@ namespace Work.Stages.Code
 
         private DoorType _currentStageDoorType = DoorType.Wood;
         private Chest _currentStageChest;
+        private StageTransitionFlowController _stageTransitionFlowController;
 
         public static Stage CurrentStage { get; private set; }
 
@@ -72,30 +74,30 @@ namespace Work.Stages.Code
             };
 
             Bus<OnChestCreatEvent>.Events += HandleChestCreatEventEvent;
-            Bus<StageProgressMapClosedEvent>.Events += HandleInitialProgressMapClosed;
+            _stageTransitionFlowController = new StageTransitionFlowController(GenerateStage, stageProgressMapFallbackDelay);
+            _stageTransitionFlowController.Initialize();
         }
 
         /// <summary>
-        /// 진행도 맵에 시작 연출 요청
+        /// 최초 스테이지 전환 시작
         /// </summary>
         private void Start()
         {
-            Bus<PlayInitialProgressMapEvent>.Raise(new PlayInitialProgressMapEvent());
+            _stageTransitionFlowController.StartInitialFlow(DoorType.Wood);
         }
 
         private void OnDestroy()
         {
             Bus<OnChestCreatEvent>.Events -= HandleChestCreatEventEvent;
-            Bus<StageProgressMapClosedEvent>.Events -= HandleInitialProgressMapClosed;
+            _stageTransitionFlowController?.Dispose();
         }
 
         /// <summary>
-        /// 스테이지 진행도 맵 닫기
+        /// 스테이지 전환 요청
         /// </summary>
-        private void HandleInitialProgressMapClosed(StageProgressMapClosedEvent evt)
+        public void RequestStageTransition(GameObject interactor, DoorType doorType)
         {
-            Bus<StageProgressMapClosedEvent>.Events -= HandleInitialProgressMapClosed;
-            GenerateStage(DoorType.Wood);
+            _stageTransitionFlowController.RequestTransition(interactor, doorType);
         }
 
         public Stage GetStage(DoorType doorType) // 특정 상황에서 상점이나 보스 스테이지를 반환하도록 수정해야함
@@ -114,8 +116,11 @@ namespace Work.Stages.Code
 
         public void GenerateStage(DoorType doorType)
         {
-            GameObject interactor = CurrentStage?.Interator;
+            GenerateStage(doorType, CurrentStage?.Interator);
+        }
 
+        private void GenerateStage(DoorType doorType, GameObject interactor)
+        {
             Stage selectedStage = GetStage(doorType);
             if (selectedStage == null) return;
 
@@ -127,7 +132,6 @@ namespace Work.Stages.Code
             if (interactor != null)
                 interactor.transform.position = CurrentStage.SpawnPoint;
             CurrentStage.EnterStage(this);
-            Bus<PlayLocationUIEvent>.Raise(new PlayLocationUIEvent());
         }
 
         private void HandleChestCreatEventEvent(OnChestCreatEvent evt)

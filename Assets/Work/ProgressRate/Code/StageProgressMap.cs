@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Work.Core.Utils.EventBus;
 using Work.Stages.Code;
-using Work.Fade;
 using LitMotion;
 using LitMotion.Extensions;
 using Cysharp.Threading.Tasks;
@@ -114,7 +113,6 @@ namespace Work.ProgressRate.Code
             if (_currentStageIndex >= totalStageCount) 
             {
                 Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
-                Bus<OnFadeEvent>.Raise(new OnFadeEvent(false));
                 return;
             }
 
@@ -160,19 +158,12 @@ namespace Work.ProgressRate.Code
             }
         }
 
-        private async UniTask CloseMapAsync(CancellationToken ct)
+        private UniTask CloseMapAsync(CancellationToken ct)
         {
-            // 1. 맵 UI 먼저 비활성화
+            ct.ThrowIfCancellationRequested();
             mapContainer.SetActive(false);
-            
-            // 2. 스테이지 매니저 등에 맵이 끝났음을 알림 (스테이지 입장 연출 준비 신호)
             Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
-            
-            // 3. 아주 짧은 대기 시간을 주어 스테이지 로직이 연출을 준비할 틈을 줌
-            await UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: ct);
-            
-            // 4. 그 다음 페이드 아웃(화면 밝아짐) 실행
-            Bus<OnFadeEvent>.Raise(new OnFadeEvent(false));
+            return UniTask.CompletedTask;
         }
 
         private void HandleResetEvent(ResetStageProgressEvent evt)

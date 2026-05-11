@@ -1077,6 +1077,7 @@ MonoBehaviour:
   doorPrefab: {fileID: 1900758950306850552, guid: 007076170283b694aad3c2eadc27e326, type: 3}
   chestPrefab: {fileID: 9201234575408641520, guid: 876da7fd808d4aa44ac9b543b6ed25af, type: 3}
   chestSpawnDistance: 2.39
+  stageProgressMapFallbackDelay: 6
 --- !u!4 &872972847
 Transform:
   m_ObjectHideFlags: 0
@@ -3242,10 +3243,6 @@ PrefabInstance:
       propertyPath: <Camera>k__BackingField
       value: 
       objectReference: {fileID: 1540623734}
-    - target: {fileID: 4886530867193011421, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
-      propertyPath: _indicatorContainer
-      value: 
-      objectReference: {fileID: 1593225245}
     - target: {fileID: 6161471127420699926, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.28703
