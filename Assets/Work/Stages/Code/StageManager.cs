@@ -75,8 +75,8 @@ namespace Work.Stages.Code
 
             Bus<OnChestCreatEvent>.Events += HandleChestCreatEventEvent;
             FadePresenter fadePresenter = FindFirstObjectByType<FadePresenter>();
-            StageProgressMap stageProgressMap = FindFirstObjectByType<StageProgressMap>();
-            _stageTransitionFlowController = new StageTransitionFlowController(GenerateStage, stageProgressMapFallbackDelay, fadePresenter, stageProgressMap);
+            StageProgressMapPresenter stageProgressMapPresenter = FindFirstObjectByType<StageProgressMapPresenter>();
+            _stageTransitionFlowController = new StageTransitionFlowController(GenerateStage, stageProgressMapFallbackDelay, fadePresenter, stageProgressMapPresenter);
             _stageTransitionFlowController.Initialize();
         }
 

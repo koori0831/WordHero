@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
-using Work.Core.Utils.EventBus;
 using Work.Stages.Code;
 using LitMotion;
 using LitMotion.Extensions;
@@ -11,7 +10,10 @@ using Cysharp.Threading.Tasks;
 
 namespace Work.ProgressRate.Code
 {
-    public class StageProgressMap : MonoBehaviour
+    /// <summary>
+    /// 스테이지 진행도 맵 뷰
+    /// </summary>
+    public class StageProgressMapView : MonoBehaviour
     {
         [Header("UI References")]
         [SerializeField] private GameObject mapContainer;
@@ -35,111 +37,74 @@ namespace Work.ProgressRate.Code
         [SerializeField] private float bossPreviewWaitTime = 1.2f;
         [SerializeField] private float returnToStartDuration = 2.2f;
 
-        private int _currentStageIndex = -1; 
-        private DoorType _initialRoomType = DoorType.Wood;
-        private readonly List<DoorType> _roomHistory = new List<DoorType>();
         private readonly List<StageProgressNode> _nodes = new List<StageProgressNode>();
         private readonly List<List<Image>> _dotGroups = new List<List<Image>>(); 
         private List<MotionHandle> _dotMotionHandles = new List<MotionHandle>();
-        
-        private CancellationTokenSource _cts;
+
+        /// <summary>
+        /// 전체 스테이지 수
+        /// </summary>
+        public int TotalStageCount => totalStageCount;
 
         private void Awake()
         {
-            Bus<ResetStageProgressEvent>.Events += HandleResetEvent;
-            Bus<SetInitialStageProgressEvent>.Events += HandleSetInitialEvent;
-            
             mapContainer.SetActive(false);
             nodePrefab.gameObject.SetActive(false);
             dotPrefab.gameObject.SetActive(false);
-
-            _roomHistory.Add(_initialRoomType);
         }
 
         private void OnDestroy()
         {
-            Bus<ResetStageProgressEvent>.Events -= HandleResetEvent;
-            Bus<SetInitialStageProgressEvent>.Events -= HandleSetInitialEvent;
             CancelProcess();
-        }
-
-        private void HandleSetInitialEvent(SetInitialStageProgressEvent evt)
-        {
-            _initialRoomType = evt.InitialRoomType;
-            if (_currentStageIndex == -1)
-            {
-                _roomHistory.Clear();
-                _roomHistory.Add(_initialRoomType);
-            }
         }
 
         /// <summary>
-        /// 최초 진행도 맵 연출 대기 처리
+        /// 최초 진행도 맵 연출
         /// </summary>
-        public UniTask PlayInitialAsync(DoorType initialRoomType, CancellationToken cancellationToken)
+        public async UniTask PlayInitialAsync(IReadOnlyList<DoorType> roomHistory, CancellationToken cancellationToken)
         {
-            _initialRoomType = initialRoomType;
-            _roomHistory.Clear();
-            _roomHistory.Add(_initialRoomType);
-            _currentStageIndex = 0;
             CancelProcess();
-            _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            return PlayInitialSequenceAsync(_cts.Token);
-        }
-
-        /// <summary>
-        /// 다음 진행도 맵 연출 대기 처리
-        /// </summary>
-        public UniTask PlayNextAsync(DoorType nextRoomType, CancellationToken cancellationToken)
-        {
-            _roomHistory.Add(nextRoomType);
-            _currentStageIndex++;
-
-            if (_currentStageIndex >= totalStageCount)
-            {
-                return UniTask.CompletedTask;
-            }
-
-            CancelProcess();
-            _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            return PlayTransitionSequenceAsync(_currentStageIndex, _cts.Token);
-        }
-
-        private async UniTask PlayInitialSequenceAsync(CancellationToken ct)
-        {
-            InitializeMap(isInitial: true);
+            InitializeMap(roomHistory, 0, isInitial: true);
             mapContainer.SetActive(true);
 
-            await WaitLayoutStabilization(ct);
+            await WaitLayoutStabilization(cancellationToken);
             SetFocusImmediate(totalStageCount - 1); 
 
-            await UniTask.Delay(TimeSpan.FromSeconds(bossPreviewWaitTime), cancellationToken: ct);
-            await FocusNodeAsync(0, returnToStartDuration, ct);
-            await UniTask.Delay(TimeSpan.FromSeconds(0.4f), cancellationToken: ct);
+            await UniTask.Delay(TimeSpan.FromSeconds(bossPreviewWaitTime), cancellationToken: cancellationToken);
+            await FocusNodeAsync(0, returnToStartDuration, cancellationToken);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.4f), cancellationToken: cancellationToken);
 
             _nodes[0].PlayActivateAnimation(animationDuration);
-            
-            // 인지 시간 대기 후 종료 시퀀스 실행
-            await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + autoCloseDelay), cancellationToken: ct);
-            await CloseMapAsync(ct);
+
+            await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + autoCloseDelay), cancellationToken: cancellationToken);
+            await CloseMapAsync(cancellationToken);
         }
 
-        private async UniTask PlayTransitionSequenceAsync(int nextIndex, CancellationToken ct)
+        /// <summary>
+        /// 다음 진행도 맵 연출
+        /// </summary>
+        public async UniTask PlayNextAsync(IReadOnlyList<DoorType> roomHistory, int nextIndex, CancellationToken cancellationToken)
         {
-            InitializeMap(isInitial: false);
+            CancelProcess();
+            if (nextIndex <= 0 || nextIndex >= totalStageCount)
+            {
+                return;
+            }
+
+            InitializeMap(roomHistory, nextIndex, isInitial: false);
             mapContainer.SetActive(true);
 
-            await WaitLayoutStabilization(ct);
+            await WaitLayoutStabilization(cancellationToken);
             SetFocusImmediate(nextIndex - 1);
 
-            await UniTask.Delay(TimeSpan.FromSeconds(delayBetweenAnimations), cancellationToken: ct);
+            await UniTask.Delay(TimeSpan.FromSeconds(delayBetweenAnimations), cancellationToken: cancellationToken);
 
             _nodes[nextIndex - 1].PlayCompleteAnimation(animationDuration);
-            await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + 0.3f), cancellationToken: ct);
+            await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + 0.3f), cancellationToken: cancellationToken);
 
             if (nextIndex < totalStageCount)
             {
-                UniTask moveTask = FocusNodeAsync(nextIndex, focusDuration, ct);
+                UniTask moveTask = FocusNodeAsync(nextIndex, focusDuration, cancellationToken);
                 if (nextIndex - 1 < _dotGroups.Count)
                 {
                     List<Image> dots = _dotGroups[nextIndex - 1];
@@ -148,16 +113,15 @@ namespace Work.ProgressRate.Code
                     {
                         int dotIndex = i;
                         PlayDotAnimation(dots[dotIndex]);
-                        await UniTask.Delay(TimeSpan.FromSeconds(delayPerDot), cancellationToken: ct);
+                        await UniTask.Delay(TimeSpan.FromSeconds(delayPerDot), cancellationToken: cancellationToken);
                     }
                 }
                 await moveTask;
 
                 _nodes[nextIndex].PlayActivateAnimation(animationDuration);
-                
-                // 인지 시간 대기 후 종료 시퀀스 실행
-                await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + autoCloseDelay), cancellationToken: ct);
-                await CloseMapAsync(ct);
+
+                await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + autoCloseDelay), cancellationToken: cancellationToken);
+                await CloseMapAsync(cancellationToken);
             }
         }
 
@@ -168,17 +132,16 @@ namespace Work.ProgressRate.Code
             return UniTask.CompletedTask;
         }
 
-        private void HandleResetEvent(ResetStageProgressEvent evt)
+        /// <summary>
+        /// 진행도 맵 숨김 처리
+        /// </summary>
+        public void Hide()
         {
-            _initialRoomType = evt.InitialRoomType;
-            _currentStageIndex = -1;
-            _roomHistory.Clear();
-            _roomHistory.Add(_initialRoomType);
             CancelProcess();
             mapContainer.SetActive(false);
         }
 
-        private void InitializeMap(bool isInitial)
+        private void InitializeMap(IReadOnlyList<DoorType> roomHistory, int currentStageIndex, bool isInitial)
         {
             for (int i = 0; i < totalStageCount; i++)
             {
@@ -187,15 +150,15 @@ namespace Work.ProgressRate.Code
                 _nodes[i].gameObject.SetActive(true);
 
                 bool isBoss = (i == totalStageCount - 1);
-                DoorType roomType = i < _roomHistory.Count ? _roomHistory[i] : DoorType.None;
+                DoorType roomType = i < roomHistory.Count ? roomHistory[i] : DoorType.None;
                 
                 bool isCompleted;
                 bool isCurrent;
                 if (isInitial) { isCompleted = false; isCurrent = false; }
                 else
                 {
-                    isCompleted = i < _currentStageIndex - 1;
-                    isCurrent = i == _currentStageIndex - 1;
+                    isCompleted = i < currentStageIndex - 1;
+                    isCurrent = i == currentStageIndex - 1;
                 }
                 
                 _nodes[i].Setup(roomType, isBoss, isCompleted, isCurrent);
@@ -206,7 +169,7 @@ namespace Work.ProgressRate.Code
                     List<Image> currentDots = _dotGroups[i];
                     while (currentDots.Count < dotsPerLink) currentDots.Add(Instantiate(dotPrefab, contentRect));
                     
-                    bool isDotActive = !isInitial && (i < _currentStageIndex - 1);
+                    bool isDotActive = !isInitial && (i < currentStageIndex - 1);
                     for (int j = 0; j < currentDots.Count; j++)
                     {
                         currentDots[j].transform.SetAsLastSibling();
@@ -266,15 +229,12 @@ namespace Work.ProgressRate.Code
             return new Vector2(contentRect.anchoredPosition.x + localDelta.x, contentRect.anchoredPosition.y);
         }
 
-        private void CancelProcess()
+        /// <summary>
+        /// 진행도 맵 연출 정리
+        /// </summary>
+        public void CancelProcess()
         {
             CancelDotMotions();
-            if (_cts != null)
-            {
-                _cts.Cancel();
-                _cts.Dispose();
-                _cts = null;
-            }
         }
 
         private void CancelDotMotions()

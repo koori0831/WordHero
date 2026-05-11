@@ -18,7 +18,7 @@ namespace Work.Stages.Code
         private readonly Action<DoorType, GameObject> _generateStage;
         private readonly float _progressMapFallbackDelay;
         private readonly FadePresenter _fadePresenter;
-        private readonly StageProgressMap _stageProgressMap;
+        private readonly StageProgressMapPresenter _stageProgressMapPresenter;
 
         private CancellationTokenSource _transitionCts;
         private bool _isTransitioning;
@@ -27,12 +27,12 @@ namespace Work.Stages.Code
         /// <summary>
         /// 스테이지 전환 흐름 제어자 생성
         /// </summary>
-        public StageTransitionFlowController(Action<DoorType, GameObject> generateStage, float progressMapFallbackDelay, FadePresenter fadePresenter, StageProgressMap stageProgressMap)
+        public StageTransitionFlowController(Action<DoorType, GameObject> generateStage, float progressMapFallbackDelay, FadePresenter fadePresenter, StageProgressMapPresenter stageProgressMapPresenter)
         {
             _generateStage = generateStage;
             _progressMapFallbackDelay = progressMapFallbackDelay;
             _fadePresenter = fadePresenter;
-            _stageProgressMap = stageProgressMap;
+            _stageProgressMapPresenter = stageProgressMapPresenter;
         }
 
         /// <summary>
@@ -155,12 +155,12 @@ namespace Work.Stages.Code
         /// </summary>
         private UniTask PlayInitialProgressMapAsync(DoorType initialDoorType, CancellationToken cancellationToken)
         {
-            if (_stageProgressMap == null)
+            if (_stageProgressMapPresenter == null)
             {
                 return UniTask.CompletedTask;
             }
 
-            return PlayProgressMapWithFallbackAsync(_stageProgressMap.PlayInitialAsync(initialDoorType, cancellationToken), cancellationToken);
+            return PlayProgressMapWithFallbackAsync(_stageProgressMapPresenter.PlayInitialAsync(initialDoorType, cancellationToken), cancellationToken);
         }
 
         /// <summary>
@@ -168,12 +168,12 @@ namespace Work.Stages.Code
         /// </summary>
         private UniTask PlayNextProgressMapAsync(DoorType doorType, CancellationToken cancellationToken)
         {
-            if (_stageProgressMap == null)
+            if (_stageProgressMapPresenter == null)
             {
                 return UniTask.CompletedTask;
             }
 
-            return PlayProgressMapWithFallbackAsync(_stageProgressMap.PlayNextAsync(doorType, cancellationToken), cancellationToken);
+            return PlayProgressMapWithFallbackAsync(_stageProgressMapPresenter.PlayNextAsync(doorType, cancellationToken), cancellationToken);
         }
 
         /// <summary>

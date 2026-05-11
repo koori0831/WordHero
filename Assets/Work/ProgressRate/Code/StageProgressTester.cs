@@ -53,10 +53,10 @@ namespace Work.ProgressRate.Code
 
             // 2. 다음 방 진입 알림 및 진행도 맵 직접 재생
             Bus<OnNextRoomEvent>.Raise(new OnNextRoomEvent(testNextRoomType));
-            StageProgressMap stageProgressMap = FindFirstObjectByType<StageProgressMap>();
-            if (stageProgressMap != null)
+            StageProgressMapPresenter stageProgressMapPresenter = FindFirstObjectByType<StageProgressMapPresenter>();
+            if (stageProgressMapPresenter != null)
             {
-                await stageProgressMap.PlayNextAsync(testNextRoomType, CancellationToken.None);
+                await stageProgressMapPresenter.PlayNextAsync(testNextRoomType, CancellationToken.None);
             }
             if (fadePresenter != null)
             {

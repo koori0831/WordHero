@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
   m_Padding:
     m_Left: 0
@@ -278,7 +278,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7833d7d604ce7df46aca9592f1f2a9af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.ProgressRate.Code.StageProgressMap
+  m_EditorClassIdentifier: Assembly-CSharp::Work.ProgressRate.Code.StageProgressMapView
   mapContainer: {fileID: 821123628}
   contentRect: {fileID: 60948497}
   viewportRect: {fileID: 1634998529}
@@ -3831,8 +3831,57 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6161471127420699926, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1311534296}
+    - targetCorrespondingSourceObject: {fileID: 6161471127420699926, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2319010002}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
+--- !u!1 &2319010001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2319010002}
+  - component: {fileID: 2319010003}
+  m_Layer: 0
+  m_Name: StageProgressMapPresenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2319010002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2319010001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 399085018}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2319010003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2319010001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f3b41408d574c9d9f6a9d07fbc193b2, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Work.ProgressRate.Code.StageProgressMapPresenter
+  progressMapView: {fileID: 191297722}
+  initialRoomType: 0
 --- !u!20 &7538238492796703259
 Camera:
   m_ObjectHideFlags: 0
