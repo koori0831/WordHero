@@ -29,6 +29,7 @@ namespace Work.Stages.Code
         [SerializeField] private Door doorPrefab;
         [SerializeField] private Chest chestPrefab;
         [SerializeField] private float chestSpawnDistance = 1.8f;
+
         public Door DoorPrefab => doorPrefab;
 
         [Inject] private Player _player;
@@ -96,6 +97,7 @@ namespace Work.Stages.Code
         {
             Bus<StageProgressMapClosedEvent>.Events -= HandleInitialProgressMapClosed;
             GenerateStage(DoorType.Wood);
+            _player.transform.position = CurrentStage.SpawnPoint;
         }
 
         public Stage GetStage(DoorType doorType) // 특정 상황에서 상점이나 보스 스테이지를 반환하도록 수정해야함
@@ -258,9 +260,10 @@ namespace Work.Stages.Code
 
         public void DoorSpawn(List<Transform> doorPoints, ref List<Door> doors, bool isRandom = false)
         {
-            int random = isRandom ? Random.Range(1, doorPoints.Count + 1) : doorPoints.Count;
+            int doorCount = doorPoints.Count;
+            bool hasUniqueDoorMap = false;
 
-            for (int i = 0; i < random; i++)
+            for (int i = 0; i < doorCount; i++)
             {
                 Transform x = doorPoints[i];
                 Door door = Instantiate(DoorPrefab, x.position, Quaternion.identity);
@@ -269,16 +272,18 @@ namespace Work.Stages.Code
                 door.DoorInit(CurrentStage);
                 DoorType nextDoorType = (DoorType)Random.Range(0, 5);
 
-                if (IsOpeningShop)
+                if (IsOpeningShop && !hasUniqueDoorMap)
                 {
+                    hasUniqueDoorMap = true;
                     nextDoorType = DoorType.Shop;
                     door.SetDoorType(nextDoorType);
                     doors.Add(door);
-                    return;
+                    continue;
                 }
 
-                if (IsNextStageInBossStage)
+                if (IsNextStageInBossStage && !hasUniqueDoorMap)
                 {
+                    hasUniqueDoorMap = true;
                     nextDoorType = DoorType.Boss;
                     door.SetDoorType(nextDoorType);
                     doors.Add(door);
