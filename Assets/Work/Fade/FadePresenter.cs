@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using R3;
+using UnityEngine;
 using Work.Core.Utils.EventBus;
 using Work.Input.Code;
 
@@ -12,13 +16,17 @@ namespace Work.Fade
         [SerializeField] private FadeView fadeView;
         [SerializeField] private float fadeDuration = 1.0f;
 
+        private CancellationTokenSource _fadeCts;
+
         /// <summary>
         /// 초기 구독 및 시작 페이드 처리
         /// </summary>
         private void Awake()
         {
             ResolveView();
-            Bus<OnFadeEvent>.Events += HandleFadeEvent;
+            BusObservable.On<OnFadeEvent>()
+                .Subscribe(HandleFadeEvent)
+                .AddTo(this);
             fadeView.PlayFade(0f, fadeDuration, null);
         }
 
@@ -27,26 +35,88 @@ namespace Work.Fade
         /// </summary>
         private void HandleFadeEvent(OnFadeEvent evt)
         {
-            ResolveView();
-            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
-
-            float targetAlpha = evt.isFadeIn ? 1f : 0f;
-            fadeView.PlayFade(targetAlpha, fadeDuration, () =>
-            {
-                Bus<OnFadeCompletedEvent>.Raise(new OnFadeCompletedEvent(evt.isFadeIn));
-                if (evt.isFadeIn == false)
-                {
-                    Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
-                }
-            });
+            PlayFadeEventAsync(evt.isFadeIn).Forget();
         }
 
         /// <summary>
-        /// 이벤트 구독 해제 처리
+        /// 페이드 연출 대기 처리
+        /// </summary>
+        public async UniTask FadeAsync(bool isFadeIn, CancellationToken cancellationToken)
+        {
+            ResolveView();
+            CancelFadeRequest();
+
+            CancellationTokenSource localCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            _fadeCts = localCts;
+
+            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
+            UniTaskCompletionSource completionSource = new UniTaskCompletionSource();
+            float targetAlpha = isFadeIn ? 1f : 0f;
+
+            fadeView.PlayFade(targetAlpha, fadeDuration, () => completionSource.TrySetResult());
+
+            try
+            {
+                await completionSource.Task.AttachExternalCancellation(localCts.Token);
+                if (isFadeIn == false)
+                {
+                    Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                if (ReferenceEquals(_fadeCts, localCts))
+                {
+                    fadeView.CancelFade();
+                }
+
+                throw;
+            }
+            finally
+            {
+                if (ReferenceEquals(_fadeCts, localCts))
+                {
+                    _fadeCts = null;
+                    localCts.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 이벤트 기반 페이드 완료 발행
+        /// </summary>
+        private async UniTaskVoid PlayFadeEventAsync(bool isFadeIn)
+        {
+            try
+            {
+                await FadeAsync(isFadeIn, CancellationToken.None);
+                Bus<OnFadeCompletedEvent>.Raise(new OnFadeCompletedEvent(isFadeIn));
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        /// <summary>
+        /// 페이드 연출 정리
         /// </summary>
         private void OnDestroy()
         {
-            Bus<OnFadeEvent>.Events -= HandleFadeEvent;
+            CancelFadeRequest();
+        }
+
+        /// <summary>
+        /// 페이드 요청 취소
+        /// </summary>
+        private void CancelFadeRequest()
+        {
+            if (_fadeCts != null)
+            {
+                _fadeCts.Cancel();
+                _fadeCts.Dispose();
+                _fadeCts = null;
+            }
+
             if (fadeView != null)
             {
                 fadeView.CancelFade();

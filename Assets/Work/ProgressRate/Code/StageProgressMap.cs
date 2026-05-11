@@ -46,8 +46,6 @@ namespace Work.ProgressRate.Code
 
         private void Awake()
         {
-            Bus<PlayInitialProgressMapEvent>.Events += HandleInitialEvent;
-            Bus<OnNextRoomEvent>.Events += HandleNextRoomEvent;
             Bus<ResetStageProgressEvent>.Events += HandleResetEvent;
             Bus<SetInitialStageProgressEvent>.Events += HandleSetInitialEvent;
             
@@ -60,8 +58,6 @@ namespace Work.ProgressRate.Code
 
         private void OnDestroy()
         {
-            Bus<PlayInitialProgressMapEvent>.Events -= HandleInitialEvent;
-            Bus<OnNextRoomEvent>.Events -= HandleNextRoomEvent;
             Bus<ResetStageProgressEvent>.Events -= HandleResetEvent;
             Bus<SetInitialStageProgressEvent>.Events -= HandleSetInitialEvent;
             CancelProcess();
@@ -77,15 +73,39 @@ namespace Work.ProgressRate.Code
             }
         }
 
-        private void HandleInitialEvent(PlayInitialProgressMapEvent evt)
+        /// <summary>
+        /// 최초 진행도 맵 연출 대기 처리
+        /// </summary>
+        public UniTask PlayInitialAsync(DoorType initialRoomType, CancellationToken cancellationToken)
         {
-            _currentStageIndex = 0; 
+            _initialRoomType = initialRoomType;
+            _roomHistory.Clear();
+            _roomHistory.Add(_initialRoomType);
+            _currentStageIndex = 0;
             CancelProcess();
-            _cts = new CancellationTokenSource();
-            PlayInitialSequenceAsync(_cts.Token).Forget();
+            _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            return PlayInitialSequenceAsync(_cts.Token);
         }
 
-        private async UniTaskVoid PlayInitialSequenceAsync(CancellationToken ct)
+        /// <summary>
+        /// 다음 진행도 맵 연출 대기 처리
+        /// </summary>
+        public UniTask PlayNextAsync(DoorType nextRoomType, CancellationToken cancellationToken)
+        {
+            _roomHistory.Add(nextRoomType);
+            _currentStageIndex++;
+
+            if (_currentStageIndex >= totalStageCount)
+            {
+                return UniTask.CompletedTask;
+            }
+
+            CancelProcess();
+            _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            return PlayTransitionSequenceAsync(_currentStageIndex, _cts.Token);
+        }
+
+        private async UniTask PlayInitialSequenceAsync(CancellationToken ct)
         {
             InitializeMap(isInitial: true);
             mapContainer.SetActive(true);
@@ -104,24 +124,7 @@ namespace Work.ProgressRate.Code
             await CloseMapAsync(ct);
         }
 
-        private void HandleNextRoomEvent(OnNextRoomEvent evt)
-        {
-            _roomHistory.Add(evt.nextRoomType);
-            _currentStageIndex++;
-            
-            // 먹통 방지: 범위를 벗어나면 즉시 페이드 해제
-            if (_currentStageIndex >= totalStageCount) 
-            {
-                Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
-                return;
-            }
-
-            CancelProcess();
-            _cts = new CancellationTokenSource();
-            PlayTransitionSequenceAsync(_currentStageIndex, _cts.Token).Forget();
-        }
-
-        private async UniTaskVoid PlayTransitionSequenceAsync(int nextIndex, CancellationToken ct)
+        private async UniTask PlayTransitionSequenceAsync(int nextIndex, CancellationToken ct)
         {
             InitializeMap(isInitial: false);
             mapContainer.SetActive(true);
@@ -162,7 +165,6 @@ namespace Work.ProgressRate.Code
         {
             ct.ThrowIfCancellationRequested();
             mapContainer.SetActive(false);
-            Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
             return UniTask.CompletedTask;
         }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 using Work.Core.Utils.EventBus;
 using Work.ETC.LocationUI.Code;
 using Work.Fade;
+using Work.Input.Code;
 using Work.ProgressRate.Code;
 
 namespace Work.Stages.Code
@@ -16,25 +17,22 @@ namespace Work.Stages.Code
     {
         private readonly Action<DoorType, GameObject> _generateStage;
         private readonly float _progressMapFallbackDelay;
+        private readonly FadePresenter _fadePresenter;
+        private readonly StageProgressMap _stageProgressMap;
 
-        private DoorType _pendingDoorType;
-        private GameObject _pendingInteractor;
-        private CancellationTokenSource _progressMapFallbackCts;
-
+        private CancellationTokenSource _transitionCts;
         private bool _isTransitioning;
-        private bool _isInitialFlow;
-        private bool _isWaitingFadeIn;
-        private bool _isWaitingProgressMap;
-        private bool _isWaitingFadeOut;
         private bool _isDisposed;
 
         /// <summary>
         /// 스테이지 전환 흐름 제어자 생성
         /// </summary>
-        public StageTransitionFlowController(Action<DoorType, GameObject> generateStage, float progressMapFallbackDelay)
+        public StageTransitionFlowController(Action<DoorType, GameObject> generateStage, float progressMapFallbackDelay, FadePresenter fadePresenter, StageProgressMap stageProgressMap)
         {
             _generateStage = generateStage;
             _progressMapFallbackDelay = progressMapFallbackDelay;
+            _fadePresenter = fadePresenter;
+            _stageProgressMap = stageProgressMap;
         }
 
         /// <summary>
@@ -42,19 +40,15 @@ namespace Work.Stages.Code
         /// </summary>
         public void Initialize()
         {
-            Bus<OnFadeCompletedEvent>.Events += HandleFadeCompletedEvent;
-            Bus<StageProgressMapClosedEvent>.Events += HandleStageProgressMapClosedEvent;
         }
 
         /// <summary>
-        /// 이벤트 구독 해제
+        /// 전환 흐름 해제
         /// </summary>
         public void Dispose()
         {
             _isDisposed = true;
-            CancelProgressMapFallback();
-            Bus<OnFadeCompletedEvent>.Events -= HandleFadeCompletedEvent;
-            Bus<StageProgressMapClosedEvent>.Events -= HandleStageProgressMapClosedEvent;
+            CancelTransition();
         }
 
         /// <summary>
@@ -67,14 +61,8 @@ namespace Work.Stages.Code
                 return;
             }
 
-            _isTransitioning = true;
-            _isInitialFlow = true;
-            _pendingDoorType = initialDoorType;
-            _pendingInteractor = null;
-
-            _generateStage.Invoke(_pendingDoorType, _pendingInteractor);
-            BeginProgressMapWait();
-            Bus<PlayInitialProgressMapEvent>.Raise(new PlayInitialProgressMapEvent());
+            _transitionCts = new CancellationTokenSource();
+            RunInitialFlowAsync(initialDoorType, _transitionCts.Token).Forget();
         }
 
         /// <summary>
@@ -88,112 +76,138 @@ namespace Work.Stages.Code
                 return;
             }
 
+            _transitionCts = new CancellationTokenSource();
+            RunTransitionAsync(interactor, doorType, _transitionCts.Token).Forget();
+        }
+
+        /// <summary>
+        /// 최초 전환 흐름
+        /// </summary>
+        private async UniTaskVoid RunInitialFlowAsync(DoorType initialDoorType, CancellationToken cancellationToken)
+        {
             _isTransitioning = true;
-            _isInitialFlow = false;
-            _isWaitingFadeIn = true;
-            _pendingInteractor = interactor;
-            _pendingDoorType = doorType;
 
-            Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));
-        }
-
-        /// <summary>
-        /// 페이드 완료 이벤트 처리
-        /// </summary>
-        private void HandleFadeCompletedEvent(OnFadeCompletedEvent evt)
-        {
-            if (_isDisposed)
-            {
-                return;
-            }
-
-            if (evt.isFadeIn && _isWaitingFadeIn)
-            {
-                _isWaitingFadeIn = false;
-                _generateStage.Invoke(_pendingDoorType, _pendingInteractor);
-                BeginProgressMapWait();
-                Bus<OnNextRoomEvent>.Raise(new OnNextRoomEvent(_pendingDoorType));
-                return;
-            }
-
-            if (evt.isFadeIn == false && _isWaitingFadeOut)
-            {
-                _isWaitingFadeOut = false;
-                CompleteTransition();
-            }
-        }
-
-        /// <summary>
-        /// 진행도 맵 닫힘 이벤트 처리
-        /// </summary>
-        private void HandleStageProgressMapClosedEvent(StageProgressMapClosedEvent evt)
-        {
-            CompleteProgressMapWait();
-        }
-
-        /// <summary>
-        /// 진행도 맵 대기 시작
-        /// </summary>
-        private void BeginProgressMapWait()
-        {
-            _isWaitingProgressMap = true;
-            CancelProgressMapFallback();
-
-            _progressMapFallbackCts = new CancellationTokenSource();
-            WaitProgressMapFallbackAsync(_progressMapFallbackCts.Token).Forget();
-        }
-
-        /// <summary>
-        /// 진행도 맵 대기 완료
-        /// </summary>
-        private void CompleteProgressMapWait()
-        {
-            if (_isDisposed || _isWaitingProgressMap == false)
-            {
-                return;
-            }
-
-            _isWaitingProgressMap = false;
-            CancelProgressMapFallback();
-
-            if (_isInitialFlow)
-            {
-                CompleteTransition();
-                return;
-            }
-
-            _isWaitingFadeOut = true;
-            Bus<OnFadeEvent>.Raise(new OnFadeEvent(false));
-        }
-
-        /// <summary>
-        /// 진행도 맵 대기 안전장치
-        /// </summary>
-        private async UniTaskVoid WaitProgressMapFallbackAsync(CancellationToken cancellationToken)
-        {
             try
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(_progressMapFallbackDelay), cancellationToken: cancellationToken);
-                CompleteProgressMapWait();
+                _generateStage.Invoke(initialDoorType, null);
+                await PlayInitialProgressMapAsync(initialDoorType, cancellationToken);
+                CompleteTransition();
             }
             catch (OperationCanceledException)
             {
             }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception);
+                CompleteTransition();
+            }
         }
 
         /// <summary>
-        /// 진행도 맵 대기 안전장치 취소
+        /// 다음 전환 흐름
         /// </summary>
-        private void CancelProgressMapFallback()
+        private async UniTaskVoid RunTransitionAsync(GameObject interactor, DoorType doorType, CancellationToken cancellationToken)
         {
-            if (_progressMapFallbackCts == null)
+            _isTransitioning = true;
+            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
+
+            try
+            {
+                await PlayFadeAsync(true, cancellationToken);
+                _generateStage.Invoke(doorType, interactor);
+                Bus<OnNextRoomEvent>.Raise(new OnNextRoomEvent(doorType));
+                await PlayNextProgressMapAsync(doorType, cancellationToken);
+                await PlayFadeAsync(false, cancellationToken);
+                CompleteTransition();
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception);
+                CompleteTransition();
+            }
+            finally
+            {
+                if (_isDisposed == false)
+                {
+                    Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 선택적 페이드 대기
+        /// </summary>
+        private UniTask PlayFadeAsync(bool isFadeIn, CancellationToken cancellationToken)
+        {
+            if (_fadePresenter == null)
+            {
+                return UniTask.CompletedTask;
+            }
+
+            return _fadePresenter.FadeAsync(isFadeIn, cancellationToken);
+        }
+
+        /// <summary>
+        /// 선택적 최초 진행도 맵 대기
+        /// </summary>
+        private UniTask PlayInitialProgressMapAsync(DoorType initialDoorType, CancellationToken cancellationToken)
+        {
+            if (_stageProgressMap == null)
+            {
+                return UniTask.CompletedTask;
+            }
+
+            return PlayProgressMapWithFallbackAsync(_stageProgressMap.PlayInitialAsync(initialDoorType, cancellationToken), cancellationToken);
+        }
+
+        /// <summary>
+        /// 선택적 다음 진행도 맵 대기
+        /// </summary>
+        private UniTask PlayNextProgressMapAsync(DoorType doorType, CancellationToken cancellationToken)
+        {
+            if (_stageProgressMap == null)
+            {
+                return UniTask.CompletedTask;
+            }
+
+            return PlayProgressMapWithFallbackAsync(_stageProgressMap.PlayNextAsync(doorType, cancellationToken), cancellationToken);
+        }
+
+        /// <summary>
+        /// 진행도 맵 안전 대기
+        /// </summary>
+        private async UniTask PlayProgressMapWithFallbackAsync(UniTask progressMapTask, CancellationToken cancellationToken)
+        {
+            if (_progressMapFallbackDelay <= 0f)
+            {
+                await progressMapTask;
+                return;
+            }
+
+            UniTask fallbackTask = UniTask.Delay(TimeSpan.FromSeconds(_progressMapFallbackDelay), cancellationToken: cancellationToken);
+            int completedIndex = await UniTask.WhenAny(progressMapTask, fallbackTask);
+            if (completedIndex == 1)
+            {
+                Debug.LogWarning("[StageTransitionFlowController] 진행도 맵 연출 대기 시간이 초과되어 전환을 계속합니다.");
+            }
+        }
+
+        /// <summary>
+        /// 전환 취소
+        /// </summary>
+        private void CancelTransition()
+        {
+            if (_transitionCts == null)
             {
                 return;
             }
 
-            _progressMapFallbackCts.Cancel();
-            _progressMapFallbackCts.Dispose();
-            _progressMapFallbackCts = null;
+            _transitionCts.Cancel();
+            _transitionCts.Dispose();
+            _transitionCts = null;
         }
 
         /// <summary>
@@ -202,11 +216,12 @@ namespace Work.Stages.Code
         private void CompleteTransition()
         {
             _isTransitioning = false;
-            _isInitialFlow = false;
-            _isWaitingFadeIn = false;
-            _isWaitingProgressMap = false;
-            _isWaitingFadeOut = false;
-            _pendingInteractor = null;
+            CancelTransition();
+
+            if (_isDisposed)
+            {
+                return;
+            }
 
             Bus<PlayLocationUIEvent>.Raise(new PlayLocationUIEvent());
         }

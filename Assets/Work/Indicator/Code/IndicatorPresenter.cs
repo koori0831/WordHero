@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using GondrLib.Dependencies;
 using GondrLib.ObjectPool.RunTime;
+using R3;
+using R3.Triggers;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Work.Core.Utils.EventBus;
@@ -44,15 +46,12 @@ namespace Work.Indicator.Code
         {
             _cachedMainCamera = Camera.main;
             ResolveContainerView();
-            Bus<OnEnemySpawnedEvent>.Events += HandleEnemyListReceived;
-        }
-
-        /// <summary>
-        /// 이벤트 구독 해제 처리
-        /// </summary>
-        private void OnDestroy()
-        {
-            Bus<OnEnemySpawnedEvent>.Events -= HandleEnemyListReceived;
+            BusObservable.On<OnEnemySpawnedEvent>()
+                .Subscribe(HandleEnemyListReceived)
+                .AddTo(this);
+            this.UpdateAsObservable()
+                .Subscribe(_ => TickIndicator())
+                .AddTo(this);
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace Work.Indicator.Code
         /// <summary>
         /// 인디케이터 표시 갱신 처리
         /// </summary>
-        private void Update()
+        private void TickIndicator()
         {
             CheckCamera();
             ResolveContainerView();
