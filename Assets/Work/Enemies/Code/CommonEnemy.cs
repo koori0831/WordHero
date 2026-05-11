@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Work.Enemies.Code
+﻿namespace Work.Enemies.Code
 {
     public class CommonEnemy : Enemy
     {
