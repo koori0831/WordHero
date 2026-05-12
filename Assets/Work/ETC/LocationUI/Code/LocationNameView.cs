@@ -1,19 +1,17 @@
-﻿using LitMotion;
+﻿using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using LitMotion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Work.Core.Utils.EventBus;
 
 namespace Work.ETC.LocationUI.Code
 {
-    public record struct OnShowLocationNameEvent(string LocationName) : IEvent;
-
     /// <summary>
-    /// 발행됐을 때 로케이션 UI를 띄우는 이벤트
+    /// 로케이션 이름 표시 뷰
     /// </summary>
-    public readonly record struct PlayLocationUIEvent : IEvent;
-
-    public class LocationNameUI : MonoBehaviour
+    public class LocationNameView : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI locationNameText;
         [SerializeField] private Image locationNameLine;
@@ -23,24 +21,34 @@ namespace Work.ETC.LocationUI.Code
         private MotionHandle _fadeInHandle;
         private MotionHandle _fadeOutHandle;
 
-        public void Awake()
+        /// <summary>
+        /// 초기 표시 상태 설정
+        /// </summary>
+        private void Awake()
         {
-            Bus<OnShowLocationNameEvent>.Events += HandleShowLocationNameEvent;
-            locationNameText.gameObject.SetActive(false);
-            locationNameLine.gameObject.SetActive(false);
+            Hide();
         }
 
+        /// <summary>
+        /// 연출 정리 처리
+        /// </summary>
         private void OnDestroy()
         {
-            Bus<OnShowLocationNameEvent>.Events -= HandleShowLocationNameEvent;
             CancelMotions();
         }
 
-        private void HandleShowLocationNameEvent(OnShowLocationNameEvent evt)
+        /// <summary>
+        /// 로케이션 이름 표시 연출
+        /// </summary>
+        public async UniTask PlayAsync(string locationName, CancellationToken cancellationToken)
         {
-            ShowLocationName(evt.LocationName);
+            ShowLocationName(locationName);
+            await UniTask.Delay(TimeSpan.FromSeconds(fadeDuration + displayDuration + fadeDuration), cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// 로케이션 이름 표시 시작
+        /// </summary>
         public void ShowLocationName(string locationName)
         {
             CancelMotions();
@@ -69,12 +77,29 @@ namespace Work.ETC.LocationUI.Code
                 .AddTo(gameObject);
         }
 
-        private void CancelMotions()
+        /// <summary>
+        /// 로케이션 이름 숨김 처리
+        /// </summary>
+        public void Hide()
+        {
+            CancelMotions();
+            locationNameText.gameObject.SetActive(false);
+            locationNameLine.gameObject.SetActive(false);
+            SetAlpha(0f);
+        }
+
+        /// <summary>
+        /// 로케이션 이름 연출 정리
+        /// </summary>
+        public void CancelMotions()
         {
             _fadeInHandle.TryCancel();
             _fadeOutHandle.TryCancel();
         }
 
+        /// <summary>
+        /// 알파값 반영
+        /// </summary>
         private void SetAlpha(float alpha)
         {
             Color textColor = locationNameText.color;

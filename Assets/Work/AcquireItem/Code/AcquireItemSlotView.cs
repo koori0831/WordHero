@@ -1,12 +1,14 @@
 ﻿using LitMotion;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Work.AcquireItem.Code
 {
-    public class AcquireItemFieldSlot : MonoBehaviour
+    /// <summary>
+    /// 획득 아이템 슬롯 뷰
+    /// </summary>
+    public class AcquireItemSlotView : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI typeText;
@@ -16,6 +18,9 @@ namespace Work.AcquireItem.Code
 
         private float _timer;
 
+        /// <summary>
+        /// 초기 표시 상태
+        /// </summary>
         public void Init()
         {
             nameText.color = new Color(nameText.color.r, nameText.color.g, nameText.color.b, 0);
@@ -23,13 +28,16 @@ namespace Work.AcquireItem.Code
             colorImage.color = new Color(colorImage.color.r, colorImage.color.g, colorImage.color.b, 0);
             backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0);
             _timer = lifeTime;
-            SetAlpha(true,0.3f);
+            SetAlpha(true, 0.3f);
         }
 
-        public void SetAlpha(bool inActiveTrue, float duration)
+        /// <summary>
+        /// 알파 연출 처리
+        /// </summary>
+        public void SetAlpha(bool isFadeIn, float duration)
         {
-            float start = inActiveTrue ? 0f : 1f;
-            float end = inActiveTrue ? 1f : 0f;
+            float start = isFadeIn ? 0f : 1f;
+            float end = isFadeIn ? 1f : 0f;
 
             LMotion.Create(start, end, duration)
                 .Bind(a =>
@@ -55,10 +63,13 @@ namespace Work.AcquireItem.Code
             }
         }
 
-        public void SetInfo(string name, string type, Color color)
+        /// <summary>
+        /// 슬롯 정보 표시
+        /// </summary>
+        public void SetInfo(string itemName, string itemType, Color color)
         {
-            nameText.text = name;
-            typeText.text = type;
+            nameText.text = itemName;
+            typeText.text = itemType;
             colorImage.color = color;
         }
     }
