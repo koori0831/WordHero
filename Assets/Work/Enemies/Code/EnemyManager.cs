@@ -11,16 +11,10 @@ namespace Work.Enemies.Code
 
     public record struct OnEnemySpawnedEvent(List<Enemy> enemyList) : IEvent;
 
-    [Serializable]
-    public class WaveSpawnAreaGroup
-    {
-        [field: SerializeField] public List<BoxCollider> SpawnAreas { get; private set; } = new List<BoxCollider>();
-    }
-
     public class EnemyManager : MonoBehaviour
     {
         [SerializeField] private EnemyWaveDataSO waveData;
-        [SerializeField] private List<WaveSpawnAreaGroup> waveSpawnAreaGroups = new List<WaveSpawnAreaGroup>();
+        [SerializeField] private List<BoxCollider> spawnAreas = new List<BoxCollider>();
         [SerializeField] private float minEnemyDistance = 2f;
         [SerializeField] private float entranceAvoidRadius = 5f;
         [SerializeField] private float navMeshSampleRadius = 3f;
@@ -84,8 +78,9 @@ namespace Work.Enemies.Code
                 return false;
             }
 
-            if (HasValidSpawnAreaGroups() == false)
+            if (HasValidSpawnArea() == false)
             {
+                Debug.LogError($"[EnemyManager] Spawn areas are missing on '{name}'.", this);
                 return false;
             }
 
@@ -128,11 +123,10 @@ namespace Work.Enemies.Code
             }
 
             EnemyWave wave = waveData.Waves[currentWaveIndex];
-            WaveSpawnAreaGroup spawnAreaGroup = waveSpawnAreaGroups[currentWaveIndex];
             currentWaveIndex++;
             allWavesSpawned = currentWaveIndex >= waveData.Waves.Count;
 
-            int immediateSpawnCount = SpawnWaveEnemies(wave, spawnAreaGroup);
+            int immediateSpawnCount = SpawnWaveEnemies(wave);
 
             if (immediateSpawnCount > 0)
             {
@@ -153,9 +147,13 @@ namespace Work.Enemies.Code
                 return;
             }
 
+            if (wave.ForceNextWaveTime > 0f && allWavesSpawned == false)
+            {
+                waveCoroutine = StartCoroutine(ForceNextWaveAfter(wave.ForceNextWaveTime));
+            }
         }
 
-        private int SpawnWaveEnemies(EnemyWave wave, WaveSpawnAreaGroup spawnAreaGroup)
+        private int SpawnWaveEnemies(EnemyWave wave)
         {
             waveSpawnPositions.Clear();
             int immediateSpawnCount = 0;
@@ -171,7 +169,7 @@ namespace Work.Enemies.Code
 
                 for (int j = 0; j < entry.Count; j++)
                 {
-                    if (TryGetSpawnPosition(spawnAreaGroup, out Vector3 spawnPosition) == false)
+                    if (TryGetSpawnPosition(out Vector3 spawnPosition) == false)
                     {
                         Debug.LogWarning($"[EnemyManager] Failed to find spawn position for '{entry.Prefab.name}' on '{name}'.", this);
                         continue;
@@ -232,11 +230,11 @@ namespace Work.Enemies.Code
             RegisterEnemy(enemy);
         }
 
-        private bool TryGetSpawnPosition(WaveSpawnAreaGroup spawnAreaGroup, out Vector3 spawnPosition)
+        private bool TryGetSpawnPosition(out Vector3 spawnPosition)
         {
             for (int i = 0; i < spawnTryCount; i++)
             {
-                BoxCollider spawnArea = GetRandomSpawnArea(spawnAreaGroup);
+                BoxCollider spawnArea = GetRandomSpawnArea();
                 if (spawnArea == null)
                     break;
 
@@ -265,75 +263,42 @@ namespace Work.Enemies.Code
             return false;
         }
 
-        private bool HasValidSpawnAreaGroups()
+        private bool HasValidSpawnArea()
         {
-            if (waveSpawnAreaGroups.Count < waveData.Waves.Count)
+            for (int i = 0; i < spawnAreas.Count; i++)
             {
-                Debug.LogError($"[EnemyManager] Wave spawn area group count is less than wave count on '{name}'.", this);
-                return false;
-            }
-
-            for (int i = 0; i < waveData.Waves.Count; i++)
-            {
-                if (HasValidSpawnArea(waveSpawnAreaGroups[i]) == false)
-                {
-                    Debug.LogError($"[EnemyManager] Wave {i + 1} spawn areas are missing on '{name}'.", this);
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private bool HasValidSpawnArea(WaveSpawnAreaGroup spawnAreaGroup)
-        {
-            if (spawnAreaGroup == null)
-                return false;
-
-            for (int i = 0; i < spawnAreaGroup.SpawnAreas.Count; i++)
-            {
-                if (spawnAreaGroup.SpawnAreas[i] != null && GetSpawnAreaWeight(spawnAreaGroup.SpawnAreas[i]) > 0f)
+                if (spawnAreas[i] != null)
                     return true;
             }
 
             return false;
         }
 
-        private BoxCollider GetRandomSpawnArea(WaveSpawnAreaGroup spawnAreaGroup)
+        private BoxCollider GetRandomSpawnArea()
         {
-            float totalWeight = 0f;
-            for (int i = 0; i < spawnAreaGroup.SpawnAreas.Count; i++)
+            int validAreaCount = 0;
+            for (int i = 0; i < spawnAreas.Count; i++)
             {
-                totalWeight += GetSpawnAreaWeight(spawnAreaGroup.SpawnAreas[i]);
+                if (spawnAreas[i] != null)
+                    validAreaCount++;
             }
 
-            if (totalWeight <= 0f)
+            if (validAreaCount <= 0)
                 return null;
 
-            float randomWeight = UnityEngine.Random.Range(0f, totalWeight);
-            for (int i = 0; i < spawnAreaGroup.SpawnAreas.Count; i++)
+            int randomIndex = UnityEngine.Random.Range(0, validAreaCount);
+            for (int i = 0; i < spawnAreas.Count; i++)
             {
-                BoxCollider spawnArea = spawnAreaGroup.SpawnAreas[i];
-                float weight = GetSpawnAreaWeight(spawnArea);
-                if (weight <= 0f)
+                if (spawnAreas[i] == null)
                     continue;
 
-                if (randomWeight <= weight)
-                    return spawnArea;
+                if (randomIndex == 0)
+                    return spawnAreas[i];
 
-                randomWeight -= weight;
+                randomIndex--;
             }
 
             return null;
-        }
-
-        private float GetSpawnAreaWeight(BoxCollider spawnArea)
-        {
-            if (spawnArea == null)
-                return 0f;
-
-            Bounds bounds = spawnArea.bounds;
-            return Mathf.Max(0f, bounds.size.x * bounds.size.z);
         }
 
         private bool IsTooCloseToOtherEnemy(Vector3 position)
@@ -366,6 +331,17 @@ namespace Work.Enemies.Code
             Action deathHandler = () => HandleDeadEvent(enemy);
             deathHandlers.Add(enemy, deathHandler);
             enemy.EnemyInfoData.HpValue.OnDead += deathHandler;
+        }
+
+        private IEnumerator ForceNextWaveAfter(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            waveCoroutine = null;
+
+            if (allWavesSpawned == false)
+            {
+                SpawnNextWave();
+            }
         }
 
         private IEnumerator SpawnNextWaveAfter(float seconds)

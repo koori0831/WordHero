@@ -2,11 +2,12 @@
 using Unity.Behavior;
 using Unity.Properties;
 using UnityEngine;
+using UnityEngine.UI;
 using Work.Enemies.Code;
 using Action = Unity.Behavior.Action;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "AnimationEndCheck", story: "[Self] animation end check", category: "Action", id: "6f50d3be169a1db4e437e55847217210")]
+[NodeDescription(name: "AnimationEndCheck", story: "[Self] animtion end check", category: "Action", id: "6f50d3be169a1db4e437e55847217210")]
 public partial class AnimationEndCheckAction : Action
 {
     [SerializeReference] public BlackboardVariable<Enemy> Self;

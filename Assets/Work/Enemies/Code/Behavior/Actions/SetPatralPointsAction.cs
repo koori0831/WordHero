@@ -7,7 +7,7 @@ using Action = Unity.Behavior.Action;
 using Unity.Properties;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "SetPatralPoints", story: "[Self] set patrol [points] [number] [range]", category: "Action", id: "563799d3c86759b452078352415edc27")]
+[NodeDescription(name: "SetPatralPoints", story: "[Self] set patral [points] [number] [range]", category: "Action", id: "563799d3c86759b452078352415edc27")]
 public partial class SetPatralPointsAction : Action
 {
     [SerializeReference] public BlackboardVariable<Enemy> Self;
@@ -24,19 +24,19 @@ public partial class SetPatralPointsAction : Action
 
         for(int i = 0; i < Number.Value; i++)
         {
-            Vector3 patrolPoint = pos + UnityEngine.Random.insideUnitSphere * range;
-            patrolPoint.y = pos.y;
+            Vector3 patralPoint = pos + UnityEngine.Random.insideUnitSphere * range;
+            patralPoint.y = pos.y;
             int count = 0;
-            while (!mover.CanMovePoint(patrolPoint) && count <= 20)
+            while (!mover.CanMovePoint(patralPoint) && count <= 20)
             {
 
-                patrolPoint = pos + UnityEngine.Random.insideUnitSphere * range;
-                patrolPoint.y = pos.y;
+                patralPoint = pos + UnityEngine.Random.insideUnitSphere * range;
+                patralPoint.y = pos.y;
                 count++;
             }
 
             
-            Points.Value.Add(patrolPoint);
+            Points.Value.Add(patralPoint);
         }
 
         return Status.Success;
