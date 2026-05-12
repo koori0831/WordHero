@@ -26,7 +26,7 @@ namespace Work.Weapons.HitBox.Code
         {
             if (DestroyOnStart)
             {
-                if (DestroyParent)
+                if (DestroyParent && gameObject.transform.parent != null)
                 {
                     Destroy(gameObject.transform.parent.gameObject, DestroyDelay);
                 }

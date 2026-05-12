@@ -79,8 +79,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83adc114953db6d4189b5596e04f5d2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Enemies.Code.EnemyManager
-  waveData: {fileID: 11400000, guid: 086730043d6d838468886e925609a963, type: 2}
-  waveSpawnAreaGroups: []
+  waveData: {fileID: 11400000, guid: 3e06f01d899b44d4494c6e9207503414, type: 2}
+  waveSpawnAreaGroups:
+  - <SpawnAreas>k__BackingField:
+    - {fileID: 8637069104448839655}
+  - <SpawnAreas>k__BackingField:
+    - {fileID: 702382749751738846}
+    - {fileID: 133776785073754541}
+  - <SpawnAreas>k__BackingField:
+    - {fileID: 5330664180288755443}
   minEnemyDistance: 2
   entranceAvoidRadius: 5
   navMeshSampleRadius: 3
@@ -197,7 +204,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -686,7 +693,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -739,7 +746,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -792,7 +799,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
