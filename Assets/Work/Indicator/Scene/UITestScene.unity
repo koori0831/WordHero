@@ -488,7 +488,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24511ae69fae3ab4e90c0363aca6f89e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.LocationUI.Code.LocationUITrigger
+  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.LocationUI.Code.LocationUIPlayer
   locationName: "\uAC00\uB77C\uC549\uC740 \uC2E0\uC804"
   delayTime: 1
 --- !u!1001 &503318157
@@ -1011,7 +1011,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24511ae69fae3ab4e90c0363aca6f89e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.LocationUI.Code.LocationUITrigger
+  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.LocationUI.Code.LocationUIPlayer
   locationName: "\uAC00\uB77C\uC549\uC740 \uC2E0\uC804"
   delayTime: 1
 --- !u!4 &832176118
@@ -1077,7 +1077,6 @@ MonoBehaviour:
   doorPrefab: {fileID: 1900758950306850552, guid: 007076170283b694aad3c2eadc27e326, type: 3}
   chestPrefab: {fileID: 9201234575408641520, guid: 876da7fd808d4aa44ac9b543b6ed25af, type: 3}
   chestSpawnDistance: 2.39
-  stageProgressMapFallbackDelay: 6
 --- !u!4 &872972847
 Transform:
   m_ObjectHideFlags: 0
@@ -2390,7 +2389,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6856603532701849318, guid: 81ea59dedc707564895d064b197153f0, type: 3}
       propertyPath: m_Name
-      value: LocationNameView
+      value: LocationNameUI
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3243,6 +3242,10 @@ PrefabInstance:
       propertyPath: <Camera>k__BackingField
       value: 
       objectReference: {fileID: 1540623734}
+    - target: {fileID: 4886530867193011421, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
+      propertyPath: _indicatorContainer
+      value: 
+      objectReference: {fileID: 1593225245}
     - target: {fileID: 6161471127420699926, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.28703

@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
   m_Padding:
     m_Left: 0
@@ -278,12 +278,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7833d7d604ce7df46aca9592f1f2a9af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.ProgressRate.Code.StageProgressMapView
+  m_EditorClassIdentifier: Assembly-CSharp::Work.ProgressRate.Code.StageProgressMap
   mapContainer: {fileID: 821123628}
   contentRect: {fileID: 60948497}
   viewportRect: {fileID: 1634998529}
   nodePrefab: {fileID: 1391739639715678303, guid: 1fff6feb02dea7e4992566bd60f460aa, type: 3}
   dotPrefab: {fileID: 810260892976073467, guid: 1350070fe5998d1439186937a7a2045a, type: 3}
+  totalStageCount: 10
   dotsPerLink: 3
   animationDuration: 0.5
   focusDuration: 0.6
@@ -632,8 +633,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24511ae69fae3ab4e90c0363aca6f89e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.LocationUI.Code.LocationUITrigger
+  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.LocationUI.Code.LocationUIPlayer
   locationName: "\uAC00\uB77C\uC549\uC740 \uC2E0\uC804"
+  delayTime: 1
 --- !u!1001 &503318157
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1191,8 +1193,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24511ae69fae3ab4e90c0363aca6f89e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.LocationUI.Code.LocationUITrigger
+  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.LocationUI.Code.LocationUIPlayer
   locationName: "\uAC00\uB77C\uC549\uC740 \uC2E0\uC804"
+  delayTime: 1
 --- !u!4 &832176118
 Transform:
   m_ObjectHideFlags: 0
@@ -1251,11 +1254,11 @@ MonoBehaviour:
   - {fileID: 5146958597725209091, guid: fda7911c295f68845bebafbf7fa2c817, type: 3}
   shopStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
   bossStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
-  stageFlowConfig: {fileID: 11400000, guid: 1af1f08ebad94b41960c87f296f5d7e4, type: 2}
+  openingShopCountList: 0200000008000000
+  bossStageCount: 12
   doorPrefab: {fileID: 1900758950306850552, guid: 007076170283b694aad3c2eadc27e326, type: 3}
   chestPrefab: {fileID: 9201234575408641520, guid: 876da7fd808d4aa44ac9b543b6ed25af, type: 3}
   chestSpawnDistance: 2.39
-  stageProgressMapFallbackDelay: 6
 --- !u!4 &872972847
 Transform:
   m_ObjectHideFlags: 0
@@ -2375,8 +2378,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7407221112111752685, guid: 365013735c30cf94aac43660cba11ce5, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2391,17 +2393,11 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 9187613823088160446, guid: 365013735c30cf94aac43660cba11ce5, type: 3}
   m_PrefabInstance: {fileID: 1593225242}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1593225245 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6421968679054812301, guid: 365013735c30cf94aac43660cba11ce5, type: 3}
+--- !u!224 &1593225245 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1924198527277946338, guid: 365013735c30cf94aac43660cba11ce5, type: 3}
   m_PrefabInstance: {fileID: 1593225242}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83a2c09f4d3c4d7bb86bc78f30c0a251, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.Indicator.Code.IndicatorContainerView
 --- !u!1001 &1597628210
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2714,7 +2710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6856603532701849318, guid: 81ea59dedc707564895d064b197153f0, type: 3}
       propertyPath: m_Name
-      value: LocationNameView
+      value: LocationNameUI
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3776,13 +3772,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1540623734}
     - target: {fileID: 4886530867193011421, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
-      propertyPath: indicatorContainerView
+      propertyPath: _indicatorContainer
       value: 
       objectReference: {fileID: 1593225245}
-    - target: {fileID: 5812680656464525552, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
-      propertyPath: m_Name
-      value: IndicatorPresenter
-      objectReference: {fileID: 0}
     - target: {fileID: 6161471127420699926, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.28703
@@ -3829,58 +3821,8 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6161471127420699926, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1311534296}
-    - targetCorrespondingSourceObject: {fileID: 6161471127420699926, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2319010002}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
---- !u!1 &2319010001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2319010002}
-  - component: {fileID: 2319010003}
-  m_Layer: 0
-  m_Name: StageProgressMapPresenter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2319010002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2319010001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 399085018}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2319010003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2319010001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f3b41408d574c9d9f6a9d07fbc193b2, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::Work.ProgressRate.Code.StageProgressMapPresenter
-  progressMapView: {fileID: 191297722}
-  stageFlowConfig: {fileID: 11400000, guid: 1af1f08ebad94b41960c87f296f5d7e4, type: 2}
-  initialRoomType: 0
 --- !u!20 &7538238492796703259
 Camera:
   m_ObjectHideFlags: 0
