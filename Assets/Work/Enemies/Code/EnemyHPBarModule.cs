@@ -31,7 +31,7 @@ namespace Work.Enemies.Code
             hpBarObject.transform.localScale = new Vector3(_hpBarPercent, 1f, 1f);
         }
 
-        private void UpdateHPBar(int previousValue, int changeValue)
+        private void UpdateHPBar(int previorsValue, int changeValue)
         {
             int maxHealth = _healthModule.MaxHealth;
             int currentHealth = changeValue;
