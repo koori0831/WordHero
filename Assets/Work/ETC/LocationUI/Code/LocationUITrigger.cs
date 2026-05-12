@@ -1,24 +1,31 @@
-﻿using UnityEngine;
+﻿using R3;
+using UnityEngine;
 using Work.Core.Utils.EventBus;
 
 namespace Work.ETC.LocationUI.Code
 {
-    public class LocationUIPlayer : MonoBehaviour
+    /// <summary>
+    /// 로케이션 이름 표시 요청 트리거
+    /// </summary>
+    public class LocationUITrigger : MonoBehaviour
     {
         [SerializeField] private string locationName;
 
         private bool _isPlayed;
 
+        /// <summary>
+        /// 표시 요청 구독 처리
+        /// </summary>
         private void Awake()
         {
-            Bus<PlayLocationUIEvent>.Events += HandlePlayLocationUIEvent;
+            BusObservable.On<PlayLocationUIEvent>()
+                .Subscribe(HandlePlayLocationUIEvent)
+                .AddTo(this);
         }
 
-        private void OnDestroy()
-        {
-            Bus<PlayLocationUIEvent>.Events -= HandlePlayLocationUIEvent;
-        }
-
+        /// <summary>
+        /// 로케이션 표시 요청 처리
+        /// </summary>
         private void HandlePlayLocationUIEvent(PlayLocationUIEvent evt)
         {
             if (_isPlayed)

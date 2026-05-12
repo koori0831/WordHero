@@ -98,7 +98,7 @@ namespace Work.Indicator.Code
 
         private void ClearEnemies()
         {
-            foreach (var enemy in _testEnemies)
+            foreach (Enemy enemy in _testEnemies)
             {
                 if (enemy != null) Destroy(enemy.gameObject);
             }
