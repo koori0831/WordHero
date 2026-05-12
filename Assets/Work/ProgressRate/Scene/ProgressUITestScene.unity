@@ -284,7 +284,6 @@ MonoBehaviour:
   viewportRect: {fileID: 1634998529}
   nodePrefab: {fileID: 1391739639715678303, guid: 1fff6feb02dea7e4992566bd60f460aa, type: 3}
   dotPrefab: {fileID: 810260892976073467, guid: 1350070fe5998d1439186937a7a2045a, type: 3}
-  totalStageCount: 10
   dotsPerLink: 3
   animationDuration: 0.5
   focusDuration: 0.6
@@ -1252,8 +1251,7 @@ MonoBehaviour:
   - {fileID: 5146958597725209091, guid: fda7911c295f68845bebafbf7fa2c817, type: 3}
   shopStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
   bossStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
-  openingShopCountList: 0200000008000000
-  bossStageCount: 12
+  stageFlowConfig: {fileID: 11400000, guid: 1af1f08ebad94b41960c87f296f5d7e4, type: 2}
   doorPrefab: {fileID: 1900758950306850552, guid: 007076170283b694aad3c2eadc27e326, type: 3}
   chestPrefab: {fileID: 9201234575408641520, guid: 876da7fd808d4aa44ac9b543b6ed25af, type: 3}
   chestSpawnDistance: 2.39
@@ -3881,6 +3879,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::Work.ProgressRate.Code.StageProgressMapPresenter
   progressMapView: {fileID: 191297722}
+  stageFlowConfig: {fileID: 11400000, guid: 1af1f08ebad94b41960c87f296f5d7e4, type: 2}
   initialRoomType: 0
 --- !u!20 &7538238492796703259
 Camera:

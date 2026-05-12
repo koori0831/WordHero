@@ -23,8 +23,7 @@ namespace Work.Stages.Code
         [SerializeField] private List<Stage> questionStageList = new List<Stage>();
         [SerializeField] private Stage shopStage;
         [SerializeField] private Stage bossStage;
-        [SerializeField] private List<int> openingShopCountList;
-        [SerializeField] private int bossStageCount;
+        [SerializeField] private StageFlowConfigSO stageFlowConfig;
 
         [SerializeField] private Door doorPrefab;
         [SerializeField] private Chest chestPrefab;
@@ -38,16 +37,30 @@ namespace Work.Stages.Code
         {
             get
             {
-                for (int i = 0; i < openingShopCountList.Count; i++)
-                {
-                    if (openingShopCountList[i] == CurrentStageCount)
-                        return true;
-                }
-                return false;
+                return stageFlowConfig != null && stageFlowConfig.ContainsShopStageIndex(CurrentStageCount + 1);
             }
         }
 
-        public bool IsNextStageInBossStage => bossStageCount == CurrentStageCount;
+        public bool IsNextStageInBossStage => CurrentStageCount + 1 == BossStageIndex;
+
+        /// <summary>
+        /// 보스방 스테이지 번호
+        /// </summary>
+        public int BossStageIndex => stageFlowConfig != null ? stageFlowConfig.BossStageIndex : 1;
+
+        /// <summary>
+        /// 보스방까지 남은 방 수
+        /// </summary>
+        public int RemainingStageCount => stageFlowConfig != null
+            ? stageFlowConfig.GetRemainingStageCount(CurrentStageCount)
+            : Mathf.Max(0, BossStageIndex - CurrentStageCount);
+
+        /// <summary>
+        /// 보스방 제외 남은 일반 방 수
+        /// </summary>
+        public int RemainingNormalStageCount => stageFlowConfig != null
+            ? stageFlowConfig.GetRemainingNormalStageCount(CurrentStageCount)
+            : Mathf.Max(0, BossStageIndex - CurrentStageCount - 1);
 
         private Dictionary<DoorType, List<Stage>> stages;
 
@@ -57,6 +70,7 @@ namespace Work.Stages.Code
         private DoorType _currentStageDoorType = DoorType.Wood;
         private Chest _currentStageChest;
         private StageTransitionFlowController _stageTransitionFlowController;
+        private bool _isInitialPlayerPlacementPending;
 
         public static Stage CurrentStage { get; private set; }
 
@@ -74,6 +88,7 @@ namespace Work.Stages.Code
             };
 
             Bus<OnChestCreatEvent>.Events += HandleChestCreatEventEvent;
+            Bus<StageProgressMapClosedEvent>.Events += HandleInitialProgressMapClosed;
             FadePresenter fadePresenter = FindFirstObjectByType<FadePresenter>();
             StageProgressMapPresenter stageProgressMapPresenter = FindFirstObjectByType<StageProgressMapPresenter>();
             _stageTransitionFlowController = new StageTransitionFlowController(GenerateStage, stageProgressMapFallbackDelay, fadePresenter, stageProgressMapPresenter);
@@ -85,12 +100,14 @@ namespace Work.Stages.Code
         /// </summary>
         private void Start()
         {
-            _stageTransitionFlowController.StartInitialFlow(DoorType.Wood);
+            _isInitialPlayerPlacementPending = true;
+            _stageTransitionFlowController.StartInitialFlow(GetInitialDoorType());
         }
 
         private void OnDestroy()
         {
             Bus<OnChestCreatEvent>.Events -= HandleChestCreatEventEvent;
+            Bus<StageProgressMapClosedEvent>.Events -= HandleInitialProgressMapClosed;
             _stageTransitionFlowController?.Dispose();
         }
 
@@ -100,6 +117,25 @@ namespace Work.Stages.Code
         public void RequestStageTransition(GameObject interactor, DoorType doorType)
         {
             _stageTransitionFlowController.RequestTransition(interactor, doorType);
+        }
+
+        /// <summary>
+        /// 최초 진행도 맵 닫힘 처리
+        /// </summary>
+        private void HandleInitialProgressMapClosed(StageProgressMapClosedEvent evt)
+        {
+            if (_isInitialPlayerPlacementPending == false)
+            {
+                return;
+            }
+
+            _isInitialPlayerPlacementPending = false;
+            if (_player == null || CurrentStage == null)
+            {
+                return;
+            }
+
+            _player.transform.position = CurrentStage.SpawnPoint;
         }
 
         public Stage GetStage(DoorType doorType) // 특정 상황에서 상점이나 보스 스테이지를 반환하도록 수정해야함
@@ -264,36 +300,55 @@ namespace Work.Stages.Code
 
         public void DoorSpawn(List<Transform> doorPoints, ref List<Door> doors, bool isRandom = false)
         {
-            int random = isRandom ? Random.Range(1, doorPoints.Count + 1) : doorPoints.Count;
+            int doorCount = isRandom ? Random.Range(1, doorPoints.Count + 1) : doorPoints.Count;
+            bool hasUniqueDoorMap = false;
 
-            for (int i = 0; i < random; i++)
+            for (int i = 0; i < doorCount; i++)
             {
                 Transform x = doorPoints[i];
                 Door door = Instantiate(DoorPrefab, x.position, Quaternion.identity);
                 door.transform.parent = x;
                 door.transform.localRotation = Quaternion.identity;
                 door.DoorInit(CurrentStage);
-                DoorType nextDoorType = (DoorType)Random.Range(0, 5);
+                DoorType nextDoorType = GetRandomDoorType();
 
-                if (IsOpeningShop)
+                if (IsOpeningShop && hasUniqueDoorMap == false)
                 {
+                    hasUniqueDoorMap = true;
                     nextDoorType = DoorType.Shop;
                     door.SetDoorType(nextDoorType);
                     doors.Add(door);
-                    return;
+                    continue;
                 }
 
-                if (IsNextStageInBossStage)
+                if (IsNextStageInBossStage && hasUniqueDoorMap == false)
                 {
+                    hasUniqueDoorMap = true;
                     nextDoorType = DoorType.Boss;
                     door.SetDoorType(nextDoorType);
                     doors.Add(door);
-                    return;
+                    continue;
                 }
 
                 door.SetDoorType(nextDoorType);
                 doors.Add(door);
             }
+        }
+
+        /// <summary>
+        /// 최초 방 타입
+        /// </summary>
+        private DoorType GetInitialDoorType()
+        {
+            return stageFlowConfig != null ? stageFlowConfig.InitialDoorType : DoorType.Wood;
+        }
+
+        /// <summary>
+        /// 일반 랜덤 문 타입
+        /// </summary>
+        private DoorType GetRandomDoorType()
+        {
+            return stageFlowConfig != null ? stageFlowConfig.GetRandomDoorCandidate() : DoorType.Wood;
         }
     }
 }

@@ -91,6 +91,7 @@ namespace Work.Stages.Code
             {
                 _generateStage.Invoke(initialDoorType, null);
                 await PlayInitialProgressMapAsync(initialDoorType, cancellationToken);
+                Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
                 CompleteTransition();
             }
             catch (OperationCanceledException)
@@ -118,6 +119,7 @@ namespace Work.Stages.Code
                 Bus<OnNextRoomEvent>.Raise(new OnNextRoomEvent(doorType));
                 await PlayNextProgressMapAsync(doorType, cancellationToken);
                 await PlayFadeAsync(false, cancellationToken);
+                Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
                 CompleteTransition();
             }
             catch (OperationCanceledException)
@@ -126,6 +128,7 @@ namespace Work.Stages.Code
             catch (Exception exception)
             {
                 Debug.LogException(exception);
+                Bus<StageProgressMapClosedEvent>.Raise(new StageProgressMapClosedEvent());
                 CompleteTransition();
             }
             finally

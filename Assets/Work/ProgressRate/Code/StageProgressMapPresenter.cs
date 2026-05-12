@@ -14,6 +14,7 @@ namespace Work.ProgressRate.Code
     public class StageProgressMapPresenter : MonoBehaviour
     {
         [SerializeField] private StageProgressMapView progressMapView;
+        [SerializeField] private StageFlowConfigSO stageFlowConfig;
         [SerializeField] private DoorType initialRoomType = DoorType.Wood;
 
         private readonly List<DoorType> _roomHistory = new List<DoorType>();
@@ -26,7 +27,7 @@ namespace Work.ProgressRate.Code
         private void Awake()
         {
             ResolveView();
-            ResetState(initialRoomType);
+            ResetState(GetInitialRoomType());
             BusObservable.On<ResetStageProgressEvent>()
                 .Subscribe(HandleResetEvent)
                 .AddTo(this);
@@ -62,7 +63,7 @@ namespace Work.ProgressRate.Code
             _cts = localCts;
             try
             {
-                await progressMapView.PlayInitialAsync(_roomHistory, localCts.Token);
+                await progressMapView.PlayInitialAsync(_roomHistory, GetTotalStageCount(), localCts.Token);
             }
             finally
             {
@@ -84,8 +85,9 @@ namespace Work.ProgressRate.Code
             _roomHistory.Add(nextRoomType);
             _currentStageIndex++;
             CancelProcess();
+            int totalStageCount = GetTotalStageCount();
 
-            if (progressMapView == null || _currentStageIndex >= progressMapView.TotalStageCount)
+            if (progressMapView == null || _currentStageIndex >= totalStageCount)
             {
                 return;
             }
@@ -94,7 +96,7 @@ namespace Work.ProgressRate.Code
             _cts = localCts;
             try
             {
-                await progressMapView.PlayNextAsync(_roomHistory, _currentStageIndex, localCts.Token);
+                await progressMapView.PlayNextAsync(_roomHistory, _currentStageIndex, totalStageCount, localCts.Token);
             }
             finally
             {
@@ -110,7 +112,7 @@ namespace Work.ProgressRate.Code
             initialRoomType = evt.InitialRoomType;
             if (_currentStageIndex == -1)
             {
-                ResetState(initialRoomType);
+                ResetState(GetInitialRoomType());
             }
         }
 
@@ -136,6 +138,22 @@ namespace Work.ProgressRate.Code
             _currentStageIndex = -1;
             _roomHistory.Clear();
             _roomHistory.Add(roomType);
+        }
+
+        /// <summary>
+        /// 최초 방 타입
+        /// </summary>
+        private DoorType GetInitialRoomType()
+        {
+            return stageFlowConfig != null ? stageFlowConfig.InitialDoorType : initialRoomType;
+        }
+
+        /// <summary>
+        /// 전체 스테이지 수
+        /// </summary>
+        private int GetTotalStageCount()
+        {
+            return stageFlowConfig != null ? stageFlowConfig.TotalStageCount : 1;
         }
 
         /// <summary>

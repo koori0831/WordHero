@@ -22,8 +22,6 @@ namespace Work.ProgressRate.Code
         [SerializeField] private StageProgressNode nodePrefab;
         [SerializeField] private Image dotPrefab; 
 
-        [Header("Stage Configuration")]
-        [SerializeField] private int totalStageCount = 10; 
         [SerializeField] private int dotsPerLink = 3; 
 
         [Header("Animation Settings")]
@@ -41,11 +39,6 @@ namespace Work.ProgressRate.Code
         private readonly List<List<Image>> _dotGroups = new List<List<Image>>(); 
         private List<MotionHandle> _dotMotionHandles = new List<MotionHandle>();
 
-        /// <summary>
-        /// 전체 스테이지 수
-        /// </summary>
-        public int TotalStageCount => totalStageCount;
-
         private void Awake()
         {
             mapContainer.SetActive(false);
@@ -61,14 +54,15 @@ namespace Work.ProgressRate.Code
         /// <summary>
         /// 최초 진행도 맵 연출
         /// </summary>
-        public async UniTask PlayInitialAsync(IReadOnlyList<DoorType> roomHistory, CancellationToken cancellationToken)
+        public async UniTask PlayInitialAsync(IReadOnlyList<DoorType> roomHistory, int totalStageCount, CancellationToken cancellationToken)
         {
             CancelProcess();
-            InitializeMap(roomHistory, 0, isInitial: true);
+            int validTotalStageCount = Mathf.Max(1, totalStageCount);
+            InitializeMap(roomHistory, 0, validTotalStageCount, isInitial: true);
             mapContainer.SetActive(true);
 
             await WaitLayoutStabilization(cancellationToken);
-            SetFocusImmediate(totalStageCount - 1); 
+            SetFocusImmediate(validTotalStageCount - 1);
 
             await UniTask.Delay(TimeSpan.FromSeconds(bossPreviewWaitTime), cancellationToken: cancellationToken);
             await FocusNodeAsync(0, returnToStartDuration, cancellationToken);
@@ -83,15 +77,16 @@ namespace Work.ProgressRate.Code
         /// <summary>
         /// 다음 진행도 맵 연출
         /// </summary>
-        public async UniTask PlayNextAsync(IReadOnlyList<DoorType> roomHistory, int nextIndex, CancellationToken cancellationToken)
+        public async UniTask PlayNextAsync(IReadOnlyList<DoorType> roomHistory, int nextIndex, int totalStageCount, CancellationToken cancellationToken)
         {
             CancelProcess();
-            if (nextIndex <= 0 || nextIndex >= totalStageCount)
+            int validTotalStageCount = Mathf.Max(1, totalStageCount);
+            if (nextIndex <= 0 || nextIndex >= validTotalStageCount)
             {
                 return;
             }
 
-            InitializeMap(roomHistory, nextIndex, isInitial: false);
+            InitializeMap(roomHistory, nextIndex, validTotalStageCount, isInitial: false);
             mapContainer.SetActive(true);
 
             await WaitLayoutStabilization(cancellationToken);
@@ -102,7 +97,7 @@ namespace Work.ProgressRate.Code
             _nodes[nextIndex - 1].PlayCompleteAnimation(animationDuration);
             await UniTask.Delay(TimeSpan.FromSeconds(animationDuration + 0.3f), cancellationToken: cancellationToken);
 
-            if (nextIndex < totalStageCount)
+            if (nextIndex < validTotalStageCount)
             {
                 UniTask moveTask = FocusNodeAsync(nextIndex, focusDuration, cancellationToken);
                 if (nextIndex - 1 < _dotGroups.Count)
@@ -141,7 +136,7 @@ namespace Work.ProgressRate.Code
             mapContainer.SetActive(false);
         }
 
-        private void InitializeMap(IReadOnlyList<DoorType> roomHistory, int currentStageIndex, bool isInitial)
+        private void InitializeMap(IReadOnlyList<DoorType> roomHistory, int currentStageIndex, int totalStageCount, bool isInitial)
         {
             for (int i = 0; i < totalStageCount; i++)
             {
