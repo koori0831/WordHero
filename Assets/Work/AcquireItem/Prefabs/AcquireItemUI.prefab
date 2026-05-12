@@ -348,9 +348,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2617966887681682700}
   - component: {fileID: 9051533466878513261}
-  - component: {fileID: 9051533466878513262}
   m_Layer: 5
-  m_Name: AcquireItemFieldView
+  m_Name: AcquireItemField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -387,19 +386,6 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f847db7db60fb324db05e43873f4527a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.AcquireItem.Code.AcquireItemFieldView
+  m_EditorClassIdentifier: Assembly-CSharp::AcquireItemField
   rootTrm: {fileID: 3673142275611895994}
   slotPrefab: {fileID: 3612856658894495930, guid: c8f5b22b0f661d646adc4cdb5ac3c5fc, type: 3}
---- !u!114 &9051533466878513262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8426783481686925668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a9d16e80c5a4a64b0f9a5af9f0ee713, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::Work.AcquireItem.Code.AcquireItemPresenter
-  fieldView: {fileID: 9051533466878513261}

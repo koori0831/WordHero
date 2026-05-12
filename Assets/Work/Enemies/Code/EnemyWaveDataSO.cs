@@ -15,7 +15,6 @@ namespace Work.Enemies.Code
     {
         [field: SerializeField] public List<EnemySpawnEntry> Enemies { get; private set; } = new List<EnemySpawnEntry>();
         [field: SerializeField] public float NextWaveDelay { get; private set; } = 1f;
-        [field: SerializeField] public float ForceNextWaveTime { get; private set; } = 20f;
     }
 
     [Serializable]

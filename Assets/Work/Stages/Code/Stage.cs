@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using Work.Core.Utils.EventBus;
+using Work.Fade;
+using Work.ProgressRate.Code;
 
 namespace Work.Stages.Code
 {
@@ -38,9 +40,29 @@ namespace Work.Stages.Code
         {
             Interator = interactor;
             _nextRoomType = doorType;
+            Bus<OnFadeCompletedEvent>.Events += HandleFadeComplete;
+            Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));
+        }
+
+        protected virtual void HandleFadeComplete(OnFadeCompletedEvent evt)
+        {
+            if (evt.isFadeIn)
+            {
+                Bus<OnFadeCompletedEvent>.Events -= HandleFadeComplete;
+                Bus<StageProgressMapClosedEvent>.Events += HandleStageProgressMapClosed;
+                Bus<OnNextRoomEvent>.Raise(new OnNextRoomEvent(_nextRoomType));
+            }
+        }
+
+        /// <summary>
+        /// 스테이지 진행도 맵과의 연동
+        /// </summary>
+        protected virtual void HandleStageProgressMapClosed(StageProgressMapClosedEvent evt)
+        {
+            Bus<StageProgressMapClosedEvent>.Events -= HandleStageProgressMapClosed;
             if (_stageManager != null)
             {
-                _stageManager.RequestStageTransition(interactor, doorType);
+                _stageManager.GenerateStage(_nextRoomType);
             }
         }
     }

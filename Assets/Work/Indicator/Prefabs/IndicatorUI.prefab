@@ -174,7 +174,6 @@ GameObject:
   - component: {fileID: 1920356519048063207}
   - component: {fileID: 3121347314586143670}
   - component: {fileID: 8924284157820912292}
-  - component: {fileID: 6421968679054812301}
   m_Layer: 5
   m_Name: IndicatorCanvas
   m_TagString: Untagged
@@ -276,16 +275,3 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!114 &6421968679054812301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8853944869365675027}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83a2c09f4d3c4d7bb86bc78f30c0a251, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.Indicator.Code.IndicatorContainerView
-  indicatorContainer: {fileID: 1924198527277946338}

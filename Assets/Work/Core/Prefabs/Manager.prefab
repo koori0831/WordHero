@@ -37,54 +37,8 @@ Transform:
   - {fileID: 3578010610502736133}
   - {fileID: 2417192945644138854}
   - {fileID: 242325766852729810}
-  - {fileID: 781420050000000002}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &781420050000000001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 781420050000000002}
-  - component: {fileID: 781420050000000003}
-  m_Layer: 0
-  m_Name: LocationNamePresenter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &781420050000000002
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 781420050000000001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6161471127420699926}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &781420050000000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 781420050000000001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1034209f7b8f4b11ad8ee1568ec92702, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::Work.ETC.LocationUI.Code.LocationNamePresenter
-  locationNameView: {fileID: 0}
 --- !u!1 &2503708692882034950
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,7 +388,7 @@ GameObject:
   - component: {fileID: 242325766852729810}
   - component: {fileID: 4886530867193011421}
   m_Layer: 0
-  m_Name: IndicatorPresenter
+  m_Name: IndicatorManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -466,11 +420,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22ef6cfd5aadc764f93139f3fb44e5f4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Work.Indicator.Code.IndicatorPresenter
-  indicatorPoolItem: {fileID: 11400000, guid: 42dfc5f4413977245896cca4e64fe75d, type: 2}
-  margin: 50
-  minSpacing: 10
-  indicatorContainerView: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::Work.Indicator.Code.IndicatorManager
+  _indicatorPoolItem: {fileID: 11400000, guid: 42dfc5f4413977245896cca4e64fe75d, type: 2}
+  _margin: 50
+  _minSpacing: 10
+  _indicatorContainer: {fileID: 0}
 --- !u!1 &8493743096607812174
 GameObject:
   m_ObjectHideFlags: 0
