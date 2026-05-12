@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Events;
-using Work.Agents.Code;
+﻿using Work.Agents.Code;
 using Work.Combat.Code;
 using Work.Core.Utils.EventBus;
 
