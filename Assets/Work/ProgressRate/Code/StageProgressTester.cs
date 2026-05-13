@@ -5,6 +5,7 @@ using Work.Stages.Code;
 using Work.Fade;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 
 namespace Work.ProgressRate.Code
 {
@@ -40,19 +41,29 @@ namespace Work.ProgressRate.Code
             Debug.Log("<color=cyan>[StageProgressTester]</color> Starting Test Sequence...");
 
             // 1. 페이드 인 (화면 어둡게)
-            Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));
-            
-            // 페이드 연출이 완료될 때까지 대기
-            await UniTask.Delay(TimeSpan.FromSeconds(fadeWaitTime));
+            FadePresenter fadePresenter = FindFirstObjectByType<FadePresenter>();
+            if (fadePresenter != null)
+            {
+                await fadePresenter.FadeAsync(true, CancellationToken.None);
+            }
+            else
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(fadeWaitTime));
+            }
 
-            // 2. 다음 방 진입 이벤트 발생 (StageProgressMap 트리거)
-            // 내부 카운터가 1 증가하며 로드맵 연출이 시작됩니다.
+            // 2. 다음 방 진입 알림 및 진행도 맵 직접 재생
             Bus<OnNextRoomEvent>.Raise(new OnNextRoomEvent(testNextRoomType));
+            StageProgressMapPresenter stageProgressMapPresenter = FindFirstObjectByType<StageProgressMapPresenter>();
+            if (stageProgressMapPresenter != null)
+            {
+                await stageProgressMapPresenter.PlayNextAsync(testNextRoomType, CancellationToken.None);
+            }
+            if (fadePresenter != null)
+            {
+                await fadePresenter.FadeAsync(false, CancellationToken.None);
+            }
             
             Debug.Log("<color=cyan>[StageProgressTester]</color> OnNextRoomEvent Raised.");
-            
-            // 로직상 StageProgressMap이 연출을 완료하면 
-            // 스스로 OnFadeEvent(false)를 쏴서 화면을 밝게 만듭니다.
         }
     }
 }
