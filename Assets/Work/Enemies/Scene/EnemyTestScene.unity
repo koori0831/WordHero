@@ -1221,11 +1221,11 @@ MonoBehaviour:
   - {fileID: 5146958597725209091, guid: fda7911c295f68845bebafbf7fa2c817, type: 3}
   shopStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
   bossStage: {fileID: 940040831415127238, guid: e46c0490fe5715d458711dff8da44b37, type: 3}
-  openingShopCountList: 0200000008000000
-  bossStageCount: 12
+  stageFlowConfig: {fileID: 0}
   doorPrefab: {fileID: 1900758950306850552, guid: 007076170283b694aad3c2eadc27e326, type: 3}
   chestPrefab: {fileID: 9201234575408641520, guid: 876da7fd808d4aa44ac9b543b6ed25af, type: 3}
   chestSpawnDistance: 2.39
+  stageProgressMapFallbackDelay: 6
 --- !u!4 &1027824295
 Transform:
   m_ObjectHideFlags: 0
@@ -3615,6 +3615,10 @@ PrefabInstance:
     - target: {fileID: 6161471127420699926, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7118760362466558616, guid: 6bebfc5246a60124bb61d1fc6d104ca0, type: 3}
+      propertyPath: selectLayerMask.m_Bits
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

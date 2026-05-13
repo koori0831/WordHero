@@ -1,12 +1,10 @@
 ﻿using GondrLib.Dependencies;
-using LitMotion;
 using System.Collections.Generic;
 using UnityEngine;
 using Work.Chests.Code;
 using Work.Combat.Code;
 using Work.Core.Utils.Cameras;
 using Work.Core.Utils.EventBus;
-using Work.ETC.LocationUI.Code;
 using Work.Fade;
 using Work.Input.Code;
 using Work.Players.Code;
@@ -186,10 +184,10 @@ namespace Work.Stages.Code
             CameraController.Instance.ZoomIn(11f, duration: 0.25f, onComplete: () =>
             {
                 Time.timeScale = 1f;
-                CameraController.Instance.ZoomIn(1f, duration: 1f, onComplete: () =>
+                CameraController.Instance.ZoomIn(1f, duration: 0.7f, onComplete: () =>
                 {
                     if (CurrentStage is BattleStage battleStage)
-                        CreatChest(battleStage.Doors, _player.transform);
+                        CreatChest(battleStage.Doors, battleStage.ChestCreatPoint);
                 });
             });
         }
@@ -218,7 +216,7 @@ namespace Work.Stages.Code
 
             _currentStageChest.cameraMovePosition = GetCameraPlaneBottomCenter(doors.ConvertAll(d => d.transform), Camera.main.transform);
 
-            CameraController.Instance.MoveTo(_currentStageChest.transform.position, duration: 0.6f);
+            CameraController.Instance.MoveTo(_currentStageChest.transform.position, duration: 0.3f);
             CameraController.Instance.ZoomIn(15f, duration: 0.7f, onComplete: () =>
             {
                 CameraController.Instance.ZoomIn(1f, duration: 1f, onComplete: () =>
@@ -300,7 +298,7 @@ namespace Work.Stages.Code
 
         public void DoorSpawn(List<Transform> doorPoints, ref List<Door> doors, bool isRandom = false)
         {
-            int doorCount = isRandom ? Random.Range(1, doorPoints.Count + 1) : doorPoints.Count;
+            int doorCount = doorPoints.Count;
             bool hasUniqueDoorMap = false;
 
             for (int i = 0; i < doorCount; i++)

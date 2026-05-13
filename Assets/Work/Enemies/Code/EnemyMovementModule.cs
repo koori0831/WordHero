@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using Work.Agents.Code;
 using Work.Combat.Code;
@@ -49,11 +48,11 @@ namespace Work.Enemies.Code
         {
             Debug.Log(statusType.ToString() + " : " + isTrue);
 
-            switch(statusType)
+            switch (statusType)
             {
                 case StatusType.Slow:
                     {
-                        if(isTrue)
+                        if (isTrue)
                         {
                             SetSpeedMultiflier(0.1f);
                         }
@@ -143,7 +142,9 @@ namespace Work.Enemies.Code
             Vector3 direction = target - _enemy.transform.position;
             direction.y = 0;
 
-            if (direction == Vector3.zero) return Quaternion.identity;
+            float angle = Vector3.Angle(_enemy.transform.forward, direction);
+
+            if (Mathf.Approximately(angle, 0f)) return Quaternion.identity;
             Quaternion lookRotation = Quaternion.LookRotation(direction.normalized);
 
             if (isSmooth)
@@ -202,9 +203,10 @@ namespace Work.Enemies.Code
             ApplySpeed();
         }
 
-        public void SetRotate(Vector3 position)
+        public bool SetRotate(Vector3 position, bool isSmooth = true)
         {
-            LookAtTarget(position, false);
+            Quaternion quaternion = LookAtTarget(position, isSmooth);
+            return quaternion != Quaternion.identity;
         }
 
         public void SetForcusingTarget(bool canForcusing) => IsFocusingTarget = canForcusing;
@@ -228,6 +230,6 @@ namespace Work.Enemies.Code
             _agent.updatePosition = !enable;
         }
 
-       
+
     }
 }

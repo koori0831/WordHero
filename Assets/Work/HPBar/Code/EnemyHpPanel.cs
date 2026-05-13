@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using Work.Combat.Code;
 using Work.Core.Utils.EventBus;
 using Work.Cursor.Code;
@@ -16,6 +17,7 @@ namespace Work.HPBar.Code
 
         private HpBarInfoData _currentTargetInfoData;
         private Enemy _currentTargetEnemy;
+        private bool _isNotDisabling = false;
 
         public void Awake()
         {
@@ -34,7 +36,7 @@ namespace Work.HPBar.Code
 
         private void OnHideInfoDataEvent(HideInfoDataEvent evt)
         {
-            if (_currentTargetEnemy != null)
+            if (_currentTargetEnemy != null || _isNotDisabling)
                 return;
             ResetEvents();
             AllDisable();
@@ -81,10 +83,19 @@ namespace Work.HPBar.Code
 
         private void HandleEnemyDeathEvent()
         {
+            StartCoroutine(DelayDisable());
+            _isNotDisabling = true;
             ResetEvents();
-            AllDisable();
+            //AllDisable();
             _currentTargetEnemy = null;
             _currentTargetInfoData = null;
+        }
+
+        private IEnumerator DelayDisable()
+        {
+            yield return new WaitForSeconds(3f);
+            AllDisable();
+            _isNotDisabling = false;
         }
 
         private void HandleStatusChangeEvent(StatusType type, bool state)

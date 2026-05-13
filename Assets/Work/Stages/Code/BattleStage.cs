@@ -8,7 +8,8 @@ namespace Work.Stages.Code
 {
     public class BattleStage : Stage
     {
-        [field:SerializeField] public List<Transform> doorPoints { get; private set; } = new List<Transform>();
+        [field: SerializeField] public List<Transform> doorPoints { get; private set; } = new List<Transform>();
+        [field: SerializeField] public Transform ChestCreatPoint { get; private set; }
         [SerializeField] private EnemyManager enemyManager;
         protected List<Door> doors = new List<Door>();
         public List<Door> Doors => doors;

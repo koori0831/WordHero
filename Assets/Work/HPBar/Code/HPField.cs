@@ -24,7 +24,7 @@ namespace Work.HPBar.Code
 
         private void SetHpText(float currentHealth, float maxHealth)
         {
-            string cur = currentHealth.ToString("N0");
+            string cur = Mathf.Clamp(currentHealth, 0, maxHealth).ToString("N0");
             string max = "/ " + maxHealth.ToString("N0");
             currentText.text = cur;
             maxText.text = max;

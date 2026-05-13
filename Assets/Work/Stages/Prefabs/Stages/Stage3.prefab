@@ -115,6 +115,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 17.95723, y: 3.63, z: 13.822419}
   m_Center: {x: -19.062874, y: 0, z: 1.692555}
+--- !u!1 &1784220248237191629
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5685116506483587594}
+  m_Layer: 0
+  m_Name: ChestSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5685116506483587594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784220248237191629}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 26.1, y: 0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 472492089012588035}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &2045815096814050703
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,6 +269,7 @@ Transform:
   - {fileID: 1406388099705473460}
   - {fileID: 2043127934641928537}
   - {fileID: 2704166851616038854}
+  - {fileID: 5685116506483587594}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4265264744074245596
@@ -289,6 +321,7 @@ MonoBehaviour:
   - {fileID: 2222693136183613699}
   - {fileID: 1406388099705473460}
   - {fileID: 2043127934641928537}
+  <ChestCreatPoint>k__BackingField: {fileID: 5685116506483587594}
   enemyManager: {fileID: 0}
 --- !u!1 &3817137113121362163
 GameObject:
