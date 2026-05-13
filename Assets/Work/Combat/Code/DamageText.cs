@@ -11,6 +11,7 @@ namespace Work.Combat.Code
 
         [SerializeField] private TMPro.TextMeshPro _textMeshPro;
         [SerializeField] private TMP_FontAsset criticalFontAsset, playerFontAsset;
+        [SerializeField] private float moveUpDistance = 1f;
 
 
         public void Init(int damage, bool isCritical = false, bool isPlayer = false)
@@ -31,7 +32,7 @@ namespace Work.Combat.Code
             if (isPlayer)
                 _textMeshPro.font = playerFontAsset;
 
-                float maxFontSize = 0;
+            float maxFontSize = 0;
             float minFontSize = 0;
 
             float startFontMaxSize = _isCritical ? 19f : 13f;
@@ -44,6 +45,14 @@ namespace Work.Combat.Code
             minFontSize = Random.Range(endFontMinSize, endFontMaxSize);
 
             _textMeshPro.fontSize = minFontSize;
+
+            Vector3 startPosition = transform.position;
+            Vector3 endPosition = startPosition + Vector3.up * moveUpDistance;
+
+            LMotion.Create(startPosition, endPosition, 1.33f)
+                .WithEase(Ease.OutCubic)
+                .Bind(position => transform.position = position)
+                .AddTo(gameObject);
 
             LMotion.Create(minFontSize, maxFontSize, 0.06f).WithOnComplete(() =>
             {
