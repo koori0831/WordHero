@@ -51,7 +51,6 @@ namespace Work.Enemies.Code
             EnemyInfoData = enemyInfoData.GetInfo(this);
             InitInfo(EnemyInfoData);
             ModuleAfterInit();
-            TryVariableSetting();
         }
 
         protected void Start()

@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using Work.Core.Utils.EventBus;
 using Work.Information.Code;
 
@@ -11,6 +12,7 @@ namespace Work.Cursor.Code
     {
         private GameObject _lastTarget;
         private Vector2 _lastMousePos;
+        [SerializeField] private LayerMask selectLayerMask;
 
         public void Update()
         {
@@ -21,7 +23,7 @@ namespace Work.Cursor.Code
 
             Ray ray = Camera.main.ScreenPointToRay(mousePos);
             Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 0.1f);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, selectLayerMask, QueryTriggerInteraction.Ignore))
             {
                 if(_lastTarget == hit.collider.gameObject)
                     return;
