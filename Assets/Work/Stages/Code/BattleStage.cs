@@ -27,6 +27,7 @@ namespace Work.Stages.Code
             });
         }
 
+
         override public void EnterStage(StageManager stageManager)
         {
             base.EnterStage(stageManager);
