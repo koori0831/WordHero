@@ -19,6 +19,7 @@ namespace Work.Stages.Code
             DoorOpen();
         }
 
+
         public void DoorOpen()
         {
             Doors.ForEach(x =>
