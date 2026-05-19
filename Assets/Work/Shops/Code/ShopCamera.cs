@@ -11,6 +11,9 @@ namespace Work.Shops.Code
         {
             if(other.CompareTag("Player"))
             {
+                CameraController.Instance.ResetPosition();
+                CameraController.Instance.ResetRotate();
+                CameraController.Instance.ResetZoom();
                 CameraController.Instance.MoveTo(camTrm.position,0.5f);
                 CameraController.Instance.RotateTo(camTrm.rotation,0.5f);
                 CameraController.Instance.ZoomIn(15,0.5f);

@@ -27,7 +27,7 @@ namespace Work.Enemies.Code
         [SerializeField] private float stopDistance = 0.05f;
         [SerializeField] private float rotateSpeed = 5f;
         [field: SerializeField] public float Speed { get; private set; } = 3f;
-        private float _speedMultiflier = 1f;
+        private float _speedMultiplier = 1f;
         [SerializeField] private float moveAnimationMultiflier = 1f;
 
         public override void Initialize(Agent agent)
@@ -37,7 +37,7 @@ namespace Work.Enemies.Code
             _animator = _enemy.GetModule<EnemyAnimatorModule>();
             _agent = _enemy.NavAgent;
             SetSpeed(Speed);
-            _speedMultiflier = 1f;
+            _speedMultiplier = 1f;
         }
 
         public void AfterInitialize()
@@ -185,20 +185,20 @@ namespace Work.Enemies.Code
         public void SetSpeed(float speed)
         {
             this.Speed = speed;
-            //float mul = IsPatroling ? speedAnimationMultiflier / 2 : speedAnimationMultiflier;
+            //float mul = IsPatroling ? speedAnimationMultiplier / 2 : speedAnimationMultiplier;
             ApplySpeed();
         }
 
         public void ApplySpeed()
         {
-            _animator.SetParam(Animator.StringToHash("MOVE_SPEED"), Speed * _speedMultiflier * moveAnimationMultiflier);
+            _animator.SetParam(Animator.StringToHash("MOVE_SPEED"), Speed * _speedMultiplier * moveAnimationMultiflier);
             if (_agent.enabled == false) return;
-            _agent.speed = Speed * _speedMultiflier;
+            _agent.speed = Speed * _speedMultiplier;
         }
 
         public void SetSpeedMultiflier(float value)
         {
-            _speedMultiflier = value;
+            _speedMultiplier = value;
             ApplySpeed();
         }
 

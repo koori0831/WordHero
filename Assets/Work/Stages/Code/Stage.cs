@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Work.Core.Utils.EventBus;
-using Work.Fade;
-using Work.Input.Code;
-using Random = UnityEngine.Random;
 
 namespace Work.Stages.Code
 {
+
+    public record struct OnNextRoomEvent(DoorType nextRoomType) : IEvent;
+
     public class Stage : MonoBehaviour
     {
         [SerializeField] protected Transform spawnPoint;
-        
+
         protected DoorType _nextRoomType;
         protected StageManager _stageManager;
 
@@ -21,6 +19,8 @@ namespace Work.Stages.Code
         protected virtual void HandleStageClearEvent(StageClearEvent evt)
         {
         }
+
+        
 
         public virtual void EnterStage(StageManager stageManager)
         {
@@ -38,15 +38,10 @@ namespace Work.Stages.Code
         {
             Interator = interactor;
             _nextRoomType = doorType;
-            Bus<OnFadeCompletedEvent>.Events += HandleFadeComplete;
-            Bus<OnFadeEvent>.Raise(new OnFadeEvent(true));
-        }
-
-        protected virtual void HandleFadeComplete(OnFadeCompletedEvent evt)
-        {
-            Bus<OnFadeCompletedEvent>.Events -= HandleFadeComplete;
-            _stageManager.GeneratStage(_nextRoomType);
-            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+            if (_stageManager != null)
+            {
+                _stageManager.RequestStageTransition(interactor, doorType);
+            }
         }
     }
 }

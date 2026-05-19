@@ -1,11 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Work.Core.Utils.EventBus;
 using Work.Players.Code;
+using Work.Stages.Code;
 using Work.Weapons.Code;
 
 namespace Work.Interaction.Code
 {
     public class DroppedWeaponInteractable : MonoBehaviour, IInteractable
     {
+        
+
         private const string PickupTriggerObjectName = "DropPickupTrigger";
 
         [SerializeField] private float pickupColliderRadius = 0.8f;
@@ -49,6 +54,12 @@ namespace Work.Interaction.Code
             _pickupCollider.isTrigger = true;
             _pickupCollider.radius = pickupColliderRadius;
             _pickupCollider.enabled = true;
+
+            Bus<OnNextRoomEvent>.Events += HandleNextRoomEvent;
+        }
+        private void HandleNextRoomEvent(OnNextRoomEvent evt)
+        {
+            Destroy(gameObject);
         }
 
         public void Interact(GameObject interactor)
