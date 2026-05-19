@@ -29,6 +29,7 @@ namespace Work.HPBar.Code
 
         private void OnDestroy()
         {
+            ResetEvents();
             Bus<InfoDataEvent>.Events -= OnInfoDataEvent;
             Bus<HideInfoDataEvent>.Events -= OnHideInfoDataEvent;
             Bus<EnemyHitEvent>.Events -= OnEnemyHitEvent;
@@ -66,6 +67,7 @@ namespace Work.HPBar.Code
         {
             if (_currentTargetInfoData != null)
             {
+                _currentTargetInfoData.HpValue.OnDead -= HandleEnemyDeathEvent;
                 _currentTargetInfoData.HpValue.OnHpChanged -= HandleHPChangeEvent;
                 _currentTargetInfoData.StatusValue.OnstateusChangeEvent -= HandleStatusChangeEvent;
             }
@@ -77,26 +79,34 @@ namespace Work.HPBar.Code
             if (hitTarget == null || (_currentTargetEnemy != null && hitTarget == _currentTargetEnemy)) return;
             _currentTargetEnemy = hitTarget;
             if (!(evt.Info is HpBarInfoData data)) return;
-            data.HpValue.OnDead += HandleEnemyDeathEvent;
             EnableFromInfo(data);
         }
 
         private void HandleEnemyDeathEvent()
         {
-            StartCoroutine(DelayDisable());
-            _isNotDisabling = true;
             ResetEvents();
-            //AllDisable();
             _currentTargetEnemy = null;
             _currentTargetInfoData = null;
+
+            if (!gameObject.activeInHierarchy)
+            {
+                _isNotDisabling = false;
+                return;
+            }
+
+            _isNotDisabling = true;
+            StartCoroutine(DelayDisable());
         }
 
         private IEnumerator DelayDisable()
         {
             yield return new WaitForSeconds(3f);
-            AllDisable();
+            if (gameObject.activeInHierarchy)
+                AllDisable();
+
             _isNotDisabling = false;
         }
+
 
         private void HandleStatusChangeEvent(StatusType type, bool state)
         {
