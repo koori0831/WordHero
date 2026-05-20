@@ -17,9 +17,11 @@ namespace Work.Weapons.Code
 
     public enum WeaponType
     {
-        Melee,
-        Ranged,
-        Magic
+        OneHandSword,
+        TwoHandSword,
+        Axe,
+        Polearm,
+        Blunt
     }
 
     [Serializable]

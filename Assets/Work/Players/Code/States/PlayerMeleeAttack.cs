@@ -73,14 +73,7 @@ namespace Work.Players.Code.States
 
         private void AttackProcess()
         {
-            if (_weaponModule.WeaponType == WeaponType.Melee)
-            {
-                _weaponModule.CurrentWeapon?.Attack(_comboIndex);
-            }
-            else 
-            {
-                Debug.LogWarning("PlayerMeleeAttack state entered but weapon is not melee.");
-            }
+            _weaponModule.CurrentWeapon?.Attack(_comboIndex);
         }
 
         public override void Enter()

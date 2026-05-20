@@ -32,7 +32,7 @@ namespace Work.Players.Code
         #region Weapon Properties
         public bool IsCanSwapWeapon => _inventory?.CanSwap ?? false;
         public bool HaveWeapon => _inventory?.HaveWeapon ?? false;
-        public WeaponType WeaponType => CurrentWeapon?.Data.Type ?? WeaponType.Melee;
+        public WeaponType WeaponType => CurrentWeapon?.Data.Type ?? WeaponType.OneHandSword;
         #endregion
 
         public void Initialize(Agent agent)
