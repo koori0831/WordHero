@@ -109,14 +109,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83adc114953db6d4189b5596e04f5d2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Work.Enemies.Code.EnemyManager
-  enemies:
-  - {fileID: 9164105385634030702, guid: f9032862950149a4ba120a39614a4ee3, type: 3}
-  enemySpawnPoints:
-  - {fileID: 1665273524460436048}
-  - {fileID: 402914810171546426}
-  - {fileID: 7742766487095414343}
-  onePointInMaxEnemyCount: 15
-  spawnRadius: 6.8
+  waveData: {fileID: 0}
+  waveSpawnAreaGroups: []
+  minEnemyDistance: 2
+  entranceAvoidRadius: 5
+  navMeshSampleRadius: 3
+  spawnTryCount: 30
+  spawnEffectPrefab: {fileID: 0}
+  spawnEffectDuration: 1.5
+  enemySpawnDelay: 0.5
 --- !u!1 &1665273524460436048
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,6 +343,8 @@ MonoBehaviour:
   <doorPoints>k__BackingField:
   - {fileID: 748855752768113122}
   - {fileID: 6241509830683033719}
+  <ChestCreatPoint>k__BackingField: {fileID: 0}
+  enemyManager: {fileID: 0}
 --- !u!1 &2556686334819849066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1479,9 +1482,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -6910979934126744485, guid: 06d28b0c66c71434c9f96301e80a6734, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -6910979934126744485, guid: 06d28b0c66c71434c9f96301e80a6734, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: ff461854cc474994baa0cad6f70ddb58, type: 2}
+    - target: {fileID: -230092140590346275, guid: 06d28b0c66c71434c9f96301e80a6734, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: -230092140590346275, guid: 06d28b0c66c71434c9f96301e80a6734, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -1491,9 +1502,17 @@ PrefabInstance:
       value: Map_05
       objectReference: {fileID: 0}
     - target: {fileID: 4580947921731052843, guid: 06d28b0c66c71434c9f96301e80a6734, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4580947921731052843, guid: 06d28b0c66c71434c9f96301e80a6734, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: bd56bd354e7b7364791dd1244c596bea, type: 2}
+    - target: {fileID: 5603065472241958975, guid: 06d28b0c66c71434c9f96301e80a6734, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5603065472241958975, guid: 06d28b0c66c71434c9f96301e80a6734, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

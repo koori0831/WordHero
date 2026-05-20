@@ -7,6 +7,7 @@ using UnityEngine.AI;
 using Work.Agents.Code;
 using Work.Core.RequestInjectors;
 using Work.Core.Utils.EventBus;
+using Work.Enemies.Code.AttackModules;
 using Work.Goods.Code;
 using Work.Information.Code;
 using Work.Players.Code;

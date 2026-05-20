@@ -2,6 +2,7 @@
 using Unity.Behavior;
 using UnityEngine;
 using Work.Enemies.Code;
+using Work.Enemies.Code.AttackModules;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
 
