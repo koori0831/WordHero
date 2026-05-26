@@ -51,5 +51,51 @@ namespace Work.Enemies.Code
         {
             _owner.GetModule<SpearComboAttackModule>(true)?.ResetCombo();
         }
+
+        public void ShowChargeWarningDecal()
+        {
+            _owner.GetModule<ChargeAttackModule>(true)?.ShowChargeWarningDecal();
+        }
+
+        public void StartCharge()
+        {
+            _owner.GetModule<ChargeAttackModule>(true)?.StartCharge();
+        }
+
+        public void EndCharge()
+        {
+            _owner.GetModule<ChargeAttackModule>(true)?.EndCharge();
+        }
+
+        public void EndChargeAnimationTrigger()
+        {
+            ChargeAttackModule chargeAttackModule = _owner.GetModule<ChargeAttackModule>(true);
+            if (chargeAttackModule == null)
+            {
+                AnimationEndTrigger();
+                return;
+            }
+
+            chargeAttackModule.EndCharge();
+            AnimationEndTrigger();
+        }
+
+        public void HandleChargeMeleeAttackTrigger()
+        {
+            _owner.GetModule<ChargeAttackModule>(true)?.MeleeAttack();
+        }
+
+        public void ResetCharge()
+        {
+            _owner.GetModule<ChargeAttackModule>(true)?.ResetCharge();
+        }
+
+        public void SwitchToChargeAttackPhase()
+        {
+        }
+
+        public void SwitchToMeleeAttackPhase()
+        {
+        }
     }
 }

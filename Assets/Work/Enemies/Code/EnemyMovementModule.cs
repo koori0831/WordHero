@@ -15,9 +15,9 @@ namespace Work.Enemies.Code
         private Vector3 velocity;
 
         //도착헀는가 , 현재 패스계산중이 아니고 남은 거리가 StopDistance보다 적다면 true;
-        public bool IsArrived => !_agent.pathPending && _agent.remainingDistance < _agent.stoppingDistance + stopDistance;
+        public bool IsArrived => IsAgentReady() == false || !_agent.pathPending && _agent.remainingDistance < _agent.stoppingDistance + stopDistance;
         //남은거리
-        public float RemainDistance => _agent.pathPending ? -1 : _agent.remainingDistance;
+        public float RemainDistance => IsAgentReady() == false || _agent.pathPending ? -1 : _agent.remainingDistance;
         public bool IsAutoMove { get; private set; } = false;
         public bool IsFocusingTarget { get; private set; }
         public bool IsMoving => velocity.magnitude > 0.1f;
@@ -122,7 +122,7 @@ namespace Work.Enemies.Code
                 {
                     LookAtTarget(_target.position);
                 }
-                else
+                else if (IsAgentReady())
                 {
                     LookAtTarget(_agent.steeringTarget);
                 }
@@ -131,6 +131,9 @@ namespace Work.Enemies.Code
 
         private void NavMoveUpdate(Vector3 targetPos)
         {
+            if (IsAgentReady() == false)
+                return;
+
             if (Vector3.Distance(_agent.destination, targetPos) > 0.25f)
             {
                 _agent.SetDestination(targetPos);
@@ -165,21 +168,21 @@ namespace Work.Enemies.Code
         public void SetMovement(bool isValue)
         {
             IsCanMove = isValue;
-            if (_agent.enabled == false) return;
+            if (IsAgentReady() == false) return;
             _agent.isStopped = !isValue && !IsAutoMove;
         }
 
         public void SetAutoMove(bool isValue)
         {
             IsAutoMove = isValue;
-            if (_agent.enabled == false) return;
+            if (IsAgentReady() == false) return;
             _agent.isStopped = !isValue && !IsCanMove;
         }
 
         public void SetDestination(Vector3 destination)
         {
             _destination = destination;
-            if (_agent.enabled == false) return;
+            if (IsAgentReady() == false) return;
             _agent.SetDestination(destination);
         }
 
@@ -214,20 +217,37 @@ namespace Work.Enemies.Code
         public bool CanMovePoint(Vector3 movePoint)
         {
             NavMeshPath path = new NavMeshPath();
-            if (_agent.enabled == false) return false;
+            if (IsAgentReady() == false) return false;
             _agent.CalculatePath(movePoint, path);
 
             return path.status == NavMeshPathStatus.PathComplete;
         }
 
-        public void SetStop(bool isStop) => _agent.isStopped = isStop;
+        public void SetStop(bool isStop)
+        {
+            if (IsAgentReady() == false)
+                return;
 
-        public void WarpToPosition(Vector3 position) => _agent.Warp(position);
+            _agent.isStopped = isStop;
+        }
+
+        public void WarpToPosition(Vector3 position)
+        {
+            if (_agent == null || _agent.enabled == false)
+                return;
+
+            _agent.Warp(position);
+        }
 
         public void EnableRootMotion(bool enable)
         {
             _animator.Animator.applyRootMotion = enable;
             _agent.updatePosition = !enable;
+        }
+
+        private bool IsAgentReady()
+        {
+            return _agent != null && _agent.enabled && _agent.isOnNavMesh;
         }
 
 
