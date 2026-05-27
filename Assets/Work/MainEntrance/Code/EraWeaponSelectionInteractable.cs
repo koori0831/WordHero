@@ -1,235 +1,188 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Work.Core.Utils.EventBus;
-using Work.Input.Code;
 using Work.Weapons.Code;
 
 namespace Work.MainEntrance.Code
 {
     /// <summary>
-    /// 에라 NPC를 통해 시작 무기군 2개를 선택하는 상호작용 컴포넌트.
+    /// 에라의 병기고에 시작 무기 전시대를 배치하고 선택 상태를 관리하는 컴포넌트
     /// </summary>
-    public sealed class EraWeaponSelectionInteractable : MonoBehaviour, IInteractable
+    public sealed class EraWeaponSelectionInteractable : MonoBehaviour
     {
         private const int REQUIRED_SELECTION_COUNT = 2;
-        private const float WINDOW_WIDTH = 460f;
-        private const float WINDOW_HEIGHT = 390f;
-        private const float WINDOW_MARGIN = 24f;
-        private const float OPTION_BUTTON_HEIGHT = 34f;
 
         [SerializeField] private StarterWeaponCatalogSO weaponCatalog;
-        [SerializeField] private string titleText = "에라의 병기고";
-        [SerializeField] private string descriptionText = "출정 전에 무기군 2개를 선택";
-        [SerializeField] private string confirmButtonText = "선택 완료";
-        [SerializeField] private string cancelButtonText = "닫기";
+        [SerializeField] private Transform displayRoot;
+        [SerializeField] private Vector3 firstStandLocalPosition = new Vector3(-4.8f, 0f, 0f);
+        [SerializeField] private float standSpacing = 2.4f;
+        [SerializeField] private Vector3 displayLocalPosition = new Vector3(0f, 1.15f, 0f);
+        [SerializeField] private Vector3 displayLocalEulerAngles = new Vector3(0f, 45f, 35f);
+        [SerializeField] private Vector3 displayLocalScale = new Vector3(1.2f, 1.2f, 1.2f);
+        [SerializeField] private Vector3 labelLocalPosition = new Vector3(0f, 2.15f, 0f);
+        [SerializeField] private Vector3 interactionColliderSize = new Vector3(1.7f, 2.4f, 1.7f);
+        [SerializeField] private string maxSelectionMessage = "시작 무기군은 2개까지만 선택 가능";
 
-        private List<WeaponType> _selectedWeaponTypes = new List<WeaponType>();
-        private bool _isOpen;
-        private bool _inputLocked;
-        private string _statusMessage;
+        private List<StarterWeaponDisplayStand> _stands = new List<StarterWeaponDisplayStand>();
+        private List<StarterWeaponOption> _selectedOptions = new List<StarterWeaponOption>();
 
         /// <summary>
-        /// 무기 선택 UI 열기.
+        /// 시작 무기 전시대 생성
         /// </summary>
-        /// <param name="interactor">상호작용을 수행한 오브젝트.</param>
-        public void Interact(GameObject interactor)
+        private void Start()
         {
-            if (_isOpen)
+            BuildDisplayStands();
+        }
+
+        /// <summary>
+        /// 특정 전시대의 선택 상태 전환
+        /// </summary>
+        /// <param name="stand">선택 상태를 전환할 전시대</param>
+        /// <returns>선택 상태 전환 성공 여부</returns>
+        public bool TryToggleSelection(StarterWeaponDisplayStand stand)
+        {
+            if (stand == null || !stand.Option.IsAvailable)
+            {
+                return false;
+            }
+
+            StarterWeaponOption option = stand.Option;
+            if (IsSelected(option.WeaponType))
+            {
+                RemoveSelection(option.WeaponType);
+                ApplySelectionState();
+                return true;
+            }
+
+            if (_selectedOptions.Count >= REQUIRED_SELECTION_COUNT)
+            {
+                Debug.Log(maxSelectionMessage);
+                return false;
+            }
+
+            _selectedOptions.Add(option);
+            ApplySelectionState();
+            return true;
+        }
+
+        /// <summary>
+        /// 무기군 선택 여부 반환
+        /// </summary>
+        /// <param name="weaponType">확인할 무기군</param>
+        /// <returns>선택 여부</returns>
+        public bool IsSelected(WeaponType weaponType)
+        {
+            return FindSelectedIndex(weaponType) >= 0;
+        }
+
+        /// <summary>
+        /// 카탈로그 기준 전시대 배치
+        /// </summary>
+        private void BuildDisplayStands()
+        {
+            if (_stands.Count > 0)
             {
                 return;
             }
 
-            OpenSelection();
-        }
-
-        /// <summary>
-        /// 컴포넌트 비활성화 시 입력 잠금 복구.
-        /// </summary>
-        private void OnDisable()
-        {
-            if (_isOpen)
-            {
-                CloseSelection();
-            }
-        }
-
-        /// <summary>
-        /// IMGUI 기반 임시 무기 선택 창 표시.
-        /// </summary>
-        private void OnGUI()
-        {
-            if (!_isOpen)
-            {
-                return;
-            }
-
-            float width = Mathf.Min(WINDOW_WIDTH, Screen.width - WINDOW_MARGIN * 2f);
-            float height = Mathf.Min(WINDOW_HEIGHT, Screen.height - WINDOW_MARGIN * 2f);
-            Rect windowRect = new Rect(
-                (Screen.width - width) * 0.5f,
-                (Screen.height - height) * 0.5f,
-                width,
-                height);
-
-            GUI.ModalWindow(GetInstanceID(), windowRect, DrawSelectionWindow, titleText);
-        }
-
-        /// <summary>
-        /// 선택 창 내부 UI 그리기.
-        /// </summary>
-        /// <param name="windowId">IMGUI 창 식별자.</param>
-        private void DrawSelectionWindow(int windowId)
-        {
-            GUILayout.Label(descriptionText);
-            GUILayout.Space(8f);
-            GUILayout.Label($"선택됨: {_selectedWeaponTypes.Count}/{REQUIRED_SELECTION_COUNT}");
-            GUILayout.Space(8f);
-
+            ResolveCatalog();
+            Transform root = displayRoot != null ? displayRoot : transform;
             WeaponType[] weaponTypes = (WeaponType[])Enum.GetValues(typeof(WeaponType));
+
             for (int i = 0; i < weaponTypes.Length; i++)
             {
-                DrawWeaponOption(weaponTypes[i]);
+                StarterWeaponOption option = GetOption(weaponTypes[i]);
+                GameObject standObject = new GameObject($"{option.GetDisplayName()} DisplayStand");
+                standObject.transform.SetParent(root);
+                standObject.transform.localPosition = firstStandLocalPosition + new Vector3(standSpacing * i, 0f, 0f);
+                standObject.transform.localRotation = Quaternion.identity;
+                standObject.transform.localScale = Vector3.one;
+
+                StarterWeaponDisplayStand stand = standObject.AddComponent<StarterWeaponDisplayStand>();
+                stand.Initialize(
+                    this,
+                    option,
+                    displayLocalPosition,
+                    displayLocalEulerAngles,
+                    displayLocalScale,
+                    labelLocalPosition,
+                    interactionColliderSize);
+
+                _stands.Add(stand);
             }
-
-            GUILayout.FlexibleSpace();
-
-            if (!string.IsNullOrWhiteSpace(_statusMessage))
-            {
-                GUILayout.Label(_statusMessage);
-            }
-
-            GUILayout.BeginHorizontal();
-            GUI.enabled = _selectedWeaponTypes.Count == REQUIRED_SELECTION_COUNT;
-            if (GUILayout.Button(confirmButtonText, GUILayout.Height(OPTION_BUTTON_HEIGHT)))
-            {
-                ConfirmSelection();
-            }
-
-            GUI.enabled = true;
-            if (GUILayout.Button(cancelButtonText, GUILayout.Height(OPTION_BUTTON_HEIGHT)))
-            {
-                CloseSelection();
-            }
-            GUILayout.EndHorizontal();
-        }
-
-        /// <summary>
-        /// 무기군 선택 버튼 표시.
-        /// </summary>
-        /// <param name="weaponType">표시할 무기군.</param>
-        private void DrawWeaponOption(WeaponType weaponType)
-        {
-            StarterWeaponOption option = GetOption(weaponType);
-            bool isSelected = IsSelected(weaponType);
-            bool canClick = option.IsAvailable && (isSelected || _selectedWeaponTypes.Count < REQUIRED_SELECTION_COUNT);
-            string label = option.GetDisplayName();
-
-            if (isSelected)
-            {
-                label = "[선택됨] " + label;
-            }
-
-            if (!option.IsAvailable)
-            {
-                label += " (준비 중)";
-            }
-
-            GUI.enabled = canClick;
-            if (GUILayout.Button(label, GUILayout.Height(OPTION_BUTTON_HEIGHT)))
-            {
-                ToggleSelection(option);
-            }
-            GUI.enabled = true;
-        }
-
-        /// <summary>
-        /// 무기 선택 창 열기 및 플레이어 입력 잠금.
-        /// </summary>
-        private void OpenSelection()
-        {
-            ResolveCatalog();
-            _selectedWeaponTypes.Clear();
-            _statusMessage = string.Empty;
 
             if (RunLoadoutState.IsComplete)
             {
-                _selectedWeaponTypes.Add(RunLoadoutState.PrimaryOption.WeaponType);
-                _selectedWeaponTypes.Add(RunLoadoutState.SecondaryOption.WeaponType);
+                _selectedOptions.Add(RunLoadoutState.PrimaryOption);
+                _selectedOptions.Add(RunLoadoutState.SecondaryOption);
             }
 
-            _isOpen = true;
-            _inputLocked = true;
-            Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(false));
+            RefreshStandVisuals();
         }
 
         /// <summary>
-        /// 무기 선택 창 닫기 및 플레이어 입력 복구.
+        /// 현재 선택 상태를 런 시작 상태에 반영
         /// </summary>
-        private void CloseSelection()
+        private void ApplySelectionState()
         {
-            _isOpen = false;
-
-            if (_inputLocked)
+            if (_selectedOptions.Count == REQUIRED_SELECTION_COUNT)
             {
-                _inputLocked = false;
-                Bus<PlayerInputEnableEvent>.Raise(new PlayerInputEnableEvent(true));
+                RunLoadoutState.SetLoadout(_selectedOptions[0], _selectedOptions[1]);
             }
+            else
+            {
+                RunLoadoutState.Clear();
+            }
+
+            RefreshStandVisuals();
         }
 
         /// <summary>
-        /// 무기군 선택 상태 전환.
+        /// 모든 전시대의 선택 표시 갱신
         /// </summary>
-        /// <param name="option">선택 전환할 무기군 항목.</param>
-        private void ToggleSelection(StarterWeaponOption option)
+        private void RefreshStandVisuals()
         {
-            if (!option.IsAvailable)
+            for (int i = 0; i < _stands.Count; i++)
             {
-                return;
+                _stands[i].SetSelected(IsSelected(_stands[i].Option.WeaponType));
             }
-
-            if (IsSelected(option.WeaponType))
-            {
-                _selectedWeaponTypes.Remove(option.WeaponType);
-                _statusMessage = string.Empty;
-                return;
-            }
-
-            if (_selectedWeaponTypes.Count >= REQUIRED_SELECTION_COUNT)
-            {
-                _statusMessage = "무기군은 2개까지만 선택 가능";
-                return;
-            }
-
-            _selectedWeaponTypes.Add(option.WeaponType);
-            _statusMessage = string.Empty;
         }
 
         /// <summary>
-        /// 현재 선택된 2개 무기군을 런 시작 상태에 저장.
+        /// 선택 목록에서 무기군 제거
         /// </summary>
-        private void ConfirmSelection()
+        /// <param name="weaponType">제거할 무기군</param>
+        private void RemoveSelection(WeaponType weaponType)
         {
-            if (_selectedWeaponTypes.Count != REQUIRED_SELECTION_COUNT)
+            int selectedIndex = FindSelectedIndex(weaponType);
+            if (selectedIndex < 0)
             {
-                _statusMessage = "무기군 2개를 선택 필요";
                 return;
             }
 
-            StarterWeaponOption primaryOption = GetOption(_selectedWeaponTypes[0]);
-            StarterWeaponOption secondaryOption = GetOption(_selectedWeaponTypes[1]);
-
-            if (!RunLoadoutState.SetLoadout(primaryOption, secondaryOption))
-            {
-                _statusMessage = "선택 저장 실패";
-                return;
-            }
-
-            CloseSelection();
+            _selectedOptions.RemoveAt(selectedIndex);
         }
 
         /// <summary>
-        /// 기본 무기 카탈로그 참조 보정.
+        /// 선택 목록에서 무기군 인덱스 조회
+        /// </summary>
+        /// <param name="weaponType">조회할 무기군</param>
+        /// <returns>선택 목록 인덱스</returns>
+        private int FindSelectedIndex(WeaponType weaponType)
+        {
+            for (int i = 0; i < _selectedOptions.Count; i++)
+            {
+                if (_selectedOptions[i].WeaponType == weaponType)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// 기본 무기 카탈로그 참조 보정
         /// </summary>
         private void ResolveCatalog()
         {
@@ -241,15 +194,15 @@ namespace Work.MainEntrance.Code
             weaponCatalog = StarterWeaponCatalogSO.LoadDefault();
             if (weaponCatalog == null)
             {
-                Debug.LogWarning("Starter weapon catalog is missing. Create Resources/StarterWeaponCatalog asset.");
+                Debug.LogWarning("Starter weapon catalog is missing. Assign StarterWeaponCatalogSO to EraWeaponSelectionInteractable.");
             }
         }
 
         /// <summary>
-        /// 무기군 항목 조회.
+        /// 무기군 항목 조회
         /// </summary>
-        /// <param name="weaponType">조회할 무기군.</param>
-        /// <returns>조회된 무기군 항목.</returns>
+        /// <param name="weaponType">조회할 무기군</param>
+        /// <returns>조회된 무기군 항목</returns>
         private StarterWeaponOption GetOption(WeaponType weaponType)
         {
             ResolveCatalog();
@@ -260,16 +213,6 @@ namespace Work.MainEntrance.Code
             }
 
             return StarterWeaponOption.CreateUnavailable(weaponType);
-        }
-
-        /// <summary>
-        /// 무기군 선택 여부 반환.
-        /// </summary>
-        /// <param name="weaponType">확인할 무기군.</param>
-        /// <returns>선택 여부.</returns>
-        private bool IsSelected(WeaponType weaponType)
-        {
-            return _selectedWeaponTypes.Contains(weaponType);
         }
     }
 }

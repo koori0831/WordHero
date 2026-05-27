@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using TMPro;
 using Work.Agents.Code;
 using Work.Core.Utils.EventBus;
 using Work.Input.Code;
@@ -14,11 +15,20 @@ namespace Work.Interaction.Code
         [SerializeField] private CanvasGroup interactUI;
         [SerializeField] private float uiRightOffset = 1f;
         [SerializeField] private float uiUpOffset = 1f;
+        [SerializeField] private bool createPromptIfMissing = true;
+        [SerializeField] private string promptText = "상호작용";
+        [SerializeField] private Vector2 generatedPromptSize = new Vector2(220f, 60f);
+        [SerializeField] private float generatedPromptScale = 0.01f;
 
         public void Initialize(Agent owner)
         {
             Owner = owner;
             Bus<InputInteractEvent>.Events += OnInteract;
+
+            if (interactUI == null && createPromptIfMissing)
+            {
+                CreateDefaultInteractPrompt();
+            }
 
             if (interactUI != null)
             {
@@ -93,6 +103,42 @@ namespace Work.Interaction.Code
             }
 
             return nearest != null;
+        }
+
+        /// <summary>
+        /// 별도 프롬프트가 연결되지 않은 씬에서 사용할 기본 상호작용 표시 생성
+        /// </summary>
+        private void CreateDefaultInteractPrompt()
+        {
+            GameObject canvasObject = new GameObject("InteractPrompt", typeof(RectTransform));
+            canvasObject.transform.SetParent(transform, false);
+            canvasObject.transform.localScale = Vector3.one * generatedPromptScale;
+
+            RectTransform canvasRectTransform = canvasObject.GetComponent<RectTransform>();
+            canvasRectTransform.sizeDelta = generatedPromptSize;
+
+            Canvas canvas = canvasObject.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvas.worldCamera = Camera.main;
+
+            interactUI = canvasObject.AddComponent<CanvasGroup>();
+            interactUI.interactable = false;
+            interactUI.blocksRaycasts = false;
+
+            GameObject textObject = new GameObject("Text", typeof(RectTransform));
+            textObject.transform.SetParent(canvasObject.transform, false);
+
+            RectTransform textRectTransform = textObject.GetComponent<RectTransform>();
+            textRectTransform.anchorMin = Vector2.zero;
+            textRectTransform.anchorMax = Vector2.one;
+            textRectTransform.offsetMin = Vector2.zero;
+            textRectTransform.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI text = textObject.AddComponent<TextMeshProUGUI>();
+            text.text = promptText;
+            text.fontSize = 36f;
+            text.alignment = TextAlignmentOptions.Center;
+            text.color = Color.white;
         }
 
         private void OnDrawGizmos()
